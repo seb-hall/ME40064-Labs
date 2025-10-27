@@ -544,6 +544,31 @@ These results show that for this example, the solver is able to produce a perfec
 
 = Q3: Verifying the FEM Solver for the Diffusion-Reaction Equation
 
+This task was to verify the FEM solver for the full steady-state diffusion-reaction equation:
+
+$
+    D (delta ^2c)/(delta x^2) + lambda c = 0
+$
+
+with 
+
+$
+    D = 1, lambda = -9
+$
+
+and Dirichlet boundary conditions:
+
+$
+    c(x = 0) = 0,
+    c(x = 1) = 1
+$
+
+The analytical solution for the below plots is:
+
+$
+    c(x) = (e^3)/(e^6 - 1) (e^(3x) - e^(-3x))
+$
+
 == Results
 
 #block(width: 100%,
