@@ -1,5 +1,5 @@
-function matrix = LaplaceElemMatrix(D, eID, msh)
-%% LaplaceElemMatrix - calculates a 2x2 element matrix for the diffusion 
+function matrix = DiffusionElemMatrix(D, eID, msh)
+%% DiffusionElemMatrix - calculates a 2x2 element matrix for the diffusion 
 %% operator in a 1d finite element mesh.
     
     % create base matrix
