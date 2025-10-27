@@ -8,7 +8,7 @@ function matrix = DiffusionElemMatrix(D, eID, msh)
     % calulate element size
     elemSize = msh.elem(eID).x(2) - msh.elem(eID).x(1);
 
-    % scale base matrix by element size
+    % apply matrix scaling
     matrix = matrix * (D / elemSize);
  
 end

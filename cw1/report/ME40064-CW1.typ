@@ -186,7 +186,7 @@
 === Unit Test 3
 
 #figure(
-    [
+    align(left, [
         ```matlab
         %% Test 3: test that one matrix is evaluated correctly
         % % Test that element 1 of the (equispaced) three element mesh 
@@ -211,7 +211,7 @@
         diffnorm = sum(sum(diff.*diff)); % calculate the total squared error between the matrices
         assert(abs(diffnorm) <= tol)
         ```
-    ],
+    ]),
     caption: [Linear Reaction Operator Unit Test 3],
     supplement: [Code Snippet]
 )  <1b-test-3>
