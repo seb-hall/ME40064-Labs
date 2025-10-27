@@ -1,4 +1,5 @@
 function RunDiffusionReaction()
+%% RunDiffusionReaction: solves a 1D mesh for the Diffusion/Reaction equation equation as required for Q3.
 
     fprintf("Running Diffusion/Reaction Solver...\n");
 
@@ -28,14 +29,20 @@ function RunDiffusionReaction()
         fprintf("Node %d: x = %.4f, c = %.6f\n", i, mesh.nvec(i), solution(i));
     end
 
-    % plot solutions
+    % plot solution (assume uniform 1D mesh)
     x = linspace(xmin, xmax, Ne + 1);
     plot(x, solution);
-    title('Laplace Equation Solution');
+
+    % set chart title and axes
+    title('Diffusion/Reaction Solution');
     xlabel('x');
-    ylabel('Solution c(x)');
+    ylabel('c(x)');
     grid on;
-    saveas(gcf, 'LaplaceEquationSolution.fig');
-    openfig('LaplaceEquationSolution.fig');
+    set(gcf, 'Position', [0, 0, 500, 350]);
+
+    % save and open figure
+    saveas(gcf, 'DiffusionReactionSolution.fig');
+    saveas(gcf, 'cw1/report/resources/DiffusionReactionSolution.png');
+    openfig('DiffusionReactionSolution.fig');
 
 end
