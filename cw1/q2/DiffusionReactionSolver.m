@@ -15,7 +15,7 @@ function solution = DiffusionReactionSolver(mesh, D, lambda, leftBoundary, right
         reactionElementMatrix = ReactionElemMatrix(lambda, eID, mesh);
 
         % combine element matrices
-        elemMatrix = diffusionElementMatrix + reactionElementMatrix;
+        elemMatrix = diffusionElementMatrix - reactionElementMatrix;
         
         % insert into global matrix
         globalMatrix(eID, eID) = globalMatrix(eID, eID) + elemMatrix(1, 1);
@@ -28,11 +28,19 @@ function solution = DiffusionReactionSolver(mesh, D, lambda, leftBoundary, right
     % initialise source vector
     sourceVector = zeros(Nn, 1);
 
+    % here we would assemble the source vector if there were any source terms
+    % however, for now we assume there are none, so it remains zero
+
     % Apply left boundary condition
     switch leftBoundary.Type
         case BoundaryType.Neumann
             sourceVector(1) = sourceVector(1) - leftBoundary.Value;
         case BoundaryType.Dirichlet
+            
+            for j = 2:Nn
+                sourceVector(j) = sourceVector(j) - globalMatrix(j, 1) * leftBoundary.Value;
+            end
+
             globalMatrix(1, :) = 0; % zero out first row
             globalMatrix(:, 1) = 0; % zero out first column
             globalMatrix(1, 1) = 1; % set diagonal to 1
@@ -44,6 +52,11 @@ function solution = DiffusionReactionSolver(mesh, D, lambda, leftBoundary, right
         case BoundaryType.Neumann
             sourceVector(Nn) = sourceVector(Nn) - rightBoundary.Value;
         case BoundaryType.Dirichlet
+            
+            for j = 2:(Nn-1)
+                sourceVector(j) = sourceVector(j) - globalMatrix(j, Nn) * rightBoundary.Value;
+            end
+
             globalMatrix(Nn, :) = 0; % zero out last row
             globalMatrix(:, Nn) = 0; % zero out last column
             globalMatrix(Nn, Nn) = 1; % set diagonal to 1
