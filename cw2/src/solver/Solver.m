@@ -25,7 +25,6 @@ classdef Solver < handle
         % 0 = Forward Euler, 0.5 = Crank-Nicholson, 1 = Backward Euler
         theta double 
 
-
         mesh % mesh object  
         solution % global solution vector
 
@@ -36,12 +35,20 @@ classdef Solver < handle
         % global matrices
         M double
         K double
+
+        % boundary conditions
+        left_boundary BoundaryCondition
+        right_boundary BoundaryCondition
+
+        % source function - take x and t, return value (double)
+        source_function function_handle
+
     end
 
     methods
 
         % generic constructor
-        function obj = Solver(dt, steps, theta, mesh, D, lambda)
+        function obj = Solver(dt, steps, theta, mesh, D, lambda, left_boundary, right_boundary, source_function)
 
             obj.t = 0;
             obj.dt = dt;
@@ -56,6 +63,11 @@ classdef Solver < handle
             obj.D = D;
             obj.lambda = lambda;
 
+            obj.left_boundary = left_boundary;
+            obj.right_boundary = right_boundary;
+
+            obj.source_function = source_function;
+            
             [obj.K, obj.M] = obj.CreateStiffnessMatrix();
 
         end
@@ -74,27 +86,13 @@ classdef Solver < handle
             rhs_vector = (obj.M - (1 - obj.theta) * obj.dt * obj.K) * c_current;
 
             % APPLY SOURCE TERMS
-            f_current = zeros(obj.mesh.ngn, 1);
-            f_next = zeros(obj.mesh.ngn, 1);
-            %rhs_vector = rhs_vector + obj.dt * (obj.theta * f_next + (1 - obj.theta) * f_current);
+            f_current = obj.CreateSourceVector(obj.t);
+            f_next = obj.CreateSourceVector(obj.t + obj.dt);
+            rhs_vector = rhs_vector + obj.dt * (obj.theta * f_next + (1 - obj.theta) * f_current);
 
             % APPLY BOUNDARY CONDITIONS
-            % TBD
-
-            % --- Left Boundary (x=0) ---
-            % Condition: c(0, t) = 0
-            % Node Index: 1
-            system_matrix(1, :) = 0;   % Clear the entire row
-            system_matrix(1, 1) = 1;   % Set diagonal to 1
-            rhs_vector(1)       = 0;   % Set value to 0
-            
-            % --- Right Boundary (x=1) ---
-            % Condition: c(1, t) = 1
-            % Node Index: Last Node (obj.mesh.ngn)
-            lastNode = obj.mesh.ngn;
-            system_matrix(lastNode, :)        = 0;   % Clear the entire row
-            system_matrix(lastNode, lastNode) = 1;   % Set diagonal to 1
-            rhs_vector(lastNode)              = 1;   % Set value to 1 (The driving force!)
+            [system_matrix, rhs_vector] = obj.ApplyBoundaryConditions(system_matrix, rhs_vector);
+    
 
             c_next = system_matrix \ rhs_vector;
             obj.solution(:, obj.step_count + 1) = c_next;
@@ -140,6 +138,63 @@ classdef Solver < handle
 
             end
         end 
+
+        function [lhs, rhs] = ApplyBoundaryConditions(obj, lhs, rhs)
+
+            % apply left boundary condition
+
+            switch obj.left_boundary.Type
+
+                case BoundaryType.Dirichlet
+                    lhs(1, :) = 0; % clear row
+                    lhs(1, 1) = 1; % set diagonal to 1
+                    rhs(1) = obj.left_boundary.Value; % set value
+
+                case BoundaryType.Neumann
+                    rhs(1) = rhs(1) + obj.left_boundary.ValueFunction(obj.t); % apply flux
+            
+            end
+
+            switch obj.right_boundary.Type
+                 case BoundaryType.Dirichlet
+                    lhs(end, :) = 0; % clear row
+                    lhs(end, end) = 1; % set diagonal to 1
+                    rhs(end) = obj.right_boundary.Value; % set value
+
+                case BoundaryType.Neumann
+                     rhs(end) = rhs(end) + obj.right_boundary.ValueFunction(obj.t); % apply flux
+            end
+
+        end
+
+        function F = CreateSourceVector(obj, t)
+
+            F = zeros(obj.mesh.ngn, 1);
+
+            % return if no source function defined
+            if (~ishandle(obj.source_function))
+                return;
+            end
+
+            for i = 1:obj.mesh.ne
+                
+                h = obj.mesh.elem(i).x(2) - obj.mesh.elem(i).x(1);
+
+                midpoint = (obj.mesh.elem(i).x(1) + obj.mesh.elem(i).x(2)) / 2;
+                f_val = obj.source_function(midpoint, t);
+
+                % Local Force Vector for linear element (Int N^T * s dx)
+                f_local = f_val * h / 2 * [1; 1];
+
+                nodes = [i, i + 1];
+                F(nodes) = F(nodes) + f_local;
+            
+            end
+
+
+
+
+        end
     
     end
 
