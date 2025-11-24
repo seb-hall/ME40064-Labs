@@ -14,11 +14,15 @@ function main()
    fprintf('ME40064 Solver...\n');
 
     % Generate mesh
-    mesh = OneDimLinearMeshGen(0, 1, 50);
 
+    xmin = 0;
+    xmax = 1;
+    element_count = 50;
 
+    x_size = (xmax - xmin) / element_count;
+    x_vals = xmin:x_size:xmax;
 
-    results = [];
+    mesh = OneDimLinearMeshGen(xmin, xmax, element_count);
 
     dt = 0.01;
     tmax = 1.0;
@@ -47,21 +51,25 @@ function main()
         results_analytic = [results_analytic; timestep_results];
     end
 
+    set(0, "DefaultAxesFontSize", 12);
+    set(0, "DefaultTextFontSize", 12);
+
     t_vec = 0:dt:(steps*dt);
-    x_vec = 1:mesh.ngn;
 
     % Display results as a heatmap
     figure;
-    imagesc(t_vec, x_vec, results_analytic');
+    imagesc(t_vec, x_vals, results_analytic');
     colorbar;
     title('Transient Diffusion Solution Heatmap');
-    xlabel('Time Step');
-    ylabel('Element Index');
+    xlabel('Time (s)');
+    ylabel('Position (x)');
     caxis([0 1]); % Lock color scale
+    axis xy;
+    set(gcf, 'Position', [0, 0, 500, 350]);
 
-    saveas(gcf, 'main.fig');
-    %saveas(gcf, 'cw1/report/resources/LaplaceEquationAnalyticalSolution.png');
-    openfig('main.fig');
+    saveas(gcf, 'cw2/report/resources/AnalyticalHeatmap.fig');
+    saveas(gcf, 'cw2/report/resources/AnalyticalHeatmap.png');
+    openfig('cw2/report/resources/AnalyticalHeatmap.fig');
 
     theta = 0.5; % Crank-Nicholson
     D = 1;
@@ -92,19 +100,88 @@ function main()
     end
 
     figure;
-    imagesc(t_vec, x_vec, solver.solution);
+    imagesc(t_vec, x_vals, solver.solution);
     colorbar;
     title('Transient Diffusion FEM Solution Heatmap');
     xlabel('Time Step');
-    ylabel('Element Index');
+    ylabel('Position (x)');
     caxis([0 1]); % Lock color scale
-    saveas(gcf, 'fem_solution.fig');
-    openfig('fem_solution.fig');
+    axis xy;
+    set(gcf, 'Position', [0, 0, 500, 350]);
+    saveas(gcf, 'cw2/report/resources/SolverHeatmap.fig');
+    saveas(gcf, 'cw2/report/resources/SolverHeatmap.png');
+    openfig('cw2/report/resources/SolverHeatmap.fig');
 
-    % plot 
+    % sample times to plot
+    sample_times = [0.05, 0.1, 0.3, 1.0];
+
     
 
-   fprintf('Exiting...\n');
+    % plot analytical solutions at sample times
+    figure;
+    plotHandle = 0; 
+
+    for i = 1:length(sample_times)
+        t_sample = sample_times(i);
+        step_index = round(t_sample / dt) + 1; % +1 for MATLAB indexing
+        
+        plotHandle = plot(x_vals, results_analytic(step_index, :));
+        set(plotHandle, 'LineWidth', 1.5);
+
+        hold on;
+    end
+
+     % set chart title and axes
+    title("Analytical Solutions");
+    xlabel('x');
+    ylabel('c(x, t)');
+    grid on;
+    set(gcf, 'Position', [0, 0, 500, 350]);
+
+    legendStrings = cell(1, length(sample_times));
+    for i = 1:length(sample_times)
+        legendStrings{i} = ['t = ', num2str(sample_times(i))];
+    end 
+
+    legend(legendStrings, "Location", "northwest");
+
+    % save and open figure
+    saveas(gcf, 'cw2/report/resources/AnalyticalSamples.fig');
+    saveas(gcf, 'cw2/report/resources/AnalyticalSamples.png');
+    openfig('cw2/report/resources/AnalyticalSamples.fig');
+
+    figure;
+    plotHandle = 0;
+
+    for i = 1:length(sample_times)
+        step_index = round(sample_times(i) / dt) + 1; % +1 for MATLAB indexing
+       
+        plotHandle = plot(x_vals, solver.solution(:, step_index));
+        set(plotHandle, 'LineWidth', 1.5);
+
+        hold on;
+    end
+
+     % set chart title and axes
+    title("FEM Solutions");
+    xlabel('x');
+    ylabel('c(x, t)');
+    grid on;
+    set(gcf, 'Position', [0, 0, 500, 350]);
+
+    legendStrings = cell(1, length(sample_times));
+    for i = 1:length(sample_times)
+        legendStrings{i} = ['t = ', num2str(sample_times(i))];
+    end 
+
+    legend(legendStrings, "Location", "northwest");
+
+    % save and open figure
+    saveas(gcf, 'cw2/report/resources/SolverSamples.fig');
+    saveas(gcf, 'cw2/report/resources/SolverSamples.png');
+    openfig('cw2/report/resources/SolverSamples.fig');
+
+    fprintf('Exiting...\n');
 end
 
 function s = SourceFunction(x, t)
