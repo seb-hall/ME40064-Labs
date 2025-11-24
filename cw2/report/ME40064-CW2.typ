@@ -60,8 +60,29 @@
 // MARK: EX 1
 = Introduction
 
+Finite Element Method (FEM) is a powerful numerical technique for solving partial differential equations (PDEs) over a discrete domain. This coursework focuses on the implementation and verification of a FEM solver for the transient diffusion-reaction equation, given by:
+
+$ (delta c) / (delta t) = D (delta ^2 c)/(delta x^2) + lambda c + f $
+
 = Part 1: Software Verification
-_Extend FEA code to solve the transient form of the diffusion-reaction equation._
+
+== Overview
+
+For this section, a static FEM solver was adapted to solve the transient diffusion equation (i.e #sym.lambda = 0 and f = 0), to give an equation of the form:
+
+$ (delta c) / (delta t) = D (delta ^2 c)/(delta x^2) $
+
+Furthermore, the domain was specified with:
+- An x range of 0 to 1
+- Dirichlet boundary conditions of c(0, t) = 1 and c(1, t) = 0
+- An initial condition of c(x, 0) = 0
+
+== Implementation
+
+== Results
+
+The solver was implemented and the following plots generated:
+
 
 #figure(
     image("resources/AnalyticalHeatmap.png", width: 110%),
@@ -96,8 +117,15 @@ _Extend FEA code to solve the transient form of the diffusion-reaction equation.
     caption: [Linear Reaction Operator Unit Test Results],  
 )  <solver-x08>
 
+== Validation
 
 = Part 2: Software features
+
+Next, the FEM solver was extended to account for the following advanced features:
+- Different solver methods (Explicit Euler, Implicit Euler, Crank-Nicolson)
+- Gaussian quadrature for numerical integration
+- Quadratic basis functions
+- Using L2 norm to evaluate solution accuracy
 
 = Part 3: Modelling & Simulation Results
 
