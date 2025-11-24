@@ -46,7 +46,7 @@
         ]
 
         text(13pt)[
-            #total-words Words, \Candidate No. 11973, 4th November 2025\
+            #total-words Words, Candidate No. 11973, 4th November 2025\
             Department of Mechanical Engineering, University of Bath \
             
         ]
@@ -83,6 +83,18 @@ _Extend FEA code to solve the transient form of the diffusion-reaction equation.
     image("resources/SolverSamples.png", width: 110%),
     caption: [Linear Reaction Operator Unit Test Results],  
 )  <solver-samples>
+
+
+#figure(
+    image("resources/AnalyticalX08.png", width: 110%),
+    caption: [Linear Reaction Operator Unit Test Results],  
+)  <analytical-x08>
+
+
+#figure(
+    image("resources/SolverX08.png", width: 110%),
+    caption: [Linear Reaction Operator Unit Test Results],  
+)  <solver-x08>
 
 
 = Part 2: Software features

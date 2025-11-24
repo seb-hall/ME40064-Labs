@@ -181,6 +181,36 @@ function main()
     saveas(gcf, 'cw2/report/resources/SolverSamples.png');
     openfig('cw2/report/resources/SolverSamples.fig');
 
+    % sample x = 0.8 over time
+
+    x_index = (0.8 - xmin)/(xmax - xmin) * element_count + 1; % +1 for MATLAB indexing
+
+    figure;
+    plotHandle = plot(t_vec, results_analytic(:, x_index));
+    set(plotHandle, 'LineWidth', 1.5);
+    title('Analytical Solution at x = 0.8');
+    xlabel('Time (s)');
+    ylabel('c(0.8, t)');
+    grid on;
+    set(gcf, 'Position', [0, 0, 500, 350]);
+    saveas(gcf, 'cw2/report/resources/AnalyticalX08.fig');
+    saveas(gcf, 'cw2/report/resources/AnalyticalX08.png');
+    openfig('cw2/report/resources/AnalyticalX08.fig');
+
+    figure;
+    plotHandle = plot(t_vec, solver.solution(x_index, :));
+    set(plotHandle, 'LineWidth', 1.5);
+    title('FEM Solution at x = 0.8');
+    xlabel('Time (s)');
+    ylabel('c(0.8, t)');
+    grid on;
+    set(gcf, 'Position', [0, 0, 500, 350]);
+    saveas(gcf, 'cw2/report/resources/SolverX08.fig');
+    saveas(gcf, 'cw2/report/resources/SolverX08.png');
+    openfig('cw2/report/resources/SolverX08.fig');
+    
+
+
     fprintf('Exiting...\n');
 end
 
