@@ -22,7 +22,7 @@ function main()
     x_size = (xmax - xmin) / element_count;
     x_vals = xmin:x_size:xmax;
 
-    mesh = OneDimLinearMeshGen(xmin, xmax, element_count);
+    mesh = OneDimMeshGen(xmin, xmax, element_count, 2);
 
     dt = 0.01;
     tmax = 1.0;

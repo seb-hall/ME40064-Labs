@@ -1,11 +1,11 @@
-function [mesh] = OneDimLinearMeshGen(xmin,xmax,Ne)
+function [mesh] = OneDimQuadraticMeshGen(xmin,xmax,Ne)
 %%This function generates a one dimensional, equispaced, linear finite
 %%element mesh, with Ne number of elements, between the points at x
 %%position xmin and xmax.
 
     mesh.ne = Ne; %set number of elements
     mesh.ngn = Ne+1; %set number of global nodes
-    mesh.nodes = 2;
+    mesh.nodes = 3;
     mesh.nvec = zeros(mesh.ngn,1); %allocate vector to store global node values
     dx = (xmax - xmin)/Ne; %calculate element size
 
