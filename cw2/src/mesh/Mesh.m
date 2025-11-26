@@ -34,7 +34,7 @@ classdef Mesh < handle
     methods
 
         %% Mesh constructor
-        function obj = Mesh(xmin, xmax, element_count, order)
+        function obj = Mesh(xmin, xmax, element_count, order, D, lambda)
 
             obj.xmin = xmin;
             obj.xmax = xmax;
@@ -58,7 +58,7 @@ classdef Mesh < handle
                 coords = obj.node_coords(node_ids);
 
                 % create MeshElement object
-                obj.elements(e) = MeshElement(node_ids, coords, order);
+                obj.elements(e) = MeshElement(node_ids, coords, order, D, lambda);
             end
             
         end

@@ -33,7 +33,7 @@ classdef AnalyticalSolver
                     timestep_results(i) = TransientAnalyticSoln(x, t);
                 end
 
-                solution.set_values(timestep_results, step);
+                solution.SetValues(timestep_results, step);
             end
 
         end

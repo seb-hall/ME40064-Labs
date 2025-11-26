@@ -2,43 +2,33 @@ classdef ElementMatrices
 
     methods (Static)
 
-        function matrix = ReactionElemMatrix(lambda, eID, msh)
-
-            % create base matrixs
-            matrix = [2, 1; 1, 2];    
-
-            % calulate element size
-            elemSize = msh.elem(eID).x(2) - msh.elem(eID).x(1);
-
-            % apply matrix scaling
-            matrix = matrix * (lambda * elemSize / 6);
-        
-        end
-
-        function matrix = DiffusionElemMatrix(D, eID, msh)
+        function matrix = DiffusionElemMatrix(D, elem_size)
             
             % create base matrix
             matrix = [1, -1; -1, 1];    
 
-            % calulate element size
-            elemSize = msh.elem(eID).x(2) - msh.elem(eID).x(1);
-
             % apply matrix scaling
-            matrix = matrix * (D / elemSize);
+            matrix = matrix * (D / elem_size);
         
         end
 
-
-        function matrix = MassElemMatrix(~, eID, msh)
+        function matrix = ReactionElemMatrix(lambda, elem_size)
 
             % create base matrix
             matrix = [2, 1; 1, 2];    
 
-            % calulate element size
-            elemSize = msh.elem(eID).x(2) - msh.elem(eID).x(1);
+            % apply matrix scaling
+            matrix = matrix * (lambda * elem_size / 6);
+        
+        end
+
+        function matrix = MassElemMatrix(elem_size)
+
+            % create base matrix
+            matrix = [2, 1; 1, 2];    
 
             % apply matrix scaling
-            matrix = matrix * (elemSize / 6);
+            matrix = matrix * (elem_size / 6);
         
         end
     end

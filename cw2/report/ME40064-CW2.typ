@@ -127,6 +127,12 @@ Next, the FEM solver was extended to account for the following advanced features
 - Quadratic basis functions
 - Using L2 norm to evaluate solution accuracy
 
+\
+
+- The *Mesh* and *MeshElement* classes were modified to support higher-order elements.
+- 
+
+
 = Part 3: Modelling & Simulation Results
 
 = Conclusion

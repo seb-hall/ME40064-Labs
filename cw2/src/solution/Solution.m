@@ -35,7 +35,7 @@ classdef Solution < handle
         end
 
         %% Set solution values at given time step
-        function set_values(obj, values, step)
+        function SetValues(obj, values, step)
             % set solution values at given time step
             obj.values(:, step) = values(:);
         end
