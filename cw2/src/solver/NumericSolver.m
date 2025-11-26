@@ -24,14 +24,6 @@ classdef NumericSolver
 
             % === SET INITIAL CONDITION EXPLICITLY ===
             c0 = zeros(mesh.node_count, 1);
-            % Apply Dirichlet BCs at t=0 (important!)
-            if left_boundary.Type == BoundaryType.Dirichlet
-                c0(1) = left_boundary.Value;
-            end
-            if right_boundary.Type == BoundaryType.Dirichlet
-                c0(end) = right_boundary.Value;
-            end
-
             solution.SetValues(c0, 1);  % column 1 = t=0
 
             [K, M] = NumericSolver.CreateGlobalMatrices(mesh);
@@ -125,15 +117,15 @@ classdef NumericSolver
                 
                 element = mesh.elements(element_id);
 
-                elem_size = element.x(end) - element.x(1); 
-                midpoint = (element.x(1) + element.x(end)) / 2;
+                elem_size = element.node_coords(end) - element.node_coords(1); 
+                midpoint = (element.node_coords(1) + element.node_coords(end)) / 2;
 
                 f_val = source_fn(midpoint, t);
 
                 % Local Force Vector for linear element (Int N^T * s dx)
                 f_local = f_val * elem_size / 2 * [1; 1];
 
-                nodes = [element_id, element_id + 1];
+                nodes = element.node_ids;
                 F(nodes) = F(nodes) + f_local;
             end
 
