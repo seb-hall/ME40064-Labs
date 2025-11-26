@@ -18,6 +18,28 @@ function main()
     xmin = 0;
     xmax = 1;
     element_count = 50;
+    order = 1;
+
+    mesh = Mesh(xmin, xmax, element_count, order);
+
+    tmax = 1.0;
+    dt = 0.01;
+
+    solution = AnalyticalSolver.SolveAnalytical(mesh, tmax, dt);
+
+    Plotter.PlotHeatMap(solution, "Analytical Solution Heatmap", 'cw2/report/resources/AnalyticalHeatmap');
+
+    % sample times to plot
+    sample_times = [0.05, 0.1, 0.3, 1.0];
+    Plotter.PlotTimeSamples(solution, dt, sample_times, "Analytical Solution Samples", 'cw2/report/resources/AnalyticalSamples');
+
+    sample_x = 0.8;
+    Plotter.PlotSampleOverTime(solution, sample_x, "Analytical Solution at x = 0.8", 'cw2/report/resources/AnalyticalX08');
+
+
+    return;
+
+    
 
     x_size = (xmax - xmin) / element_count;
     x_vals = xmin:x_size:xmax;
@@ -51,9 +73,7 @@ function main()
         results_analytic = [results_analytic; timestep_results];
     end
 
-    set(0, "DefaultAxesFontSize", 12);
-    set(0, "DefaultTextFontSize", 12);
-
+    
     t_vec = 0:dt:(steps*dt);
 
     % Display results as a heatmap
