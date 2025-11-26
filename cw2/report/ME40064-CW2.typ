@@ -139,6 +139,11 @@ Next, the FEM solver was extended to account for the following advanced features
 - other two methods - unconditionally stable
 
 
+\
+
+NEED TO REFINE MESH!
+
+
 = Part 3: Modelling & Simulation Results
 
 = Conclusion

@@ -16,7 +16,7 @@ classdef NumericSolver
 
     methods (Static)
 
-       function solution = SolveAnalytical(mesh, tmax, dt, theta, left_boundary, right_boundary, source_fn)
+       function solution = SolveAnalytical(mesh, tmax, dt, theta, left_boundary, right_boundary, source_fn, integration_method)
             
             % time vector
             time_vector = 0:dt:tmax;
@@ -26,7 +26,7 @@ classdef NumericSolver
             c0 = zeros(mesh.node_count, 1);
             solution.SetValues(c0, 1);  % column 1 = t=0
 
-            [K, M] = NumericSolver.CreateGlobalMatrices(mesh);
+            [K, M] = NumericSolver.CreateGlobalMatrices(mesh, integration_method);
 
             % loop over time steps
             for step = 1:length(time_vector) - 1
@@ -66,7 +66,7 @@ classdef NumericSolver
         end
 
         %% Create global stiffness and mass matrices
-        function [K, M] = CreateGlobalMatrices(mesh)
+        function [K, M] = CreateGlobalMatrices(mesh, integration_method)
 
             num_elements = mesh.element_count;
             num_nodes = mesh.node_count;
@@ -81,14 +81,13 @@ classdef NumericSolver
                 nodes = element.node_ids;
                 local_size = length(nodes);
 
-                elem_size = element.node_coords(end) - element.node_coords(1); 
-                
-                diff_matrix = ElementMatrices.DiffusionElemMatrix(element.D, elem_size);
-                react_matrix = ElementMatrices.ReactionElemMatrix(element.lambda, elem_size);
+                diff_matrix = ElementMatrices.DiffusionElemMatrix(element, integration_method);
+                react_matrix = ElementMatrices.ReactionElemMatrix(element, integration_method);
 
                 k_matrix = diff_matrix - react_matrix;
 
-                m_matrix = ElementMatrices.MassElemMatrix(elem_size);
+                elem_size = element.node_coords(end) - element.node_coords(1); 
+                m_matrix = ElementMatrices.MassElemMatrix(element, integration_method);
 
                 % assemble into global matrices
                 for i = 1:local_size

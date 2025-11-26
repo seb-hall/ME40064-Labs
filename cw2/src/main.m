@@ -18,19 +18,18 @@ function main()
     xmin = 0;
     xmax = 1;
     element_count = 50;
-    order = 1;
+    order = 2;
 
-    theta = 0; % Crank-Nicholson
+    theta = 0.5; % Crank-Nicholson
     D = 1;
     lambda = 0;
 
     mesh = Mesh(xmin, xmax, element_count, order, D, lambda);
 
     tmax = 1.0;
-    dt = 0.001; % works well with element_count = 50
+    dt = 0.01; % works well with element_count = 50
 
     analytical_solution = AnalyticalSolver.SolveAnalytical(mesh, tmax, dt);
-
 
     lhs_boundary = BoundaryCondition();
     lhs_boundary.Type = BoundaryType.Dirichlet;
@@ -40,8 +39,12 @@ function main()
     rhs_boundary.Type = BoundaryType.Dirichlet;
     rhs_boundary.Value = 1;
 
+    integration_method = IntegrationMethod();
+    integration_method.type = IntegrationType.Gaussian;
+    integration_method.gauss_points = order + 1;
+
     numeric_solution = NumericSolver.SolveAnalytical(...
-        mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @SourceFunction);
+        mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @SourceFunction, integration_method);
 
 
     l2_error = L2Error(analytical_solution, numeric_solution);
