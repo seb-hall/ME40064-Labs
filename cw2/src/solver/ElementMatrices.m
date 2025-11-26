@@ -24,11 +24,7 @@ classdef ElementMatrices
 
         function matrix = MassElemMatrix(elem_size)
 
-            % create base matrix
-            matrix = [2, 1; 1, 2];    
-
-            % apply matrix scaling
-            matrix = matrix * (elem_size / 6);
+            matrix = eye(2) * (elem_size / 2);
         
         end
     end

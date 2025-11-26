@@ -101,7 +101,7 @@ The solver was implemented and the following plots generated:
 )  <analytical-samples>
 
 #figure(
-    image("resources/SolverSamples.png", width: 110%),
+    image("resources/NumericSamples.png", width: 110%),
     caption: [Linear Reaction Operator Unit Test Results],  
 )  <solver-samples>
 
@@ -113,7 +113,7 @@ The solver was implemented and the following plots generated:
 
 
 #figure(
-    image("resources/SolverX08.png", width: 110%),
+    image("resources/NumericX08.png", width: 110%),
     caption: [Linear Reaction Operator Unit Test Results],  
 )  <solver-x08>
 
@@ -130,7 +130,13 @@ Next, the FEM solver was extended to account for the following advanced features
 \
 
 - The *Mesh* and *MeshElement* classes were modified to support higher-order elements.
-- 
+
+== Comparing Solver Methods
+
+- Forward Euler - conditionally stable, requires 0.0002s dt for stability
+   - needs to be dt <= (dx^2) / (2D)
+
+- other two methods - unconditionally stable
 
 
 = Part 3: Modelling & Simulation Results

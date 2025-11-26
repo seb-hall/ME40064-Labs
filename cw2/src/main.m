@@ -20,18 +20,17 @@ function main()
     element_count = 50;
     order = 1;
 
-    theta = 0.5; % Crank-Nicholson
+    theta = 0; % Crank-Nicholson
     D = 1;
     lambda = 0;
 
     mesh = Mesh(xmin, xmax, element_count, order, D, lambda);
 
     tmax = 1.0;
-    dt = 0.01;
+    dt = 0.001; % works well with element_count = 50
 
     analytical_solution = AnalyticalSolver.SolveAnalytical(mesh, tmax, dt);
 
-    Plotter.PlotHeatMap(analytical_solution, "Analytical Solution Heatmap", 'cw2/report/resources/AnalyticalHeatmap');
 
     lhs_boundary = BoundaryCondition();
     lhs_boundary.Type = BoundaryType.Dirichlet;
@@ -44,9 +43,20 @@ function main()
     numeric_solution = NumericSolver.SolveAnalytical(...
         mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @SourceFunction);
 
-    Plotter.PlotHeatMap(numeric_solution, "Numeric Solution Heatmap", 'cw2/report/resources/NumericHeatmap');
+
+    l2_error = L2Error(analytical_solution, numeric_solution);
+
+    %Plotter.PlotL2Error(l2_error, "L2 Error over Time", 'cw2/report/resources/L2Error');
 
     if true
+
+        Plotter.PlotHeatMap(analytical_solution, "Analytical Solution Heatmap", 'cw2/report/resources/AnalyticalHeatmap');
+        Plotter.PlotHeatMap(numeric_solution, "Numeric Solution Heatmap", 'cw2/report/resources/NumericHeatmap');
+    
+    end
+
+    if false
+
          % sample times to plot
         sample_times = [0.05, 0.1, 0.3, 1.0];
         Plotter.PlotTimeSamples(analytical_solution, dt, sample_times, "Analytical Solution Samples", 'cw2/report/resources/AnalyticalSamples');

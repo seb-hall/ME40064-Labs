@@ -115,5 +115,30 @@ classdef Plotter
 
         end
 
+        function PlotL2Error(l2_error, title_str, name)
+
+            set(0, "DefaultAxesFontSize", 12);
+            set(0, "DefaultTextFontSize", 12);
+
+            figure;
+            plot_handle = plot(l2_error.time, l2_error.l2_error);
+            set(plot_handle, "LineWidth", 1.5);
+
+            xlabel("Time (t)");
+            ylabel("L2 Error");
+            title(title_str);
+
+            grid on;
+
+            set(gcf, 'Position', [0, 0, 500, 350]);
+
+            % Save figure
+            saveas(gcf, name, "png");
+            saveas(gcf, name, "fig");
+
+            openfig(name + ".fig");
+
+        end
+
     end
 end
