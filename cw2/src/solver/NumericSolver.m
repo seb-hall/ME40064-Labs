@@ -38,10 +38,6 @@ classdef NumericSolver
 
         end
 
-    end
-
-    methods (Static, Access = private)
-
         function c = SolveStep(mesh, solution, step, dt, theta, K, M, left_boundary, right_boundary, source_fn, integration_method)
 
             c_current = solution.values(:, step);

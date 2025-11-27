@@ -60,7 +60,7 @@
 // MARK: EX 1
 = Introduction
 
-Finite Element Method (FEM) is a powerful numerical technique for solving equations over a discrete domain. 
+*Finite Element Method (FEM)* is a powerful numerical technique for solving equations over a discrete domain. 
 The simulated system is split into small regions called *elements*, connected by *nodes* which represent discrete points in the domain, together making up a *mesh*.
 Elements are evaluated using *basis functions* which approximate the solution within each element based on node values @finite-element-method.
 This approach allows for practical solutions to problems that may be difficult or impossible to solve analytically. 
@@ -99,7 +99,7 @@ A static FEM solver was implemented in a previous coursework for the steady-stat
 This solver was subsequently adapted to solve the transient form of the equation (@transient-diffusion-reaction).
 
 For the initial case, the values of $D = 1$ and $lambda = 0$ were used, representing a pure diffusion scenario with linear behaviour.
-The *Crank-Nicolson* finite difference method was used for time integration, providing a good compromise between accuracy and stability @crank-nicolson.
+The *Crank-Nicolson* finite difference method was used for time integration. It has unconditional stability but no damping of oscillations, providing a good compromise between accuracy and stability at this stage @crank-nicolson.
 
 The problem space was further defined with the following conditions:
 
@@ -109,11 +109,11 @@ The problem space was further defined with the following conditions:
         align(center, //Align starts here
             table(
                 columns: (auto, auto),
-                inset: 7.5pt,
+                inset: 5pt,
                 align: horizon + left,
                 [Problem Space], [$0 <= x <= 1$],
-                [Left Boundary Condition], [Dirichlet: $c(0, t) = 1$],
-                [Right Boundary Condition], [Dirichlet: $c(1, t) = 0$],
+                [Left Boundary Condition], [Dirichlet: $c(0, t) = 0$],
+                [Right Boundary Condition], [Dirichlet: $c(1, t) = 1$],
                 [Initial Condition], [$c(x, 0) = 0$],
             )
         )
@@ -176,7 +176,31 @@ Additionally, a chart was created for both solutions at a single point in the me
     caption: [Comparison of Analytical and FEM Solutions at $x = 0.8$ over $0 <= t <= 1s$],  
 )  <analytical-x08>
 
+\
+
+== Spacial and Temporal Convergence
+
+To quantitatively assess the accuracy of the FEM solver, the *Root Mean Square (RMS)* error between numerical and analytical solutions was evaluated over a range of element and time step sizes.
+As shown in @element-size-convergence and @element-temporal-convergence, the RMS error decreases with both smaller element sizes and smaller time steps, demonstrating convergence of the numerical solution towards the analytical solution with increasing resolution.
+
+#figure(
+    image("resources/part1/ElementSizeConvergence.png", width: 110%),
+    caption: [Comparison of RMS errors at $t = 1s$ for Varying Element Sizes],  
+)  <element-size-convergence>
+
+#figure(
+    image("resources/part1/TimeStepConvergence.png", width: 110%),
+    caption: [Comparison of RMS errors at $t = 1s$ for Varying Time Steps],  
+)  <element-temporal-convergence>
+
 == Testing and Validation
+
+A set of unit tests were created alongside the FEM solver, to verify the functionality of individual components such as mesh generation, element assembly, and time integration.
+As part of the development process, the project was continuously tested to ensure it passed all scenarios.
+
+In particular, a unit test was created to validate the solver against a manufactured solution of the transient diffusion-reaction equation.
+This involved selecting specific values for $D$, $lambda$, and $f$ such that the solution could be expressed in a simple analytical form.
+
 
 = Part 2: Software features
 

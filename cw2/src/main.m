@@ -13,7 +13,7 @@
 function main()
     fprintf("ME40064 Coursework 2 Starting...\n");
 
-    Coursework.Part1();
+    Coursework.Part1Convergence();
 
     fprintf("...ME40064 Coursework 2 Complete\n");
     return;
