@@ -46,7 +46,7 @@
         ]
 
         text(13pt)[
-            #total-words Words, Candidate No. 11973, 4th November 2025\
+            #total-words Words, Candidate No. 11973, 2nd December 2025\
             Department of Mechanical Engineering, University of Bath \
             
         ]
@@ -73,7 +73,11 @@ In addition to this, the size and shape of elements can be adjusted to improve a
 
 This coursework focuses on the implementation and verification of a FEM solver for the transient diffusion-reaction equation, given by @numerical-advection-diffusion-reaction:
 
-$ (delta c) / (delta t) = D (delta ^2 c)/(delta x^2) + lambda c + f $ 
+#math.equation(
+  block: true,
+  numbering: "(1)",
+  $ (delta c) / (delta t) = D (delta ^2 c)/(delta x^2) + lambda c + f $
+) <transient-diffusion-reaction>
 
 Where:
 - $c$ is the concentration level
@@ -89,58 +93,90 @@ To keep the scope manageable, the solver was implemented in 1D, using MATLAB as 
 
 = Part 1: Software Verification
 
-== Overview
+== Background
 
-For this section, a static FEM solver was adapted to solve the transient diffusion equation (i.e #sym.lambda = 0 and f = 0), to give an equation of the form:
+A static FEM solver was implemented in a previous coursework for the steady-state diffusion-reaction equation. 
+This solver was subsequently adapted to solve the transient form of the equation (@transient-diffusion-reaction).
 
-$ (delta c) / (delta t) = D (delta ^2 c)/(delta x^2) $
+For the initial case, the values of $D = 1$ and $lambda = 0$ were used, representing a pure diffusion scenario with linear behaviour.
+The *Crank-Nicolson* finite difference method was used for time integration, providing a good compromise between accuracy and stability @crank-nicolson.
 
-Furthermore, the domain was specified with:
-- An x range of 0 to 1
-- Dirichlet boundary conditions of c(0, t) = 1 and c(1, t) = 0
-- An initial condition of c(x, 0) = 0
+The problem space was further defined with the following conditions:
 
-== Implementation
+#figure(
+    caption: "Initial Case Conditions",
+    block(width: 100%, inset: (top: 0%, bottom: 0%),
+        align(center, //Align starts here
+            table(
+                columns: (auto, auto),
+                inset: 7.5pt,
+                align: horizon + left,
+                [Problem Space], [$0 <= x <= 1$],
+                [Left Boundary Condition], [Dirichlet: $c(0, t) = 1$],
+                [Right Boundary Condition], [Dirichlet: $c(1, t) = 0$],
+                [Initial Condition], [$c(x, 0) = 0$],
+            )
+        )
+    )
+) <intial-case-conditions>
+
+These conditions have a known analytical solution, given by @analytical-solution-equation:
+
+#math.equation(
+  block: true,
+  numbering: "(1)",
+  $ c(x, t) = x + 2/pi sum^infinity_(n = 1) ((-1)^n)/n e^(-n^2 pi^2 t) sin(n pi x) $
+) <analytical-solution-equation>
+
+The analytical solution allows for direct comparison of results between the FEM solver and expected values, providing a quantitative measure of accuracy.
+
+== Software Architecture
+
+The solver was implemented with a modular, object-oriented software architecture to improve readability and control flow. 
+Classes were created to encapsulate well-defined functions of the solver, such as mesh generation or plotting (@part1-software-architecture).
+
+#figure(
+    image("resources/part1/SoftwareArchitecture.drawio.png", width: 100%),
+    caption: [High-Level Software Architecture of the FEM Solver], 
+)  <part1-software-architecture>
 
 == Results
 
-The solver was implemented and the following plots generated:
+Having implemented the FEM solver as described above, a simulation was run using a mesh size of 50 elements and a time step of 0.01s, over the time period $0 < t <= 1s$.
 
-
-#figure(
-    image("resources/AnalyticalHeatmap.png", width: 110%),
-    caption: [Linear Reaction Operator Unit Test Results], 
-)  <analytical-heatmap>
-
+After this, the results were plotted on a series of charts for a visual comparison of the two solutions.
+The first of these were heatmaps which are an effective method for visualising the 1D diffusion over time (@part1-analytical-heatmap, @part1-numeric-heatmap).
 
 #figure(
-    image("resources/SolverHeatmap.png", width: 110%),
-    caption: [Linear Reaction Operator Unit Test Results], 
-)  <solver-heatmap>
+    image("resources/part1/NumericHeatmap.png", width: 110%),
+    caption: [FEM Solution of Diffusion Equation over using the Crank-Nicolson method over $0 <= x <= 1$ and \ $0 <= t <= 1s$], 
+)  <part1-numeric-heatmap>
 
 #figure(
-    image("resources/AnalyticalSamples.png", width: 110%),
-    caption: [Linear Reaction Operator Unit Test Results], 
-)  <analytical-samples>
+    image("resources/part1/AnalyticalHeatmap.png", width: 110%),
+    caption: [Analytical Solution of Diffusion Equation over $0 <= x <= 1$ and $0 <= t <= 1s$], 
+)  <part1-analytical-heatmap>
+
+The data was also represented in a 2D plot, showing the concentration through the mesh at sample times of $t = 0.05s, 0.1s, 0.3s, 1.0s$, shown in @part1-numeric-samples and @part1-analytical-samples.
+
+Additionally, a chart was created for both solutions at a single point in the mesh ($x = 0.8$), shown in @analytical-x08. Unlike previous plots, this shows both methods on the same axes for direct comparison, demonstrating the agreement between the two solutions.
 
 #figure(
-    image("resources/NumericSamples.png", width: 110%),
-    caption: [Linear Reaction Operator Unit Test Results],  
-)  <solver-samples>
-
+    image("resources/part1/NumericSamples.png", width: 110%),
+    caption: [FEM Solution of Diffusion Equation over using the Crank-Nicolson method over $0 <= x <= 1$ and at $t = 0.05s, 0.1s, 0.3s, 1.0s$],  
+)  <part1-numeric-samples>
 
 #figure(
-    image("resources/AnalyticalX08.png", width: 110%),
-    caption: [Linear Reaction Operator Unit Test Results],  
+    image("resources/part1/AnalyticalSamples.png", width: 110%),
+    caption: [Analytical Solution of Diffusion Equation over $0 <= x <= 1$ and at $t = 0.05s, 0.1s, 0.3s, 1.0s$], 
+)  <part1-analytical-samples>
+
+#figure(
+    image("resources/part1/BothX08.png", width: 110%),
+    caption: [Comparison of Analytical and FEM Solutions at $x = 0.8$ over $0 <= t <= 1s$],  
 )  <analytical-x08>
 
-
-#figure(
-    image("resources/NumericX08.png", width: 110%),
-    caption: [Linear Reaction Operator Unit Test Results],  
-)  <solver-x08>
-
-== Validation
+== Testing and Validation
 
 = Part 2: Software features
 
@@ -183,4 +219,4 @@ NEED TO REFINE MESH!
 
 = Use of Generative AI
 
-This coursework was completed in Visual Studio Code (with the #link("https://marketplace.visualstudio.com/items?itemName=MathWorks.language-matlab", "MATLAB Extension")), using Typst for report writing. The #link("https://github.com/features/copilot", "GitHub Copilot") AI tool was enabled for this, and provided generative suggestions for code snippets and report phrasing.
+This coursework was completed in Visual Studio Code (with the #link("https://marketplace.visualstudio.com/items?itemName=MathWorks.language-matlab", "MATLAB Extension")), using Typst for report writing. The #link("https://github.com/features/copilot", "GitHub Copilot") AI tool was enabled, providing generative suggestions for report phrasing and code snippets.

@@ -11,7 +11,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function main()
-   fprintf('ME40064 Solver...\n');
+    fprintf("ME40064 Coursework 2 Starting...\n");
+
+    Coursework.Part1();
+
+    fprintf("...ME40064 Coursework 2 Complete\n");
+    return;
 
     % Generate mesh
 
@@ -36,7 +41,7 @@ function main()
     tmax = 30.0;
     dt = 0.01; % works well with element_count = 50
 
-    analytical_solution = AnalyticalSolver.SolveAnalytical(mesh, tmax, dt);
+    
 
     lhs_boundary = BoundaryCondition();
     lhs_boundary.Type = BoundaryType.Dirichlet;
@@ -72,8 +77,7 @@ function main()
 
     if false
 
-         % sample times to plot
-        sample_times = [0.05, 0.1, 0.3, 1.0];
+         
         Plotter.PlotTimeSamples(analytical_solution, dt, sample_times, "Analytical Solution Samples", 'cw2/report/resources/AnalyticalSamples');
         Plotter.PlotTimeSamples(numeric_solution, dt, sample_times, "Numeric Solution Samples", 'cw2/report/resources/NumericSamples');
 
@@ -83,8 +87,4 @@ function main()
     end
 
     fprintf('Exiting...\n');
-end
-
-function s = SourceFunction(x, t)
-    s = 0; % No source term
 end

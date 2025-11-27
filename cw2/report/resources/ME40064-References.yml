@@ -21,3 +21,10 @@ matlab:
     type: Web
     title: MATLAB
     url: https://mathworks.com/products/matlab.html
+
+crank-nicolson:
+    type: Article
+    title: Unconditionally stable Crank-Nicolson scheme for solving two-dimensional Maxwell's equations
+    author: C. Sun, C. W. Trueman
+    date: 2003
+    url: https://doi.org/10.1049/el:20030416

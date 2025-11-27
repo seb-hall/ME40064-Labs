@@ -16,7 +16,7 @@ classdef Plotter
     methods (Static)
 
         %% Plot entire solution as a heatmap - time as x-axis, position as y-axis and solution value as color
-        function PlotHeatMap(solution, title_str, name)
+        function PlotHeatMap(solution, title_str, name, c_max)
 
             set(0, "DefaultAxesFontSize", 12);
             set(0, "DefaultTextFontSize", 12);
@@ -25,18 +25,18 @@ classdef Plotter
             figure;
             imagesc(solution.time, solution.mesh.node_coords, solution.values);
             colorbar;
-            xlabel("Time");
-            ylabel("Position");
-            %caxis([0 1]) % lock color axis for consistency
+            xlabel("Time (t)");
+            ylabel("Displacement (x)");
+            caxis([0 c_max]) % lock color axis for consistency
             axis xy; % ensure y-axis is oriented correctly
             title(title_str);
+            grid off;
 
             set(gcf, 'Position', [0, 0, 500, 350]);
 
             % Save figure
             saveas(gcf, name, "png");
             saveas(gcf, name, "fig");
-
             openfig(name + ".fig");
             
         end
@@ -79,38 +79,41 @@ classdef Plotter
             % Save figure
             saveas(gcf, name, "png");
             saveas(gcf, name, "fig");
-
             openfig(name + ".fig");
 
         end
 
-        %% Plot solution at a specific position over time
-        function PlotSampleOverTime(solution, x_sample, title_str, name)
+        %% Plot two solutions at a specific position over time
+        function PlotSampleOverTime(solution_1, solution_2, x_sample, title_str, name, legend_strings)
 
             set(0, "DefaultAxesFontSize", 12);
             set(0, "DefaultTextFontSize", 12);
 
             % find x index
-            x_index = round((x_sample - solution.mesh.xmin) / (solution.mesh.xmax - solution.mesh.xmin) * solution.mesh.element_count) + 1; % +1 for MATLAB indexing
+            x_index = round((x_sample - solution_1.mesh.xmin) / (solution_1.mesh.xmax - solution_1.mesh.xmin) * solution_1.mesh.element_count) + 1; % +1 for MATLAB indexing
 
             figure;
-            plot_handle = plot(solution.time, solution.values(x_index, :));
+            plot_handle = plot(solution_1.time, solution_1.values(x_index, :));
+            set(plot_handle, "LineWidth", 1.5);
+
+            hold on;
+
+            plot_handle = plot(solution_2.time, solution_2.values(x_index, :));
             set(plot_handle, "LineWidth", 1.5);
 
             xlabel("Time (t)");
-
             
             ylabel("c(" + num2str(x_sample) + ", t)");
             title(title_str);
 
             grid on;
 
+            legend(legend_strings, "Location", "southeast");
             set(gcf, 'Position', [0, 0, 500, 350]);
 
             % Save figure
             saveas(gcf, name, "png");
             saveas(gcf, name, "fig");
-
             openfig(name + ".fig");
 
         end
