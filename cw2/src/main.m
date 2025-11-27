@@ -13,7 +13,7 @@
 function main()
     fprintf("ME40064 Coursework 2 Starting...\n");
 
-    Coursework.Part1Convergence();
+    Coursework.Part2TimeIntegrationComparison();
 
     fprintf("...ME40064 Coursework 2 Complete\n");
     return;
@@ -76,7 +76,6 @@ function main()
     end
 
     if false
-
          
         Plotter.PlotTimeSamples(analytical_solution, dt, sample_times, "Analytical Solution Samples", 'cw2/report/resources/AnalyticalSamples');
         Plotter.PlotTimeSamples(numeric_solution, dt, sample_times, "Numeric Solution Samples", 'cw2/report/resources/NumericSamples');

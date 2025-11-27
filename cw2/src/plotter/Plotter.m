@@ -141,14 +141,19 @@ classdef Plotter
 
         end
 
-        function PlotL2Error(l2_error, title_str, name)
+        function PlotL2Errors(l2_errors, title_str, name, legend_strings)
 
             set(0, "DefaultAxesFontSize", 12);
-            set(0, "DefaultTextFontSize", 12);
+            set(0, "DefaultTextFontSize", 12);  
 
             figure;
-            plot_handle = plot(l2_error.time, l2_error.l2_error);
-            set(plot_handle, "LineWidth", 1.5);
+            
+            for i = 1:length(l2_errors)
+                l2_error = l2_errors(i);
+                plot_handle = plot(l2_error.time, l2_error.l2_error);
+                set(plot_handle, "LineWidth", 1.5);
+                hold on;
+            end
 
             xlabel("Time (t)");
             ylabel("L2 Error");
@@ -156,6 +161,7 @@ classdef Plotter
 
             grid on;
 
+            legend(legend_strings, "Location", "northeast");
             set(gcf, 'Position', [0, 0, 500, 350]);
 
             % Save figure

@@ -14,17 +14,17 @@ classdef Coursework
 
     methods (Static)
 
-        function Part1()
+        function Part1Plots()
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %
-        % Function:     Part1()
+        % Function:     Part1Plots()
         %
         % Arguments:    None
         % Returns:      None
         %
-        % Description:  Runs Part 1 of the coursework, generating a simple
-        %               mesh, running numeric and analytical solvers,
-        %               and plotting the results.
+        % Description:  Runs the start Part 1 of the coursework,  
+        %               generating a simple mesh, running numeric and  
+        %               analytical solvers, and plotting the results.
         % 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -69,7 +69,7 @@ classdef Coursework
 
             % solve numerically
             numeric_solution = NumericSolver.SolveNumeric(...
-                mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @SourceFunction, integration_method);
+                mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
 
             % solve analytically
             analytical_solution = AnalyticalSolver.SolveAnalytical(mesh, tmax, dt);
@@ -96,7 +96,20 @@ classdef Coursework
         end
 
         function Part1Convergence()
-            
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     Part1Convergence()
+        %
+        % Arguments:    None
+        % Returns:      None
+        %
+        % Description:  Runs a convergence study for Part 1 of the 
+        %               coursework, calculating RMS error between numeric
+        %               and analytical solutions over a range of element
+        %               counts and time steps.
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
             % time parameters
             tmax = 1.0;
 
@@ -146,6 +159,7 @@ classdef Coursework
 
             k = 1;
 
+            % vary element count with fixed time step
             for i = 1:length(element_counts)
                 elem_count = element_counts(i);
                 dt = 0.0005;
@@ -156,7 +170,7 @@ classdef Coursework
 
                 % solve numerically
                 numeric_solution = NumericSolver.SolveNumeric(...
-                    mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @SourceFunction, integration_method);
+                    mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
 
                 % solve analytically
                 analytical_solution = AnalyticalSolver.SolveAnalytical(mesh, tmax, dt);
@@ -179,7 +193,7 @@ classdef Coursework
 
             k = 1;
 
-            if false
+            % vary time step with fixed element count
             for j = 1:length(time_steps)
 
                 elem_count = 1 / 0.01;
@@ -191,7 +205,7 @@ classdef Coursework
 
                 % solve numerically
                 numeric_solution = NumericSolver.SolveNumeric(...
-                    mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @SourceFunction, integration_method);
+                    mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
 
                 % solve analytically
                 analytical_solution = AnalyticalSolver.SolveAnalytical(mesh, tmax, dt);
@@ -210,10 +224,10 @@ classdef Coursework
 
                 fprintf('Elements: %d, dt: %.4f, dx: %.4f, RMS Error: %.6f\n', ...
                     elem_count, dt, (xmax-xmin)/elem_count, rms_error);
+
             end
 
-            end 
-            % plot element counts at min time step
+            % plot element counts
             dx = rms_errr_table_elem_count(:, 3);  % element size
             err_spatial = rms_errr_table_elem_count(:, 4);
 
@@ -221,8 +235,7 @@ classdef Coursework
                 "RMS Error vs Element Size (dt = 0.0005)", ...
                 'cw2/report/resources/part1/ElementSizeConvergence', 'Element Size (x)', 'RMS Error at t = 1s');
 
-            return;
-
+            % plot time steps
             dt_vals = rms_errr_table_time_step(:, 2);  % time steps
             err_temporal = rms_errr_table_time_step(:, 4);
 
@@ -230,11 +243,141 @@ classdef Coursework
                 "RMS Error vs Time Step (dx = 0.01)", ...
                 'cw2/report/resources/part1/TimeStepConvergence', 'Time Step (s)', 'RMS Error at t = 1s');
         end
+
+        function Part2Error()
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     Part2TimeIntegrationComparison()
+        %
+        % Arguments:    None
+        % Returns:      None
+        %
+        % Description:  Runs a study comparing different time integration
+        %               methods for Part 2 of the coursework.
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            
+            
+            
+        end
+
+        function Part2TimeIntegrationComparison()
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     Part2TimeIntegrationComparison()
+        %
+        % Arguments:    None
+        % Returns:      None
+        %
+        % Description:  Runs a study comparing different time integration
+        %               methods for Part 2 of the coursework.
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            
+            % time parameters
+            tmax = 0.002;
+            dt = 0.0001;
+
+            % mesh parameters
+            xmin = 0.0;
+            xmax = 1.0;
+            element_count = 10;
+            order = 1;
+
+            % diffusion and reaction coefficients
+            D = 1.0; 
+            lambda = 0.0;
+
+            % concentrations
+            c_max = 1.0;
+            c_min = 0.0;
+
+             % generate mesh
+            mesh = Mesh(xmin, xmax, element_count, order, D, lambda);
+            mesh.Generate();
+
+            % solve analytically
+            analytical_solution = AnalyticalSolver.SolveAnalytical(mesh, tmax, dt);
+
+            % solver parameters
+            lhs_boundary = BoundaryCondition();
+            lhs_boundary.Type = BoundaryType.Dirichlet;
+            lhs_boundary.Value = c_min;
+
+            rhs_boundary = BoundaryCondition();
+            rhs_boundary.Type = BoundaryType.Dirichlet;
+            rhs_boundary.Value = c_max;
+
+            integration_method = IntegrationMethod();
+            integration_method.type = IntegrationType.Trapezoidal;
+            integration_method.gauss_points = 0; % not used for trapezoidal
+            
+
+            l2_errors = [];
+
+            thetas = [0.0, 1.0, 0.5]; % Explicit Euler, Implicit Euler, Crank-Nicholson
+            method_names = {'Forward Euler', 'Crank-Nicolson', 'Backward Euler'};
+
+            for i = 1:length(thetas)
+                theta = thetas(i);
+
+                % solve numerically
+                numeric_solution = NumericSolver.SolveNumeric(...
+                    mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
+
+                % compute L2 error
+                l2_error = L2Error(analytical_solution, numeric_solution);
+                l2_errors = [l2_errors, l2_error];
+            end
+
+            Plotter.PlotL2Errors(l2_errors, "L2 Error over Time", ...
+                'cw2/report/resources/part2/L2ErrorTimeIntegration', ...
+                method_names);
+
+
+            % perform stability analysis 
+
+            tmax = 1.0;
+            element_count = 50;
+            dt_list = [0.0001, 0.001, 0.01, 0.1, 0.25];
+
+            % generate mesh
+            mesh = Mesh(xmin, xmax, element_count, order, D, lambda);
+            mesh.Generate();
+
+            l2_errors_stability = [];
+
+            for i = 1:length(thetas)
+                theta = thetas(i);
+
+                l2_errors_dt = [];
+
+                for j = 1:length(dt_list)
+                    dt = dt_list(j);
+
+                    try
+                        numeric_solution = NumericSolver.SolveNumeric(...
+                            mesh, tmax, dt_list(j), theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
+
+                        analytical_solution = AnalyticalSolver.SolveAnalytical(mesh, tmax, dt);
+
+                        l2_error = L2Error(analytical_solution, numeric_solution);
+                        
+                        %l2_errors_dt = [l2_errors_dt, l2_error];
+                        fprintf('%s OK %f \n', method_names{i}, l2_error.l2_error(end));
+                    catch
+                        %l2_errors_dt = [l2_errors_dt, NaN];
+                        fprintf('%s EXPLODED \n', method_names{i});
+                    end
+                end
+
+                l2_errors_stability = [l2_errors_stability; l2_errors_dt];
+            end
+
+        end
+
+
+
     end
 
-end
-
-
-function s = SourceFunction(x, t)
-    s = 0; % No source term
 end

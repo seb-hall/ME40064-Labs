@@ -204,13 +204,33 @@ This involved selecting specific values for $D$, $lambda$, and $f$ such that the
 
 = Part 2: Software features
 
-Next, the FEM solver was extended to account for the following advanced features:
-- Different solver methods (Explicit Euler, Implicit Euler, Crank-Nicolson)
-- Gaussian quadrature for numerical integration
-- Quadratic basis functions
-- Using L2 norm to evaluate solution accuracy
+== Error Evaluation
 
-\
+In Part 1 of the coursework, the RMS error term was used to evaluate the accuracy of the FEM solver. 
+While RMS is a useful metric, it can be sensitive to outliers and therefore may not always provide a complete picture of the solution accuracy.
+L2 norm doesn't suffer as much from this, and is more widely used in literature as a result @numerical-advection-diffusion-reaction
+To address this, a dedicated L2 error evaluation class was added to the solver, allowing for more robust error analysis.
+
+== Integration Methods
+
+Using the L2 norm error evalutation class, the performance of three different time integration methods was compared: 
+Forward (Explicit) Euler, Backward (Implicit) Euler, and Crank-Nicolson.
+
+
+
+#figure(
+    image("resources/part2/L2ErrorTimeIntegration.png", width: 110%),
+    caption: [Comparison of RMS errors at $t = 1s$ for Varying Time Steps],  
+)  <part2-time-integration-comparison>
+
+
+
+== Quadratic Basis Functions
+
+== Gaussian Quadrature
+
+
+
 
 - The *Mesh* and *MeshElement* classes were modified to support higher-order elements.
 
@@ -222,7 +242,17 @@ Next, the FEM solver was extended to account for the following advanced features
 - other two methods - unconditionally stable
 
 
+
 \
+
+Next, the FEM solver was extended to account for the following advanced features:
+- Different solver methods (Explicit Euler, Implicit Euler, Crank-Nicolson)
+- Gaussian quadrature for numerical integration
+- Quadratic basis functions
+- Using L2 norm to evaluate solution accuracy
+
+\
+
 
 NEED TO REFINE MESH!
 
