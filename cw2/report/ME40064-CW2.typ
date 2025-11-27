@@ -224,6 +224,17 @@ Forward (Explicit) Euler, Backward (Implicit) Euler, and Crank-Nicolson.
 )  <part2-time-integration-comparison>
 
 
+#figure(
+    image("resources/part2/BasisComparison.png", width: 110%),
+    caption: [Comparison of RMS errors at $t = 1s$ for Varying Time Steps],  
+)  <part2-basis-function-comparison>
+
+
+#figure(
+    image("resources/part2/IntegrationComparison.png", width: 110%),
+    caption: [Comparison of RMS errors at $t = 1s$ for Varying Time Steps],  
+)  <part2-integration-comparison>
+
 
 == Quadratic Basis Functions
 

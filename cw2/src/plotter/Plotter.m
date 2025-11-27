@@ -172,5 +172,28 @@ classdef Plotter
 
         end
 
+        function PlotTwoConvergenceLines(x_values, y1_values, y2_values, title_str, name, x_label, y_label, legend_strings)
+            set(0, "DefaultAxesFontSize", 12);
+            set(0, "DefaultTextFontSize", 12);
+
+            figure;
+            
+            loglog(x_values, y1_values, '-o', 'LineWidth', 1.5, 'MarkerSize', 8);
+            hold on;
+            loglog(x_values, y2_values, '-s', 'LineWidth', 1.5, 'MarkerSize', 8);
+            
+            xlabel(x_label);
+            ylabel(y_label);
+            title(title_str);
+            legend(legend_strings, 'Location', 'best');
+            grid on;
+
+            set(gcf, 'Position', [0, 0, 500, 350]);
+
+            saveas(gcf, name, "png");
+            saveas(gcf, name, "fig");
+            openfig(name + ".fig");
+        end
+
     end
 end

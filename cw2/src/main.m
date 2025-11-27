@@ -13,7 +13,7 @@
 function main()
     fprintf("ME40064 Coursework 2 Starting...\n");
 
-    Coursework.Part2TimeIntegrationComparison();
+    Coursework.Part2BasisFunctionComparison();
 
     fprintf("...ME40064 Coursework 2 Complete\n");
     return;
