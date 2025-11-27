@@ -12,53 +12,26 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-classdef Mesh < handle
+classdef MultilayerMesh < Mesh
     % inherit from handle to allow pass-by-reference
 
     properties
-
-        xmin double
-        xmax double
-        dx double
-
-        order double
-
-        D double % diffusion coefficient
-        lambda double % reaction coefficient
-    
-        node_count uint64
-        node_coords double % coordinates of global nodes
-
-        element_count uint64
-        elements MeshElement % array of mesh elements
-
+        layer_properties LayerProperties % array of layer properties
     end
 
     methods
 
         %% Mesh constructor
-        function obj = Mesh(xmin, xmax, element_count, order, D, lambda)
-
-            obj.xmin = xmin;
-            obj.xmax = xmax;
-            obj.dx = (xmax - xmin) / element_count;
-            obj.D = D;
-            obj.lambda = lambda;
+        function obj = MultilayerMesh(xmin, xmax, element_count, order, D, lambda, layer_properties)
             
-            obj.order = order;
-
-            % total number of nodes
-            obj.node_count = (element_count * order) + 1;
-            obj.node_coords = zeros(1, obj.node_count);
-            
-            obj.element_count = element_count;
-            obj.elements = MeshElement.empty(element_count, 0);
+            obj = obj@Mesh(xmin, xmax, element_count, order, D, lambda);
+            obj.layer_properties = layer_properties;
             
         end
 
         function obj = Generate(obj)
 
-            disp('Generating normal mesh...');
+            disp('Generating multilayer mesh...');
 
             % generate uniform node coordinates
             obj.node_coords = linspace(obj.xmin, obj.xmax, obj.node_count);
@@ -73,8 +46,22 @@ classdef Mesh < handle
                 %  coordinates for this element
                 coords = obj.node_coords(node_ids);
 
+                midpoint = (coords(1) + coords(end)) / 2;
+
+                % determine which layer this element is in
+                layer_index = 1;
+
+                for l = 1:length(obj.layer_properties)
+                    if midpoint >= obj.layer_properties(l).x
+                        layer_index = l;
+                    end
+                end
+
+                D = obj.layer_properties(layer_index).D;
+                lambda = -(obj.layer_properties(layer_index).beta + obj.layer_properties(layer_index).gamma);
+
                 % create MeshElement object
-                obj.elements(e) = MeshElement(node_ids, coords, obj.order, obj.D, obj.lambda);
+                obj.elements(e) = MeshElement(node_ids, coords, obj.order, D, lambda);
             end
         end
 

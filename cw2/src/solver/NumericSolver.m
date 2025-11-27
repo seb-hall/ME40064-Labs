@@ -16,7 +16,7 @@ classdef NumericSolver
 
     methods (Static)
 
-       function solution = SolveAnalytical(mesh, tmax, dt, theta, left_boundary, right_boundary, source_fn, integration_method)
+       function solution = SolveNumeric(mesh, tmax, dt, theta, left_boundary, right_boundary, source_fn, integration_method)
             
             % time vector
             time_vector = 0:dt:tmax;
@@ -108,7 +108,7 @@ classdef NumericSolver
             F = zeros(mesh.node_count, 1);
 
             % return if no source function defined
-            if (~ishandle(source_fn))
+            if (isempty(source_fn))
                 return;
             end
 

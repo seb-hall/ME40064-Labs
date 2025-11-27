@@ -16,7 +16,7 @@ function main()
     % Generate mesh
 
     xmin = 0;
-    xmax = 1;
+    xmax = 0.01;
     element_count = 50;
     order = 2;
 
@@ -24,7 +24,14 @@ function main()
     D = 1;
     lambda = 0;
 
-    mesh = Mesh(xmin, xmax, element_count, order, D, lambda);
+    epidermis_layer = LayerProperties(0.0, 4e-6, 0.0, 0.02);
+    dermis_layer = LayerProperties(0.00166667, 5e-6, 0.01, 0.02);
+    sub_cutaneous_layer = LayerProperties(0.005, 2e-6, 0.01, 0.02);
+
+    layer_properties = [epidermis_layer, dermis_layer, sub_cutaneous_layer];
+
+    mesh = MultilayerMesh(xmin, xmax, element_count, order, D, lambda, layer_properties);
+    mesh.Generate();
 
     tmax = 1.0;
     dt = 0.01; % works well with element_count = 50
@@ -43,11 +50,12 @@ function main()
     integration_method.type = IntegrationType.Gaussian;
     integration_method.gauss_points = order + 1;
 
-    numeric_solution = NumericSolver.SolveAnalytical(...
+    numeric_solution = NumericSolver.SolveNumeric(...
         mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @SourceFunction, integration_method);
 
 
     l2_error = L2Error(analytical_solution, numeric_solution);
+
 
     Plotter.PlotL2Error(l2_error, "L2 Error over Time", 'cw2/report/resources/L2Error');
 

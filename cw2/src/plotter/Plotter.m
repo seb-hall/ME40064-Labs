@@ -91,7 +91,7 @@ classdef Plotter
             set(0, "DefaultTextFontSize", 12);
 
             % find x index
-            x_index = (x_sample - solution.mesh.xmin) / (solution.mesh.xmax - solution.mesh.xmin) * solution.mesh.element_count + 1; % +1 for MATLAB indexing
+            x_index = round((x_sample - solution.mesh.xmin) / (solution.mesh.xmax - solution.mesh.xmin) * solution.mesh.element_count) + 1; % +1 for MATLAB indexing
 
             figure;
             plot_handle = plot(solution.time, solution.values(x_index, :));
