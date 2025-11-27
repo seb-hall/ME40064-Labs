@@ -114,6 +114,36 @@ classdef ElementMatrices
             end
         
         end
+
+        function matrix = ForceMatrix(element, method)
+
+            elem_size = element.node_coords(end) - element.node_coords(1); 
+
+            if method.type == IntegrationType.Trapezoidal
+
+                % create base matrix
+                matrix = ones(element.order + 1, 1);
+
+                % apply matrix scaling
+                matrix = matrix * (elem_size / 2);
+                
+            else
+
+                matrix = zeros(element.order + 1, 1);
+                [xi, wi] = ElementMatrices.GaussQuadraturePoints(method.gauss_points);
+
+                for i = 1:length(xi)
+                    N = ElementMatrices.ShapeFunctions(element.order, xi(i));
+
+                    J = element.jacobian;
+
+                    % compute contribution to stiffness matrix
+                    matrix = matrix + N' * (wi(i) * J);
+                end
+
+            end
+
+        end
     end
 
     methods (Static, Access = private)

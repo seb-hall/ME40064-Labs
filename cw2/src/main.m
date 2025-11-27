@@ -49,7 +49,7 @@ function main()
 
     l2_error = L2Error(analytical_solution, numeric_solution);
 
-    %Plotter.PlotL2Error(l2_error, "L2 Error over Time", 'cw2/report/resources/L2Error');
+    Plotter.PlotL2Error(l2_error, "L2 Error over Time", 'cw2/report/resources/L2Error');
 
     if true
 

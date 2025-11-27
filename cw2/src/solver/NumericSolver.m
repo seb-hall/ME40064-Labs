@@ -31,7 +31,7 @@ classdef NumericSolver
             % loop over time steps
             for step = 1:length(time_vector) - 1
 
-                c_next = NumericSolver.SolveStep(mesh, solution, step, dt, theta, K, M, left_boundary, right_boundary, source_fn);
+                c_next = NumericSolver.SolveStep(mesh, solution, step, dt, theta, K, M, left_boundary, right_boundary, source_fn, integration_method);
                 solution.SetValues(c_next, step + 1);
 
             end
@@ -42,7 +42,7 @@ classdef NumericSolver
 
     methods (Static, Access = private)
 
-        function c = SolveStep(mesh, solution, step, dt, theta, K, M, left_boundary, right_boundary, source_fn)
+        function c = SolveStep(mesh, solution, step, dt, theta, K, M, left_boundary, right_boundary, source_fn, integration_method)
 
             c_current = solution.values(:, step);
 
@@ -53,8 +53,8 @@ classdef NumericSolver
             rhs_vector = (M - (1 - theta) * dt * K) * c_current;
 
             % add source term
-            f_current = NumericSolver.CreateSourceVector(mesh, t, source_fn);
-            f_next = NumericSolver.CreateSourceVector(mesh, t + dt, source_fn);
+            f_current = NumericSolver.CreateSourceVector(mesh, t, source_fn, integration_method);
+            f_next = NumericSolver.CreateSourceVector(mesh, t + dt, source_fn, integration_method);
             rhs_vector = rhs_vector + dt * (theta * f_next + (1 - theta) * f_current);
 
             % apply boundary conditions
@@ -103,7 +103,7 @@ classdef NumericSolver
         end
 
         %% Create source vector for given time
-        function F = CreateSourceVector(mesh, t, source_fn)
+        function F = CreateSourceVector(mesh, t, source_fn, integration_method)
 
             F = zeros(mesh.node_count, 1);
 
@@ -122,7 +122,7 @@ classdef NumericSolver
                 f_val = source_fn(midpoint, t);
 
                 % Local Force Vector for linear element (Int N^T * s dx)
-                f_local = f_val * elem_size / 2 * [1; 1];
+                f_local = f_val * ElementMatrices.ForceMatrix(element, integration_method);
 
                 nodes = element.node_ids;
                 F(nodes) = F(nodes) + f_local;
