@@ -60,9 +60,32 @@
 // MARK: EX 1
 = Introduction
 
-Finite Element Method (FEM) is a powerful numerical technique for solving partial differential equations (PDEs) over a discrete domain. This coursework focuses on the implementation and verification of a FEM solver for the transient diffusion-reaction equation, given by:
+Finite Element Method (FEM) is a powerful numerical technique for solving equations over a discrete domain. 
+The simulated system is split into small regions called *elements*, connected by *nodes* which represent discrete points in the domain, together making up a *mesh*.
+Elements are evaluated using *basis functions* which approximate the solution within each element based on node values @finite-element-method.
+This approach allows for practical solutions to problems that may be difficult or impossible to solve analytically. 
+In addition to this, the size and shape of elements can be adjusted to improve accuracy or reduce computational cost, making FEM a powerful and flexible tool for modelling (@fem-example).
 
-$ (delta c) / (delta t) = D (delta ^2 c)/(delta x^2) + lambda c + f $
+#figure(
+    image("resources/fem-example.jpg", width: 90%),
+    caption: [Finite Element Modelling of a Wrench under a Test Load Scenario @comsol], 
+)  <fem-example>
+
+This coursework focuses on the implementation and verification of a FEM solver for the transient diffusion-reaction equation, given by @numerical-advection-diffusion-reaction:
+
+$ (delta c) / (delta t) = D (delta ^2 c)/(delta x^2) + lambda c + f $ 
+
+Where:
+- $c$ is the concentration level
+- $D$ is the diffusion coefficient
+- $lambda$ is the reaction rate
+- $f$ is a source term
+
+The transient diffusion-reaction equation models processes where substances diffuse through a medium while undergoing reactions or being influenced by boundary interactions. 
+Examples of situations modelled by this equation include the transfer of heat through a material or (as explored in Part 3 of this report) the diffusion of a drug through biological tissue.
+
+This coursework describes the development and validation of a FEM solver for the transient diffusion-reaction equation. 
+To keep the scope manageable, the solver was implemented in 1D, using MATLAB as the scripting language @matlab
 
 = Part 1: Software Verification
 
@@ -147,6 +170,16 @@ NEED TO REFINE MESH!
 = Part 3: Modelling & Simulation Results
 
 = Conclusion
+
+// MARK: REFERENCES
+= References
+
+#bibliography(
+    "resources/ME40064-References.yml",
+    title: none,
+    style: "ieee"
+)
+
 
 = Use of Generative AI
 

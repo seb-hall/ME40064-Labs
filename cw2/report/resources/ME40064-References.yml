@@ -1,0 +1,23 @@
+numerical-advection-diffusion-reaction:
+    type: Article
+    title: Numerical Solution of Advection-Diffusion-Reaction Equations
+    date: 2000
+    author: W. Hundsdorfer
+    url: https://bpb-us-e1.wpmucdn.com/blogs.gwu.edu/dist/9/297/files/2018/01/66bdd115ac105ea17af303e73d4fec449754-v448bk.pdf
+
+finite-element-method:
+    type: Book
+    title: Finite Element Method
+    author: G. Dhatt, G. Touzot, J. Lefrançois
+    publisher: Wiley
+    year: 2012
+
+comsol:
+    type: Web
+    title: Finite Element Mesh Refinement
+    url: https://www.comsol.com/multiphysics/mesh-refinement
+
+matlab:
+    type: Web
+    title: MATLAB
+    url: https://mathworks.com/products/matlab.html

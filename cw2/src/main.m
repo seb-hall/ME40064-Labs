@@ -33,18 +33,18 @@ function main()
     mesh = MultilayerMesh(xmin, xmax, element_count, order, D, lambda, layer_properties);
     mesh.Generate();
 
-    tmax = 1.0;
+    tmax = 30.0;
     dt = 0.01; % works well with element_count = 50
 
     analytical_solution = AnalyticalSolver.SolveAnalytical(mesh, tmax, dt);
 
     lhs_boundary = BoundaryCondition();
     lhs_boundary.Type = BoundaryType.Dirichlet;
-    lhs_boundary.Value = 0;
+    lhs_boundary.Value = 30;
 
     rhs_boundary = BoundaryCondition();
     rhs_boundary.Type = BoundaryType.Dirichlet;
-    rhs_boundary.Value = 1;
+    rhs_boundary.Value = 0;
 
     integration_method = IntegrationMethod();
     integration_method.type = IntegrationType.Gaussian;
@@ -56,14 +56,18 @@ function main()
 
     l2_error = L2Error(analytical_solution, numeric_solution);
 
+    kappa = DoseEvaluator.EvaluateSolution(numeric_solution, 0.005, 4.0, dt);
+        
+    fprintf('Kappa: %.2f\n', kappa);
 
-    Plotter.PlotL2Error(l2_error, "L2 Error over Time", 'cw2/report/resources/L2Error');
+
+    %Plotter.PlotL2Error(l2_error, "L2 Error over Time", 'cw2/report/resources/L2Error');
 
     if true
 
-        Plotter.PlotHeatMap(analytical_solution, "Analytical Solution Heatmap", 'cw2/report/resources/AnalyticalHeatmap');
+        %Plotter.PlotHeatMap(analytical_solution, "Analytical Solution Heatmap", 'cw2/report/resources/AnalyticalHeatmap');
         Plotter.PlotHeatMap(numeric_solution, "Numeric Solution Heatmap", 'cw2/report/resources/NumericHeatmap');
-    
+
     end
 
     if false

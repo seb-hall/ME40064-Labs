@@ -25,7 +25,7 @@ classdef Mesh < handle
 
         D double % diffusion coefficient
         lambda double % reaction coefficient
-    
+
         node_count uint64
         node_coords double % coordinates of global nodes
 
@@ -44,16 +44,16 @@ classdef Mesh < handle
             obj.dx = (xmax - xmin) / element_count;
             obj.D = D;
             obj.lambda = lambda;
-            
+
             obj.order = order;
 
             % total number of nodes
             obj.node_count = (element_count * order) + 1;
             obj.node_coords = zeros(1, obj.node_count);
-            
+
             obj.element_count = element_count;
             obj.elements = MeshElement.empty(element_count, 0);
-            
+
         end
 
         function obj = Generate(obj)
@@ -80,4 +80,3 @@ classdef Mesh < handle
 
     end
 end
-

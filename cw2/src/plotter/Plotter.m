@@ -27,7 +27,7 @@ classdef Plotter
             colorbar;
             xlabel("Time");
             ylabel("Position");
-            caxis([0 1]) % lock color axis for consistency
+            %caxis([0 1]) % lock color axis for consistency
             axis xy; % ensure y-axis is oriented correctly
             title(title_str);
 
