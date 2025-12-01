@@ -357,7 +357,24 @@ classdef Coursework
 
                     try
                         numeric_solution = NumericSolver.SolveNumeric(...
-                            mesh, tmax, dt_list(j), theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
+                            mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
+
+                            % CHECK FOR NaN/Inf at each timestep
+                        for t_idx = 1:length(numeric_solution.time)
+                            vals = numeric_solution.values(:, t_idx);
+                            if any(isnan(vals))
+                                fprintf('%s: NaN at step %d (t=%.4f)\n', method_names{i}, t_idx, numeric_solution.time(t_idx));
+                                break;
+                            end
+                            if any(isinf(vals))
+                                fprintf('%s: Inf at step %d (t=%.4f)\n', method_names{i}, t_idx, numeric_solution.time(t_idx));
+                                break;
+                            end
+                            if max(abs(vals)) > 1e10
+                                fprintf('%s: Explosion at step %d (t=%.4f), max=%.2e\n', method_names{i}, t_idx, numeric_solution.time(t_idx), max(abs(vals)));
+                                break;
+                            end
+                        end
 
                         analytical_solution = AnalyticalSolver.SolveAnalytical(mesh, tmax, dt);
 

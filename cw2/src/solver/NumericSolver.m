@@ -96,6 +96,11 @@ classdef NumericSolver
 
             end
 
+            fprintf('Condition number of M: %.2e\n', condest(M));
+            fprintf('Condition number of K: %.2e\n', condest(K));
+            fprintf('Max eigenvalue of M\\K: %.2e\n', max(eigs(M\K, 1)));
+            fprintf('Stability limit (theory): dt < %.6f\n', 0.02^2/(2*1.0));
+
         end
 
         %% Create source vector for given time
