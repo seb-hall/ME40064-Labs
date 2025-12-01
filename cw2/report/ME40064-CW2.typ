@@ -23,6 +23,18 @@
     }
 )
 
+#let style-number(number) = text(gray)[#number]
+
+#show raw.where(block: true): it => grid(
+  columns: 2,
+  align: (right, left),
+  gutter: 0.5em,
+  ..it.lines
+    .enumerate()
+    .map(((i, line)) => (style-number(i + 1), line))
+    .flatten()
+)
+
 #set text(
     size: 11pt
 )
@@ -285,3 +297,91 @@ NEED TO REFINE MESH!
 = Use of Generative AI
 
 This coursework was completed in Visual Studio Code (with the #link("https://marketplace.visualstudio.com/items?itemName=MathWorks.language-matlab", "MATLAB Extension")), using Typst for report writing. The #link("https://github.com/features/copilot", "GitHub Copilot") AI tool was enabled, providing generative suggestions for report phrasing and code snippets.
+
+#pagebreak()
+
+#set page(columns: 1)
+
+= Appendix
+
+#let sections = (
+  ("Main", (
+    "../src/main.m", 
+    ""
+  )),
+
+  ("Coursework", (
+    "../src/coursework/Coursework.m", 
+    ""
+  )),
+
+  ("Mesh", (
+    "../src/mesh/Mesh.m",
+    "../src/mesh/MeshElement.m",
+    "../src/mesh/MultilayerMesh.m",
+    "../src/mesh/LayerProperties.m",
+  )),
+
+  ("Analytical", (
+    "../src/analytical/AnalyticalSolver.m",
+    "../src/analytical/TransientAnalyticSoln.m",
+  )),
+
+  ("Plotter", (
+    "../src/plotter/Plotter.m", 
+    ""
+  )),
+
+  ("Solution", (
+    "../src/solution/Solution.m", 
+    "../src/solution/L2Error.m", 
+    "../src/solution/DoseEvaluator.m", 
+    ""
+  )),
+
+  ("Solver", (
+    "../src/solver/NumericSolver.m", 
+    "../src/solver/BoundaryCondition.m", 
+    "../src/solver/BoundaryType.m", 
+    "../src/solver/ElementMatrices.m", 
+    "../src/solver/IntegrationMethod.m", 
+    "../src/solver/IntegrationType.m", 
+    ""
+  )),
+
+
+  ("Tests", (
+    "../src/tests/NumericSolverTest.m", 
+    ""
+  )),
+
+)
+
+#context [
+    #let n = counter("code-count")
+
+    #for (section, files) in sections {
+
+        n.step()
+
+        context [
+            
+            = #section
+
+            #for file in files {
+                if file != "" {
+                    [
+                        == #file.split("/").last()
+                        #let text = read(file)
+                        #raw(text, lang: "matlab", block: true)
+                    ]
+                }
+            }
+
+            #if n.get().at(0) < sections.len() [
+                #pagebreak()
+            ]
+        ]
+    }
+
+]

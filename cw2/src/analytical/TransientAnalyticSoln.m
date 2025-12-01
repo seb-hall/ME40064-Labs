@@ -1,3 +1,15 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% ME40064 Coursework 2
+%
+% File         :  TransientAnalyticSoln.m
+% Author       :  A. N. Cookson
+% Created      :  2025-11-11 (YYYY-MM-DD)
+% License      :  -
+% Description  :  Analytical solution to transient diffusion equation
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 function [ c ] = TransientAnalyticSoln(x,t)
 %TransientAnalyticSonl Analytical solution to transient diffusion equation
 %   Computes the analytical solution to the transient diffusion equation for
