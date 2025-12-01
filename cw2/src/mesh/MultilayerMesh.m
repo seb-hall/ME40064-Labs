@@ -40,13 +40,16 @@ classdef MultilayerMesh < Mesh
 
             for l = 1:length(layers)
 
-                layer_density = layers(l).density_ratio;
+                layer_density = obj.layers(l).density_ratio;
                 layer_element_count = round((layer_density / obj.total_density) * element_count);
 
-                layers(l).element_count = layer_element_count;
-                layers(l).layer_offset = obj.element_count + 1; % starting index for this layer
+                obj.layers(l).element_count = layer_element_count;
+                obj.layers(l).layer_offset = obj.element_count + 1; % starting index for this layer
 
                 obj.element_count = obj.element_count + layer_element_count;
+
+                disp(['Layer ' num2str(l) ' Element Count: ' num2str(layer_element_count)]);
+                disp(obj.layers(l));
             end
 
             obj.node_count = (obj.element_count * order) + 1;
@@ -61,6 +64,8 @@ classdef MultilayerMesh < Mesh
             disp('Generating multilayer mesh...');
 
             % generate per-layer uniform node coordinates
+
+            current_node = 1;
 
             for l = 1:length(obj.layers)
                 
@@ -80,38 +85,33 @@ classdef MultilayerMesh < Mesh
 
 
                 if l == 1
-                    node_range = 1:layer_nodes;
+                    nodes_to_add = layer_coords;
                 else
-                    node_range = 2:layer_nodes;
+                    nodes_to_add = layer_coords(2:end);  % Skip duplicate boundary node
                 end
 
-                num_nodes = length(node_range);
-                
-                if l == 1
-                    start_index = (obj.layers(l).layer_offset-1)*obj.order + 1;
-                else
-                    start_index = (obj.layers(l).layer_offset-1)*obj.order;
-                end
+                % Add nodes to global coordinate array
+                num_new_nodes = length(nodes_to_add);
+                obj.node_coords(current_node : current_node + num_new_nodes - 1) = nodes_to_add;
+                current_node = current_node + num_new_nodes;
 
-                obj.node_coords(start_index : start_index + num_nodes - 1) = layer_coords(node_range);
                 
             end
 
-            % generate elements
+            % Generate elements
             for e = 1:obj.element_count
 
-                % determine global node IDs for this element
+                % Determine global node IDs for this element
                 node_start = (e - 1) * obj.order + 1;
                 node_ids = node_start:(node_start + obj.order);
 
-                %  coordinates for this element
+                % Coordinates for this element
                 coords = obj.node_coords(node_ids);
 
                 midpoint = (coords(1) + coords(end)) / 2;
 
-                % determine which layer this element is in
+                % Determine which layer this element is in
                 layer_index = 1;
-
                 for l = 1:length(obj.layers)
                     if midpoint >= obj.layers(l).x
                         layer_index = l;
@@ -121,7 +121,7 @@ classdef MultilayerMesh < Mesh
                 D = obj.layers(layer_index).D;
                 lambda = -(obj.layers(layer_index).beta + obj.layers(layer_index).gamma);
 
-                % create MeshElement object
+                % Create MeshElement object
                 obj.elements(e) = MeshElement(node_ids, coords, obj.order, D, lambda);
             end
         end
