@@ -45,7 +45,10 @@ classdef NumericSolver
             % loop over time steps
             for step = 1:length(time_vector) - 1
 
-                c_next = NumericSolver.SolveStep(mesh, solution, step, dt, theta, K, M, left_boundary, right_boundary, source_fn, integration_method);
+                % solve for next time step
+                c_next = NumericSolver.SolveStep(mesh, solution, step, dt, theta, ...
+                K, M, left_boundary, right_boundary, source_fn, integration_method);
+
                 solution.SetValues(c_next, step + 1);
 
             end
@@ -73,12 +76,17 @@ classdef NumericSolver
             rhs_vector = (M - (1 - theta) * dt * K) * c_current;
 
             % add source term
-            f_current = NumericSolver.CreateSourceVector(mesh, t, source_fn, integration_method);
-            f_next = NumericSolver.CreateSourceVector(mesh, t + dt, source_fn, integration_method);
+            f_current = NumericSolver.CreateSourceVector(mesh, t, ...
+                source_fn, integration_method);
+
+            f_next = NumericSolver.CreateSourceVector(mesh, t + dt, ...
+                source_fn, integration_method);
+
             rhs_vector = rhs_vector + dt * (theta * f_next + (1 - theta) * f_current);
 
             % apply boundary conditions
-            [system_matrix, rhs_vector] = NumericSolver.ApplyBoundaryConditions(system_matrix, rhs_vector, t + dt, left_boundary, right_boundary);
+            [system_matrix, rhs_vector] = NumericSolver.ApplyBoundaryConditions(...
+                system_matrix, rhs_vector, t + dt, left_boundary, right_boundary);
 
             % solve system
             c = system_matrix \ rhs_vector;
@@ -110,8 +118,10 @@ classdef NumericSolver
                 nodes = element.node_ids;
                 local_size = length(nodes);
 
-                diff_matrix = ElementMatrices.DiffusionElemMatrix(element, integration_method);
-                react_matrix = ElementMatrices.ReactionElemMatrix(element, integration_method);
+                diff_matrix = ElementMatrices.DiffusionElemMatrix(element, ...
+                    integration_method);
+                react_matrix = ElementMatrices.ReactionElemMatrix(element, ...
+                    integration_method);
 
                 k_matrix = diff_matrix - react_matrix;
 

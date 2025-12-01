@@ -29,6 +29,7 @@ classdef ElementMatrices
             
             elem_size = element.node_coords(end) - element.node_coords(1); 
 
+            % check integration method
             if method.type == IntegrationType.Trapezoidal
                 
                 % create base matrix
@@ -46,7 +47,8 @@ classdef ElementMatrices
                 matrix = matrix * (element.D / elem_size);
             
             else
-
+                % handle Gaussian quadrature
+                
                 matrix = zeros(element.order + 1);
                 [xi, wi] = ElementMatrices.GaussQuadraturePoints(method.gauss_points);
 
@@ -78,8 +80,9 @@ classdef ElementMatrices
 
             elem_size = element.node_coords(end) - element.node_coords(1); 
 
+            % check integration method
             if method.type == IntegrationType.Trapezoidal
-
+                
                 % create base matrix
                 matrix = eye(element.order + 1) * 2;
 
@@ -95,6 +98,7 @@ classdef ElementMatrices
                 matrix = matrix * (element.lambda * elem_size / 6);
 
             else
+                % handle Gaussian quadrature
 
                 matrix = zeros(element.order + 1);
                 [xi, wi] = ElementMatrices.GaussQuadraturePoints(method.gauss_points);
@@ -124,6 +128,7 @@ classdef ElementMatrices
 
             elem_size = element.node_coords(end) - element.node_coords(1); 
 
+            % check integration method
             if method.type == IntegrationType.Trapezoidal
 
                 % create base matrix
@@ -141,6 +146,7 @@ classdef ElementMatrices
                 matrix = matrix * (elem_size / 6);
                 
             else
+                % handle Gaussian quadrature
 
                 matrix = zeros(element.order + 1);
                 [xi, wi] = ElementMatrices.GaussQuadraturePoints(method.gauss_points);
@@ -173,6 +179,7 @@ classdef ElementMatrices
 
             elem_size = element.node_coords(end) - element.node_coords(1); 
 
+            % check integration method
             if method.type == IntegrationType.Trapezoidal
 
                 % create base matrix
@@ -182,6 +189,7 @@ classdef ElementMatrices
                 matrix = matrix * (elem_size / 2);
                 
             else
+                % handle Gaussian quadrature
 
                 matrix = zeros(element.order + 1, 1);
                 [xi, wi] = ElementMatrices.GaussQuadraturePoints(method.gauss_points);
@@ -213,7 +221,8 @@ classdef ElementMatrices
         % Description:  Looks up Gauss quadrature points and weights
         % 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            
+
+            % look up points and weights, limited to n = 1, 2, 3
             switch n
                 case 1
                     xi = 0;
@@ -243,6 +252,7 @@ classdef ElementMatrices
         % 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+            % switch based on element order, limited to linear and quadratic
             switch order
                 case 1 % linear
                     N = [(1 - xi) / 2, (1 + xi) / 2];
@@ -267,6 +277,7 @@ classdef ElementMatrices
         % 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+            % switch based on element order, limited to linear and quadratic
             switch order
                 case 1 % linear
                     dN_dxi = [-0.5, 0.5];

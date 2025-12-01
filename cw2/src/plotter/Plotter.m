@@ -73,7 +73,8 @@ classdef Plotter
 
                 step_index = round(t_sample / dt) + 1; % +1 for MATLAB indexing
 
-                plot_handle = plot(solution.mesh.node_coords, solution.values(:, step_index));
+                plot_handle = plot(solution.mesh.node_coords, ... 
+                    solution.values(:, step_index));
                 set(plot_handle, "LineWidth", 1.5);
 
                 hold on;
@@ -116,8 +117,9 @@ classdef Plotter
             set(0, "DefaultAxesFontSize", 12);
             set(0, "DefaultTextFontSize", 12);
 
-            % find x index
-            x_index = round((x_sample - solution_1.mesh.xmin) / (solution_1.mesh.xmax - solution_1.mesh.xmin) * solution_1.mesh.element_count) + 1; % +1 for MATLAB indexing
+            % find x index, +1 for MATLAB indexing
+            x_index = round((x_sample - solution_1.mesh.xmin) / (solution_1.mesh.xmax ...
+                - solution_1.mesh.xmin) * solution_1.mesh.element_count) + 1; 
 
             figure;
             plot_handle = plot(solution_1.time, solution_1.values(x_index, :));

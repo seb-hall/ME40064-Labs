@@ -16,20 +16,20 @@ classdef Mesh < handle
 
     properties
 
-        xmin double
-        xmax double
-        dx double
+        xmin            double % min x coordinate
+        xmax            double % max x coordinate
+        dx              double % element size
 
-        order double
+        order           double % element order (1=linear, 2=quadratic etc)
 
-        D double % diffusion coefficient
-        lambda double % reaction coefficient
+        D               double % diffusion coefficient
+        lambda          double % reaction coefficient
 
-        node_count uint64
-        node_coords double % coordinates of global nodes
+        node_count      uint64 % total number of global nodes
+        node_coords     double % coordinates of global nodes
 
-        element_count uint64
-        elements MeshElement % array of mesh elements
+        element_count   uint64
+        elements        MeshElement % array of mesh elements
 
     end
 
@@ -47,7 +47,7 @@ classdef Mesh < handle
         % 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
+            % assign properties
             obj.xmin = xmin;
             obj.xmax = xmax;
             obj.dx = (xmax - xmin) / element_count;
@@ -93,7 +93,8 @@ classdef Mesh < handle
                 coords = obj.node_coords(node_ids);
 
                 % create MeshElement object
-                obj.elements(e) = MeshElement(node_ids, coords, obj.order, obj.D, obj.lambda);
+                obj.elements(e) = MeshElement(...
+                    node_ids, coords, obj.order, obj.D, obj.lambda);
             end
         end
 

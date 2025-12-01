@@ -17,7 +17,7 @@ classdef MultilayerMesh < Mesh
 
     properties
         layers              MeshLayer % array of layer properties
-        total_density       double
+        total_density       double % total density ratio across all layers
     end
 
     methods
@@ -51,10 +51,13 @@ classdef MultilayerMesh < Mesh
             for l = 1:length(layers)
 
                 layer_density = obj.layers(l).density_ratio;
-                layer_element_count = round((layer_density / obj.total_density) * element_count);
+                layer_element_count = round(...
+                    (layer_density / obj.total_density) * element_count);
 
                 obj.layers(l).element_count = layer_element_count;
-                obj.layers(l).layer_offset = obj.element_count + 1; % starting index for this layer
+
+                % starting index for this layer
+                obj.layers(l).layer_offset = obj.element_count + 1; 
 
                 obj.element_count = obj.element_count + layer_element_count;
             end
@@ -110,7 +113,9 @@ classdef MultilayerMesh < Mesh
 
                 % Add nodes to global coordinate array
                 num_new_nodes = length(nodes_to_add);
-                obj.node_coords(current_node : current_node + num_new_nodes - 1) = nodes_to_add;
+                obj.node_coords(current_node : current_node + num_new_nodes - 1)...
+                    = nodes_to_add;
+                    
                 current_node = current_node + num_new_nodes;
 
                 

@@ -69,7 +69,8 @@ classdef Coursework
 
             % solve numerically
             numeric_solution = NumericSolver.SolveNumeric(...
-                mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
+                mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, ...
+                @(~, ~) 0.0, integration_method);
 
             % solve analytically
             analytical_solution = AnalyticalSolver.SolveAnalytical(mesh, tmax, dt);
@@ -77,21 +78,26 @@ classdef Coursework
             % plot solutions as a heatmaps
             Plotter.PlotHeatMap(numeric_solution, "FEM Solution Heatmap", ...
                 "cw2/report/resources/part1/NumericHeatmap", c_max);
+
             Plotter.PlotHeatMap(analytical_solution, "Analytical Solution Heatmap", ...
                 "cw2/report/resources/part1/AnalyticalHeatmap", c_max);
 
             % plot solution samples at specified times
             sample_times = [0.05, 0.1, 0.3, 1.0];
-            Plotter.PlotTimeSamples(numeric_solution, dt, sample_times, "FEM Solution Samples", ...
-                "cw2/report/resources/part1/NumericSamples");
-            Plotter.PlotTimeSamples(analytical_solution, dt, sample_times, "Analytical Solution Samples", ...
-                "cw2/report/resources/part1/AnalyticalSamples");
+
+            Plotter.PlotTimeSamples(numeric_solution, dt, sample_times, ...
+            "FEM Solution Samples", "cw2/report/resources/part1/NumericSamples");
+
+            Plotter.PlotTimeSamples(analytical_solution, dt, sample_times, ...
+            "Analytical Solution Samples", "cw2/report/resources/part1/AnalyticalSamples");
 
             % plot both solutions at a specific position over time
             sample_x = 0.8;
             legend_strings = {"Numeric Solution", "Analytical Solution"};
+
             Plotter.PlotSampleOverTime(numeric_solution, analytical_solution, ...
-                sample_x, "Both Solutions at x = 0.8", "cw2/report/resources/part1/BothX08", legend_strings);
+                sample_x, "Both Solutions at x = 0.8", ...
+                "cw2/report/resources/part1/BothX08", legend_strings);
 
         end
 
@@ -154,8 +160,12 @@ classdef Coursework
             time_steps = [0.1, 0.05, 0.01, 0.005, 0.001, 0.0005];
 
             num_cases = length(element_counts) * length(time_steps);
-            rms_errr_table_elem_count = zeros(num_cases, 4);   % columns: elem_count, dt, dx, RMS error
-            rms_errr_table_time_step = zeros(num_cases, 4);   % columns: elem_count, dt, dx, RMS error
+             
+            % columns: elem_count, dt, dx, RMS error
+            rms_errr_table_elem_count = zeros(num_cases, 4);  
+        
+            % columns: elem_count, dt, dx, RMS error
+            rms_errr_table_time_step = zeros(num_cases, 4);   
 
             k = 1;
 
@@ -170,7 +180,8 @@ classdef Coursework
 
                 % solve numerically
                 numeric_solution = NumericSolver.SolveNumeric(...
-                    mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
+                    mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, ...
+                    @(~, ~) 0.0, integration_method);
 
                 % solve analytically
                 analytical_solution = AnalyticalSolver.SolveAnalytical(mesh, tmax, dt);
@@ -184,7 +195,9 @@ classdef Coursework
                 error = c_numeric - c_analytical;
                 rms_error = sqrt(mean(error.^2));
 
-                rms_errr_table_elem_count(k,:) = [elem_count, dt, (xmax-xmin)/elem_count, rms_error];
+                rms_errr_table_elem_count(k,:) = [elem_count, dt, ...
+                    (xmax-xmin)/elem_count, rms_error];
+                    
                 k = k + 1;
 
                 fprintf("Elements: %d, dt: %.4f, dx: %.4f, RMS Error: %.6f\n", ...
@@ -205,7 +218,8 @@ classdef Coursework
 
                 % solve numerically
                 numeric_solution = NumericSolver.SolveNumeric(...
-                    mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
+                    mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, ...
+                    @(~, ~) 0.0, integration_method);
 
                 % solve analytically
                 analytical_solution = AnalyticalSolver.SolveAnalytical(mesh, tmax, dt);
@@ -219,7 +233,9 @@ classdef Coursework
                 error = c_numeric - c_analytical;
                 rms_error = sqrt(mean(error.^2));
 
-                rms_errr_table_time_step(k,:) = [elem_count, dt, (xmax-xmin)/elem_count, rms_error];
+                rms_errr_table_time_step(k,:) = [elem_count, dt, ...
+                    (xmax-xmin)/elem_count, rms_error];
+
                 k = k + 1;
 
                 fprintf("Elements: %d, dt: %.4f, dx: %.4f, RMS Error: %.6f\n", ...
@@ -233,7 +249,8 @@ classdef Coursework
 
             Plotter.PlotConvergenceError(dx, err_spatial, ...
                 "RMS Error vs Element Size (dt = 0.0005)", ...
-                "cw2/report/resources/part1/ElementSizeConvergence", "Element Size (x)", "RMS Error at t = 1s");
+                "cw2/report/resources/part1/ElementSizeConvergence", ...
+                "Element Size (x)", "RMS Error at t = 1s");
 
             % plot time steps
             dt_vals = rms_errr_table_time_step(:, 2);  % time steps
@@ -241,7 +258,8 @@ classdef Coursework
 
             Plotter.PlotConvergenceError(dt_vals, err_temporal, ...
                 "RMS Error vs Time Step (dx = 0.01)", ...
-                "cw2/report/resources/part1/TimeStepConvergence", "Time Step (s)", "RMS Error at t = 1s");
+                "cw2/report/resources/part1/TimeStepConvergence", ...
+                "Time Step (s)", "RMS Error at t = 1s");
         end
 
         function Part2TimeIntegrationComparison()
@@ -306,7 +324,8 @@ classdef Coursework
 
                 % solve numerically
                 numeric_solution = NumericSolver.SolveNumeric(...
-                    mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
+                    mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, ...
+                    integration_method);
 
                 % compute L2 error
                 l2_error = L2Error(analytical_solution, numeric_solution);
@@ -342,17 +361,20 @@ classdef Coursework
                         fprintf("Testing %s with dt = %.4f...\n", method_names{i}, dt);
 
                         numeric_solution = NumericSolver.SolveNumeric(...
-                            mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
+                            mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, ...
+                            @(~, ~) 0.0, integration_method);
 
                             % CHECK FOR NaN/Inf at each timestep
                         for t_idx = 1:length(numeric_solution.time)
                             vals = numeric_solution.values(:, t_idx);
                             if any(isnan(vals))
-                                fprintf("%s: NaN at step %d (t=%.4f)\n", method_names{i}, t_idx, numeric_solution.time(t_idx));
+                                fprintf("%s: NaN at step %d (t=%.4f)\n", ...
+                                    method_names{i}, t_idx, numeric_solution.time(t_idx));
                                 break;
                             end
                             if any(isinf(vals))
-                                fprintf("%s: Inf at step %d (t=%.4f)\n", method_names{i}, t_idx, numeric_solution.time(t_idx));
+                                fprintf("%s: Inf at step %d (t=%.4f)\n", ...
+                                    method_names{i}, t_idx, numeric_solution.time(t_idx));
                                 break;
                             end
                             
@@ -362,7 +384,8 @@ classdef Coursework
                             end
                         end
 
-                        analytical_solution = AnalyticalSolver.SolveAnalytical(mesh, tmax, dt);
+                        analytical_solution = AnalyticalSolver.SolveAnalytical(...
+                            mesh, tmax, dt);
 
                         l2_error = L2Error(analytical_solution, numeric_solution);
                         
@@ -435,7 +458,8 @@ classdef Coursework
             trapezoidal_method.gauss_points = 0; % not used for trapezoidal
 
             trapezoidal_solution = NumericSolver.SolveNumeric(...
-                mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, trapezoidal_method);
+                mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, ...
+                trapezoidal_method);
 
             % gaussian quadrature method
             gaussian_method = IntegrationMethod();
@@ -443,14 +467,16 @@ classdef Coursework
             gaussian_method.gauss_points = 3; % 3-point Gaussian quadrature
 
             gaussian_solution = NumericSolver.SolveNumeric(...
-                mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, gaussian_method);
+                mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, ...
+                gaussian_method);
 
             % compute L2 error
             l2_error_trapezoidal = L2Error(analytical_solution, trapezoidal_solution);
             l2_error_gaussian = L2Error(analytical_solution, gaussian_solution);
             l2_errors = [l2_error_trapezoidal, l2_error_gaussian];
 
-            method_names = {"2-point Trapezoidal Integration", "3-point Gaussian Quadrature"};
+            method_names = {"2-point Trapezoidal Integration", ...
+                "3-point Gaussian Quadrature"};
 
             Plotter.PlotL2Errors(l2_errors, "Gaussian vs Trapezoidal Integration", ...
                 "cw2/report/resources/part2/L2ErrorGaussianTrapezoidal", ...
@@ -510,7 +536,8 @@ classdef Coursework
             numeric_solution = NumericSolver.SolveNumeric(...
                 mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
 
-            Plotter.PlotHeatMap(numeric_solution, "Drug Concentration Heatmap", 'cw2/report/resources/part3/InitialNumericHeatmap', c_max);
+            Plotter.PlotHeatMap(numeric_solution, "Drug Concentration Heatmap", ...
+                "cw2/report/resources/part3/InitialNumericHeatmap", c_max);
         end
             
         function Part3MinimumEffectiveDose()
@@ -645,9 +672,11 @@ classdef Coursework
                 mesh.Generate();
 
                 numeric_solution = NumericSolver.SolveNumeric(...
-                    mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
+                    mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, ...
+                    @(~, ~) 0.0, integration_method);
 
-                kappa_values = [kappa_values, DoseEvaluator.EvaluateSolution(numeric_solution, 0.005, 4.0, 0.0)];
+                kappa_values = [kappa_values, DoseEvaluator.EvaluateSolution(...
+                    numeric_solution, 0.005, 4.0, 0.0)];
 
                  % first, find the closest node to the target
                 node_index = 0;
@@ -670,7 +699,8 @@ classdef Coursework
             legend_strings = [];
 
             for d = 1:length(relative_diffusions)
-                legend_strings = [legend_strings, sprintf("D rel = %.2f", relative_diffusions(d))];
+                legend_strings = [legend_strings, ...
+                    sprintf("D rel = %.2f", relative_diffusions(d))];
             end
 
             fprintf("Plotting Dose Sensitivity Analysis...\n");
@@ -710,9 +740,11 @@ classdef Coursework
                 mesh.Generate();
 
                 numeric_solution = NumericSolver.SolveNumeric(...
-                    mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
+                    mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, ...
+                    @(~, ~) 0.0, integration_method);
 
-                kappa_values = [kappa_values, DoseEvaluator.EvaluateSolution(numeric_solution, 0.005, 4.0, 0.0)];
+                kappa_values = [kappa_values, ...
+                    DoseEvaluator.EvaluateSolution(numeric_solution, 0.005, 4.0, 0.0)];
 
                  % first, find the closest node to the target
                 node_index = 0;
@@ -735,7 +767,8 @@ classdef Coursework
             legend_strings = [];
 
             for d = 1:length(relative_betas)
-                legend_strings = [legend_strings, sprintf("Beta rel = %.2f", relative_betas(d))];
+                legend_strings = [legend_strings, ...
+                    sprintf("Beta rel = %.2f", relative_betas(d))];
             end
 
             fprintf("Plotting Dose Sensitivity Analysis...\n");
@@ -774,8 +807,10 @@ classdef Coursework
                 mesh.Generate();
 
                 numeric_solution = NumericSolver.SolveNumeric(...
-                    mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
-                kappa_values = [kappa_values, DoseEvaluator.EvaluateSolution(numeric_solution, 0.005, 4.0, 0.0)];
+                    mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, ...
+                    @(~, ~) 0.0, integration_method);
+                kappa_values = [kappa_values, ...
+                    DoseEvaluator.EvaluateSolution(numeric_solution, 0.005, 4.0, 0.0)];
 
 
                  % first, find the closest node to the target
@@ -799,7 +834,8 @@ classdef Coursework
             legend_strings = [];
 
             for d = 1:length(relative_gammas)
-                legend_strings = [legend_strings, sprintf("Gamma rel = %.2f", relative_betas(d))];
+                legend_strings = [legend_strings, ...
+                sprintf("Gamma rel = %.2f", relative_betas(d))];
             end
 
             fprintf("Plotting Dose Sensitivity Analysis...\n");
@@ -813,8 +849,6 @@ classdef Coursework
                 "Gamma Coefficient vs Kappa", ...
                 "cw2/report/resources/part3/GammaKappa", ...
                 "Relative Gamma Coefficient", "Kappa (K)");
-
-
 
         end
 

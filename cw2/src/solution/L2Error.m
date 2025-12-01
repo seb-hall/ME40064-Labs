@@ -45,6 +45,7 @@ classdef L2Error < handle
             obj.num_solution = num_solution;
             obj.time = ref_solution.time;
 
+            % check compatibility
             if ref_solution.mesh.node_count ~= num_solution.mesh.node_count
                 error('Reference and error solutions must have the same number of nodes');
             end
@@ -56,12 +57,15 @@ classdef L2Error < handle
             step_count = length(ref_solution.time);
             
             obj.l2_error = zeros(1, step_count);
-
+            
+            % compute L2 error at each time step
             for step = 1:step_count
+
                 c_ref = ref_solution.values(:, step);
                 c_num = num_solution.values(:, step);
                 x = ref_solution.mesh.node_coords;
-
+                
+                % compute L2 norm using trapezoidal rule
                 integrand = (c_ref - c_num).^2;
                 obj.l2_error(step) = sqrt(trapz(x, integrand));
             end
