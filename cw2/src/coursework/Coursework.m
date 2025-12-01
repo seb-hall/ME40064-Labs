@@ -393,17 +393,17 @@ classdef Coursework
             
             
             % time parameters
-            tmax = 0.002;
+            tmax = 0.001;
             dt = 0.0001;
 
             % mesh parameters
             xmin = 0.0;
             xmax = 1.0;
-            element_count = 10;
-            order = 1;
+            element_count = 5;
+            order = 2;
 
             % diffusion and reaction coefficients
-            D = 1.0; 
+            D = 0.5; 
             lambda = 0.0;
 
             % concentrations
@@ -442,7 +442,7 @@ classdef Coursework
             % gaussian quadrature method
             gaussian_method = IntegrationMethod();
             gaussian_method.type = IntegrationType.Gaussian;
-            gaussian_method.gauss_points = 3; % 2-point Gaussian quadrature
+            gaussian_method.gauss_points = 3; % 3-point Gaussian quadrature
 
             gaussian_solution = NumericSolver.SolveNumeric(...
                 mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, gaussian_method);
@@ -452,9 +452,9 @@ classdef Coursework
             l2_error_gaussian = L2Error(analytical_solution, gaussian_solution);
             l2_errors = [l2_error_trapezoidal, l2_error_gaussian];
 
-            method_names = {"Trapezoidal Integration", "Gaussian Quadrature"};
+            method_names = {"2-point Trapezoidal Integration", "3-point Gaussian Quadrature"};
 
-            Plotter.PlotL2Errors(l2_errors, "L2 Error over Time", ...
+            Plotter.PlotL2Errors(l2_errors, "Gaussian vs Trapezoidal Integration", ...
                 "cw2/report/resources/part2/L2ErrorGaussianTrapezoidal", ...
                 method_names);
         end

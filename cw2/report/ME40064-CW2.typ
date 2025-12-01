@@ -281,6 +281,22 @@ While this method is easy to implement, it treats all elements as linear, requir
 
 == Quadratic Basis Functions
 
+For 2-point basis functions like those used in the coursework so far, Gaussian Quadrature with 2 points will produce an identical result to trapezoidal integration. 
+The mesh was therefore updated to support higher-order basis functions, such as quadratic (3-point) elements, where each element has a node at each end and one in the middle.
+
+The L2 error of a quadratic mesh with both trapezoidal and Gaussian integration methods is shown below in @part2-gaussian-trapezoidal-comparison:
+
+#figure(
+    image("resources/part2/L2ErrorGaussianTrapezoidal.png", width: 110%),
+    caption: [Comparison of L2 Errors for Gaussian Quadrature and Trapezoidal Integration],  
+)  <part2-gaussian-trapezoidal-comparison>
+
+This shows a clear improvement in accuracy when using Gaussian Quadrature over trapezoidal integration with quadratic basis functions, approaching the analytical solution in a shorter time.
+
+== Summary of Features
+
+The addition of L2 error evaluation was an effective way to quantitatively assess the accuracy of the FEM solver, with varying configurations. It was found that the Crank-Nicolson method remained a suitable choice for time integration, balancing accuracy and stability, while the addition of Gaussian Quadrature and higher-order basis functions showed a significant improvement to solution accuracy.
+
 
 = Part 3: Modelling & Simulation Results
 
