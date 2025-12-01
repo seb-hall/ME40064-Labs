@@ -293,8 +293,8 @@ This shows a clear improvement in accuracy when using Gaussian Quadrature over t
 The reason for this improved performance is that Gaussian Quadrature evaluates the integrand at optimally chosen points, capturing a more accurate representation of the function being integrated (@part2-gaussian-trapezoidal-diagram).
 
 #figure(
-    image("resources/part2/Comparison_Gaussquad_trapezoidal.svg.png", width: 100%),
-    caption: [Visualisation of Gaussian Quadrature vs Trapezoidal Integration],  
+    image("resources/part2/Comparison_Gaussquad_trapezoidal.svg.png", width: 90%),
+    caption: [Visualisation of Gaussian Quadrature vs Trapezoidal Integration @gaussian-diagram],  
 )  <part2-gaussian-trapezoidal-diagram>
 
 
@@ -419,7 +419,62 @@ The minimum effective dose, $c_op("DOSE")$, was defined as the value at which th
 
 This shows that the relationship between dose and kappa is linear, and that the minimum effective dose was found to be approximately *59.18*.
 
+\
+
 == Dose Sensitivity Analysis
+
+A sensitivity analysis was then performed on the model, investigating the impact of varying the diffusion coefficient $D$, extra-vascular diffusivity $beta$, and drug degradation rate $gamma$ on the concentration at $x = 0.005$ over time, and the resulting dose effectiveness K (Kappa).
+
+=== Diffusion Coefficient
+
+The diffusion coefficient $D$ was investigated by scaling the original values for each layer by factors of 0.5, 0.75, 1.0, 1.5 and 2.0. The results of this analysis are shown below in @part3-diffusion-sensitivity and @part3-diffusion-kappa, illustrating the effect of varying $D$ on concentration over time, and of the resultant dose effectiveness.
+
+#figure(
+    image("resources/part3/DiffusionSensitivityAnalysis.png", width: 110%), 
+    caption: [Concentration at $x=D$ for Varying Values of $D$],  
+)  <part3-diffusion-sensitivity>
+
+#figure(
+    image("resources/part3/DiffusionKappa.png", width: 110%), 
+    caption: [Dose Effectiveness for Varying Values of $D$],  
+)  <part3-diffusion-kappa>
+
+These plots show a clear trend of increasing diffusion coefficient leading to higher concentrations at the target point, and therefore higher dose effectiveness K. This is expected, as a higher diffusion coefficient allows the drug to spread more rapidly through the tissue layers, reaching the target point in a shorter time, with less degradation.
+
+\
+
+=== Extra-Vascular Diffusivity
+
+The next parameter to be investigated was extra-vascular diffusivity ($beta$), varied in the same way as the diffusion coefficient. The results of this analysis are shown below in @part3-beta-sensitivity and @part3-beta-kappa.
+
+#figure(
+    image("resources/part3/BetaSensitivityAnalysis.png", width: 110%), 
+    caption: [Concentration at $x=D$ for Varying Values of $beta$],  
+)  <part3-beta-sensitivity>
+
+#figure(
+    image("resources/part3/BetaKappa.png", width: 110%), 
+    caption: [Dose Effectiveness for Varying Values of $beta$],  
+)  <part3-beta-kappa>
+
+These plots show an inverse, linear relationship between $beta$ and dose effectiveness. As $beta$ increases, the faster the drug diffuses out of the vascular system into surrounding tissue, reducing the concentration at the target point and therefore lowering K.
+
+=== Drug Degradation Rate
+
+Finally, the drug degredation rate ($gamma$) was investigated, again varied in the same way as previous parameters. The results of this analysis are shown below @part3-gamma-sensitivity and @part3-gamma-kappa.
+
+#figure(
+    image("resources/part3/GammaSensitivityAnalysis.png", width: 110%), 
+    caption: [Concentration at $x=D$ for Varying Values of $gamma$],  
+)  <part3-gamma-sensitivity>
+
+#figure(
+    image("resources/part3/GammaKappa.png", width: 110%), 
+    caption: [Dose Effectiveness for Varying Values of $gamma$],  
+)  <part3-gamma-kappa>
+
+As with $beta$, these plots show an inverse, linear relationship between $gamma$ and dose effectiveness. A higher degradation rate results in the drug breaking down more quickly, reducing the concentration at the target point and lowering K. From a mathematical perspective, this is also expected as both $beta$ and $gamma$ act as sink terms in the diffusion-reaction equation, reducing the overall concentration. However, as the original values of $gamma$ were larger than those of $beta$, the impact of varying $gamma$ was more pronounced.
+
 
 == Further Work
 
@@ -433,11 +488,6 @@ This shows that the relationship between dose and kappa is linear, and that the 
     title: none,
     style: "ieee"
 )
-
-
-= Use of Generative AI
-
-This coursework was completed in Visual Studio Code (with the #link("https://marketplace.visualstudio.com/items?itemName=MathWorks.language-matlab", "MATLAB Extension")), using Typst for report writing. The #link("https://github.com/features/copilot", "GitHub Copilot") AI tool was enabled, providing generative suggestions for report phrasing and code snippets.
 
 #pagebreak()
 

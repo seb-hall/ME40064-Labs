@@ -221,8 +221,9 @@ classdef Plotter
 
             figure;
 
-            for i = 1:length(y_values)
-                plot_handle = plot(x_values, y_values(i));
+            % y_values is a matrix where each row is a different series
+            for i = 1:size(y_values, 1)
+                plot_handle = plot(x_values, y_values(i, :));
                 set(plot_handle, "LineWidth", 1.5);
                 hold on;
             end
@@ -235,6 +236,30 @@ classdef Plotter
 
             set(gcf, 'Position', [0, 0, 500, 350]);
 
+            % Save figure
+            saveas(gcf, name, "png");
+            saveas(gcf, name, "fig");
+            openfig(name + ".fig");
+        end
+
+        function PlotKappaValues(x_values, y_values, title_str, name, x_label, y_label)
+            set(0, "DefaultAxesFontSize", 12);
+            set(0, "DefaultTextFontSize", 12);
+
+            figure;
+            
+            plot_handle = plot(x_values, y_values, "-o");
+            set(plot_handle, "LineWidth", 1.5);
+            hold on;
+    
+            xlabel(x_label);
+            ylabel(y_label);
+            title(title_str);
+            grid on;
+
+            set(gcf, 'Position', [0, 0, 500, 350]);
+
+            % Save figure
             saveas(gcf, name, "png");
             saveas(gcf, name, "fig");
             openfig(name + ".fig");

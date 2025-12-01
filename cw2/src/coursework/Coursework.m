@@ -612,12 +612,14 @@ classdef Coursework
             integration_method.gauss_points = order + 1;
 
             % diffusion coefficients analysis
-            relative_diffusions = [1.0];
+            relative_diffusions = [0.5, 0.75, 1.0, 1.5, 2.0];
 
             target_x = 0.005; % use x = D as an example
 
             x_values = [];
             y_values = zeros(length(relative_diffusions), tmax/dt + 1);
+
+            kappa_values = [];
 
             for d = 1:length(relative_diffusions)
 
@@ -634,6 +636,8 @@ classdef Coursework
 
                 numeric_solution = NumericSolver.SolveNumeric(...
                     mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
+
+                kappa_values = [kappa_values, DoseEvaluator.EvaluateSolution(numeric_solution, 0.005, 4.0, 0.0)];
 
                  % first, find the closest node to the target
                 node_index = 0;
@@ -662,9 +666,144 @@ classdef Coursework
             fprintf("Plotting Dose Sensitivity Analysis...\n");
 
             Plotter.PlotSensitivityAnalysis(x_values, y_values, ...
-                "Dose Sensitivity Analysis", ...
-                "cw2/report/resources/part3/DoseSensitivityAnalysis", ...
+                "Diffusion Sensitivity Analysis", ...
+                "cw2/report/resources/part3/DiffusionSensitivityAnalysis", ...
                 "Time (s)", "Concentration at x = 0.005", legend_strings);
+
+            Plotter.PlotKappaValues(relative_diffusions, kappa_values, ...
+                "Diffusion Coefficient vs Kappa", ...
+                "cw2/report/resources/part3/DiffusionKappa", ...
+                "Relative Diffusion Coefficient", "Kappa (K)");
+
+
+            % beta coefficients analysis
+
+            relative_betas = [0.5, 0.75, 1.0, 1.5, 2.0];
+
+            target_x = 0.005; % use x = D as an example
+
+            x_values = [];
+            y_values = zeros(length(relative_betas), tmax/dt + 1);
+            kappa_values = [];
+
+            for d = 1:length(relative_betas)
+
+                beta_rel = relative_betas(d);
+
+                epidermis_layer = MeshLayer(0.0, 4e-6, 0.0 * beta_rel, 0.02, 2.0);
+                dermis_layer = MeshLayer(0.00166667, 5e-6, 0.01 * beta_rel, 0.02, 1.0);
+                sub_cutaneous_layer = MeshLayer(0.005, 2e-6, 0.01 * beta_rel, 0.02, 1.0);
+
+                layers = [epidermis_layer, dermis_layer, sub_cutaneous_layer];
+
+                mesh = MultilayerMesh(xmin, xmax, element_count, order, D, lambda, layers);
+                mesh.Generate();
+
+                numeric_solution = NumericSolver.SolveNumeric(...
+                    mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
+
+                kappa_values = [kappa_values, DoseEvaluator.EvaluateSolution(numeric_solution, 0.005, 4.0, 0.0)];
+
+                 % first, find the closest node to the target
+                node_index = 0;
+
+                for i = 1:numeric_solution.mesh.node_count
+                    x = numeric_solution.mesh.node_coords(i);
+                    if x >= target_x
+                        node_index = i;
+                        break;
+                    end
+                end
+
+                if d == 1
+                    x_values = numeric_solution.time;
+                end
+
+                y_values(d, :) = numeric_solution.values(node_index, :);
+            end
+
+            legend_strings = [];
+
+            for d = 1:length(relative_betas)
+                legend_strings = [legend_strings, sprintf("Beta rel = %.2f", relative_betas(d))];
+            end
+
+            fprintf("Plotting Dose Sensitivity Analysis...\n");
+
+            Plotter.PlotSensitivityAnalysis(x_values, y_values, ...
+                "Beta Sensitivity Analysis", ...
+                "cw2/report/resources/part3/BetaSensitivityAnalysis", ...
+                "Time (s)", "Concentration at x = 0.005", legend_strings);
+
+            Plotter.PlotKappaValues(relative_betas, kappa_values, ...
+                "Beta Coefficient vs Kappa", ...
+                "cw2/report/resources/part3/BetaKappa", ...
+                "Relative Beta Coefficient", "Kappa (K)");
+
+            % gamma coefficients analysis
+            relative_gammas = [0.5, 0.75, 1.0, 1.5, 2.0];
+
+            target_x = 0.005; % use x = D as an example
+
+            x_values = [];
+            y_values = zeros(length(relative_gammas), tmax/dt + 1);
+            kappa_values = [];
+
+
+            for d = 1:length(relative_gammas)
+
+                gamma_rel = relative_gammas(d);
+
+                epidermis_layer = MeshLayer(0.0, 4e-6, 0.0, 0.02 * gamma_rel, 2.0);
+                dermis_layer = MeshLayer(0.00166667, 5e-6, 0.01, 0.02 * gamma_rel, 1.0);
+                sub_cutaneous_layer = MeshLayer(0.005, 2e-6, 0.01, 0.02 * gamma_rel, 1.0);
+
+                layers = [epidermis_layer, dermis_layer, sub_cutaneous_layer];
+
+                mesh = MultilayerMesh(xmin, xmax, element_count, order, D, lambda, layers);
+                mesh.Generate();
+
+                numeric_solution = NumericSolver.SolveNumeric(...
+                    mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
+                kappa_values = [kappa_values, DoseEvaluator.EvaluateSolution(numeric_solution, 0.005, 4.0, 0.0)];
+
+
+                 % first, find the closest node to the target
+                node_index = 0;
+
+                for i = 1:numeric_solution.mesh.node_count
+                    x = numeric_solution.mesh.node_coords(i);
+                    if x >= target_x
+                        node_index = i;
+                        break;
+                    end
+                end
+
+                if d == 1
+                    x_values = numeric_solution.time;
+                end
+
+                y_values(d, :) = numeric_solution.values(node_index, :);
+            end
+
+            legend_strings = [];
+
+            for d = 1:length(relative_gammas)
+                legend_strings = [legend_strings, sprintf("Gamma rel = %.2f", relative_betas(d))];
+            end
+
+            fprintf("Plotting Dose Sensitivity Analysis...\n");
+
+            Plotter.PlotSensitivityAnalysis(x_values, y_values, ...
+                "Gamma Sensitivity Analysis", ...
+                "cw2/report/resources/part3/GammaSensitivityAnalysis", ...
+                "Time (s)", "Concentration at x = 0.005", legend_strings);
+
+            Plotter.PlotKappaValues(relative_gammas, kappa_values, ...
+                "Gamma Coefficient vs Kappa", ...
+                "cw2/report/resources/part3/GammaKappa", ...
+                "Relative Gamma Coefficient", "Kappa (K)");
+
 
 
         end

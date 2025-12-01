@@ -49,3 +49,9 @@ part3-description:
     title: Assignment Transient MATLAB-Based FEM Modelling
     date: 2025
     author: A. Cookson
+
+gaussian-diagram:
+    type: Artwork
+    title: Comparison between 2-point Gaussian and trapezoidal quadrature
+    author: Paolostar
+    url: https://en.wikipedia.org/wiki/Gaussian_quadrature#/media/File:Comparison_Gaussquad_trapezoidal.svg
