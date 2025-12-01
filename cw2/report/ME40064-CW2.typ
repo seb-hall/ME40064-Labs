@@ -406,7 +406,7 @@ After establishing a baseline simulation profile, the next step was to calculate
   $ K = integral^(t = 30)_(t_op("eff")) c space d t $
 ) <part3-kappa-equation>
 
-where $t_op("eff")$ is the time at which the concentration first exceeds the threshold level, $t=30$ is the end of the simulation period, and $c$ is the drug concentration at a target point in the mesh.
+where $t_op("eff")$ is the time at which the concentration first exceeds the threshold level (here 4.0), $t=30$ is the end of the simulation period, and $c$ is the drug concentration at a target point in the mesh.
 
 A new class, *DoseEvaluator*, was created to provide this functionality, with a static method *EvaluateSolution* that returns the kappa value for a given solution dataset, target location and threshold concentration. The logic is quite simple; first the node closest to the target location is identified, and then the concentration values for that node are checked against the target threshold. If the concentration exceeds the threshold, the solution is integrated between the time this occurs and the end of the simulation, using a trapezoidal method.
 
