@@ -567,19 +567,16 @@ classdef Coursework
             integration_method.gauss_points = order + 1;
 
             % Find minimum dose
-            c_dose_min = DoseEvaluator.FindMinimumDose(...
+            [c_dose_min, dose_vals, kappa_vals] = DoseEvaluator.FindMinimumDose(...
                 mesh, tmax, dt, theta, integration_method, ...
                 0.005, 4.0, 1000.0);
 
-            numeric_solution = NumericSolver.SolveNumeric(...
-                mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
+            Plotter.PlotDoseEffectiveness(dose_vals, kappa_vals, ...
+                "Min. Effective Dose Binary Search", ...
+                "cw2/report/resources/part3/MinDoseBinarySearch", ...
+                "Dose (c)", "Kappa (K)");
 
-
-            kappa = DoseEvaluator.EvaluateSolution(numeric_solution, 0.005, 4.0, dt);
-                
-            fprintf('Kappa: %.2f\n', kappa);
-
-            %Plotter.PlotHeatMap(numeric_solution, "Drug Concentration Heatmap", 'cw2/report/resources/part3/InitialNumericHeatmap', c_max);
+            fprintf("Minimum Effective Dose: %.2f\n", c_dose_min);
         end
             
 

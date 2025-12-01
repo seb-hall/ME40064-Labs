@@ -47,9 +47,6 @@ classdef MultilayerMesh < Mesh
                 obj.layers(l).layer_offset = obj.element_count + 1; % starting index for this layer
 
                 obj.element_count = obj.element_count + layer_element_count;
-
-                disp(['Layer ' num2str(l) ' Element Count: ' num2str(layer_element_count)]);
-                disp(obj.layers(l));
             end
 
             obj.node_count = (obj.element_count * order) + 1;

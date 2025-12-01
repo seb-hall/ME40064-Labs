@@ -47,28 +47,26 @@ classdef DoseEvaluator
 
             t_effective = solution.time(effective_t_index);
 
-            fprintf("effective t index %d %fs\n", effective_t_index, t_effective);
-
             % integrate concentration over time until effective_t_index
             time_range = effective_t_index:length(solution.time);
             K = trapz(solution.time(time_range), c(time_range));
-            fprintf("Kappa = %.2f (integrated from t=%.2f to t=%.2f)\n", ...
-                K, t_effective, solution.time(end));
         end
 
-        function c_dose_min = FindMinimumDose(mesh, tmax, dt, theta, integration_method, target_x, c_threshold, K_target)
-            % Binary search for minimum effective dose
+        function [c_dose_min, dose_vals, kappa_vals] = FindMinimumDose(mesh, tmax, dt, theta, integration_method, target_x, c_threshold, K_target)
+
+            % Binary search for minimum effective dose - high and low starting bounds
             c_dose_low = 0;
-            c_dose_high = 100;  % Start with reasonable upper bound
-            tolerance = 0.1;  % Dose tolerance
-            
-            fprintf("\n=== Finding Minimum Effective Dose ===\n");
-            fprintf("Target: K > %.0f at x = %.6f\n", K_target, target_x);
-            
+            c_dose_high = 100; 
+
+            tolerance = 0.1;
+
+            dose_vals = [];
+            kappa_vals = [];
+
             while (c_dose_high - c_dose_low) > tolerance
                 c_dose_test = (c_dose_low + c_dose_high) / 2;
                 
-                fprintf("\nTesting c_DOSE = %.2f...\n", c_dose_test);
+                fprintf("Testing dose = %.2f...\n", c_dose_test);
                 
                 % Run simulation with this dose
                 lhs_boundary = BoundaryCondition();
@@ -94,10 +92,13 @@ classdef DoseEvaluator
                     c_dose_low = c_dose_test;
                     fprintf("K = %.2f < %.0f: dose too low\n", K, K_target);
                 end
+
+                dose_vals = [dose_vals, c_dose_test];
+                kappa_vals = [kappa_vals, K];
             end
             
             c_dose_min = c_dose_high;  % Use upper bound to ensure K > target
-            fprintf("\n=== Minimum Effective Dose: %.2f ===\n\n", c_dose_min);
+
         end
     end
 end

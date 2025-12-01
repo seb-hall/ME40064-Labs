@@ -392,6 +392,33 @@ A stable profile is visible after around 10 seconds, with the epidermis layer al
 
 == Dose Evaluation
 
+After establishing a baseline simulation profile, the next step was to calculate the effectiveness of the drug diffusion. This was evaluated using the *kappa* metric, defined as the integral of the concentration above a threshold level over a specified time period, given by 
+
+#math.equation(
+  block: true,
+  numbering: "(1)",
+  $ K = integral^(t = 30)_(t_op("eff")) c space d t $
+) <part3-kappa-equation>
+
+where $t_op("eff")$ is the time at which the concentration first exceeds the threshold level, $t=30$ is the end of the simulation period, and $c$ is the drug concentration at a target point in the mesh.
+
+A new class, *DoseEvaluator*, was created to provide this functionality, with a static method *EvaluateSolution* that returns the kappa value for a given solution dataset, target location and threshold concentration. The logic is quite simple; first the node closest to the target location is identified, and then the concentration values for that node are checked against the target threshold. If the concentration exceeds the threshold, the solution is integrated between the time this occurs and the end of the simulation, using a trapezoidal method.
+
+== Minimum Dose Search
+
+The *DoseEvaluator* class was then modified to add a new function, *FindMinimumDose*. The purpose of this was to indentify the minimum required dose of the drug that would achieve a sufficient value of kappa. 
+
+This process was achieved with a *binary search* algorithm, which iteratevely narrows down the range of possible dose values, converging on the minimum effective dose. It relies on having a correct initial upper and lower bound for the dose, but provides an effective search method with relatively few iterations.
+
+The minimum effective dose, $c_op("DOSE")$, was defined as the value at which the concentration at $x = 0.005$ exceeds a threshold of $K > 1000$. A search was run with an initial search range of $0 <= c <= 100$, using a tolerance of 0.1 for convergence. The results of this search are shown below in @part3-dose-binary-search:
+
+#figure(
+    image("resources/part3/MinDoseBinarySearch.png", width: 110%), 
+    caption: [Binary Search for Minimum Effective Dose],  
+)  <part3-dose-binary-search>
+
+This shows that the relationship between dose and kappa is linear, and that the minimum effective dose was found to be approximately *59.18*.
+
 == Dose Sensitivity Analysis
 
 == Further Work
@@ -433,7 +460,7 @@ This coursework was completed in Visual Studio Code (with the #link("https://mar
     "../src/mesh/Mesh.m",
     "../src/mesh/MeshElement.m",
     "../src/mesh/MultilayerMesh.m",
-    "../src/mesh/LayerProperties.m",
+    "../src/mesh/MeshLayer.m",
   )),
 
   ("Analytical", (

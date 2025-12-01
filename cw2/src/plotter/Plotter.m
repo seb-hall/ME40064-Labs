@@ -195,5 +195,25 @@ classdef Plotter
             openfig(name + ".fig");
         end
 
+        function PlotDoseEffectiveness(dose_values, kappa_values, title_str, name, x_label, y_label)
+            set(0, "DefaultAxesFontSize", 12);
+            set(0, "DefaultTextFontSize", 12);
+
+            figure;
+
+            plot_handle = plot(dose_values, kappa_values, "-o", 'LineWidth', 1.5);
+            xlabel(x_label);
+            ylabel(y_label);
+            title(title_str);
+            grid on;
+
+            set(gcf, 'Position', [0, 0, 500, 350]);
+
+            % Save figure
+            saveas(gcf, name, "png");
+            saveas(gcf, name, "fig");
+            openfig(name + ".fig");
+        end
+
     end
 end
