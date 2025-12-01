@@ -3,7 +3,7 @@
 % ME40064 Coursework 2
 %
 % File         :  Plotter.m
-% Author       :  samh25
+% Author       :  11973
 % Created      :  2025-11-26 (YYYY-MM-DD)
 % License      :  MIT
 % Description  :  A collection of static methods for plotting
@@ -15,8 +15,17 @@ classdef Plotter
 
     methods (Static)
 
-        %% Plot entire solution as a heatmap - time as x-axis, position as y-axis and solution value as color
         function PlotHeatMap(solution, title_str, name, c_max)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     PlotHeatMap()
+        %
+        % Arguments:    Plotting parameters
+        % Returns:      None
+        %
+        % Description:  Plots a 2D heat map of solution values
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
             set(0, "DefaultAxesFontSize", 12);
             set(0, "DefaultTextFontSize", 12);
@@ -41,8 +50,17 @@ classdef Plotter
             
         end
 
-        %% Plot full solution at specified time samples
         function PlotTimeSamples(solution, dt, time_samples, title_str, name)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     PlotTimeSamples()
+        %
+        % Arguments:    Plotting parameters
+        % Returns:      None
+        %
+        % Description:  Plots a solution at multiple time samples
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
             set(0, "DefaultAxesFontSize", 12);
             set(0, "DefaultTextFontSize", 12);
@@ -83,8 +101,17 @@ classdef Plotter
 
         end
 
-        %% Plot two solutions at a specific position over time
         function PlotSampleOverTime(solution_1, solution_2, x_sample, title_str, name, legend_strings)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     PlotSampleOverTime()
+        %
+        % Arguments:    Plotting parameters
+        % Returns:      None
+        %
+        % Description:  Plots two solutions at a given spatial sample over time
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
             set(0, "DefaultAxesFontSize", 12);
             set(0, "DefaultTextFontSize", 12);
@@ -119,6 +146,17 @@ classdef Plotter
         end
 
         function PlotConvergenceError(x_values, y_values, title_str, name, x_label, y_label)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     PlotConvergenceError()
+        %
+        % Arguments:    Plotting parameters
+        % Returns:      None
+        %
+        % Description:  Plots convergence error on a log-log scale
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
             set(0, "DefaultAxesFontSize", 12);
             set(0, "DefaultTextFontSize", 12);
 
@@ -142,6 +180,16 @@ classdef Plotter
         end
 
         function PlotL2Errors(l2_errors, title_str, name, legend_strings)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     PlotL2Errors()
+        %
+        % Arguments:    Plotting parameters
+        % Returns:      None
+        %
+        % Description:  Plots L2 errors over time for multiple simulations
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
             set(0, "DefaultAxesFontSize", 12);
             set(0, "DefaultTextFontSize", 12);  
@@ -173,6 +221,17 @@ classdef Plotter
         end
 
         function PlotTwoConvergenceLines(x_values, y1_values, y2_values, title_str, name, x_label, y_label, legend_strings)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     PlotTwoConvergenceLines()
+        %
+        % Arguments:    Plotting parameters
+        % Returns:      None
+        %
+        % Description:  Plots two convergence lines on a log-log scale
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
             set(0, "DefaultAxesFontSize", 12);
             set(0, "DefaultTextFontSize", 12);
 
@@ -196,6 +255,17 @@ classdef Plotter
         end
 
         function PlotDoseEffectiveness(dose_values, kappa_values, title_str, name, x_label, y_label)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     PlotDoseEffectiveness()
+        %
+        % Arguments:    Plotting parameters
+        % Returns:      None
+        %
+        % Description:  Plots dose vs effectiveness
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
             set(0, "DefaultAxesFontSize", 12);
             set(0, "DefaultTextFontSize", 12);
 
@@ -216,6 +286,17 @@ classdef Plotter
         end
 
         function PlotSensitivityAnalysis(x_values, y_values, title_str, name, x_label, y_label, legend_strings)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     PlotSensitivityAnalysis()
+        %
+        % Arguments:    Plotting parameters
+        % Returns:      None
+        %
+        % Description:  Plots sensitivity analysis results
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
             set(0, "DefaultAxesFontSize", 12);
             set(0, "DefaultTextFontSize", 12);
 
@@ -241,8 +322,19 @@ classdef Plotter
             saveas(gcf, name, "fig");
             openfig(name + ".fig");
         end
-
+        
         function PlotKappaValues(x_values, y_values, title_str, name, x_label, y_label)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     PlotKappaValues()
+        %
+        % Arguments:    Plotting parameters
+        % Returns:      None
+        %
+        % Description:  Plots kappa values
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
             set(0, "DefaultAxesFontSize", 12);
             set(0, "DefaultTextFontSize", 12);
 

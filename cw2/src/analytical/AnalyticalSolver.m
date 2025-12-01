@@ -3,7 +3,7 @@
 % ME40064 Coursework 2
 %
 % File         :  AnalyticalSolver.m
-% Author       :  samh25
+% Author       :  11973
 % Created      :  2025-11-26 (YYYY-MM-DD)
 % License      :  MIT
 % Description  :  A static class defining an analytical solver
@@ -16,6 +16,17 @@ classdef AnalyticalSolver
     methods (Static)
 
         function solution = SolveAnalytical(mesh, tmax, dt)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     SolveAnalytical()
+        %
+        % Arguments:    mesh, max time and time step
+        % Returns:      solution to the equation
+        %
+        % Description:  Solves the transient diffusion equation using 
+        %               the analytical solution.
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
             % time vector
             time_vector = 0:dt:tmax;

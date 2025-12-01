@@ -1,8 +1,31 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% ME40064 Coursework 2
+%
+% File         :  ElementMatrices.m
+% Author       :  11973
+% Created      :  2025-11-26 (YYYY-MM-DD)
+% License      :  MIT
+% Description  :  A static class defining element matrix
+%                 helper functions for the transient diffusion
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 classdef ElementMatrices
 
     methods (Static)
 
         function matrix = DiffusionElemMatrix(element, method)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     DiffusionElemMatrix()
+        %
+        % Arguments:    element and integration method
+        % Returns:      diffusion element matrix
+        %
+        % Description:  Computes the diffusion element matrix
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
             elem_size = element.node_coords(end) - element.node_coords(1); 
 
@@ -42,6 +65,16 @@ classdef ElementMatrices
         end
 
         function matrix = ReactionElemMatrix(element, method)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     ReactionElemMatrix()
+        %
+        % Arguments:    element and integration method
+        % Returns:      reaction element matrix
+        %
+        % Description:  Computes the reaction element matrix
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
             elem_size = element.node_coords(end) - element.node_coords(1); 
 
@@ -78,6 +111,16 @@ classdef ElementMatrices
         end
 
         function matrix = MassElemMatrix(element, method)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     MassElemMatrix()
+        %
+        % Arguments:    element and integration method
+        % Returns:      mass element matrix
+        %
+        % Description:  Computes the mass element matrix
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
             elem_size = element.node_coords(end) - element.node_coords(1); 
 
@@ -115,7 +158,18 @@ classdef ElementMatrices
         
         end
 
+
         function matrix = ForceMatrix(element, method)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     ForceMatrix()
+        %
+        % Arguments:    element and integration method
+        % Returns:      force element matrix
+        %
+        % Description:  Computes the force element matrix
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
             elem_size = element.node_coords(end) - element.node_coords(1); 
 
@@ -149,7 +203,17 @@ classdef ElementMatrices
     methods (Static, Access = private)
 
         function [xi, wi] = GaussQuadraturePoints(n)
-
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     GaussQuadraturePoints()
+        %
+        % Arguments:    number of points
+        % Returns:      quadrature points and weights
+        %
+        % Description:  Looks up Gauss quadrature points and weights
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            
             switch n
                 case 1
                     xi = 0;
@@ -167,6 +231,17 @@ classdef ElementMatrices
         end
 
         function N = ShapeFunctions(order, xi)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     ShapeFunctions()
+        %
+        % Arguments:    order and local coordinate
+        % Returns:      shape function values
+        %
+        % Description:  Computes shape function values at given local
+        %               coordinate
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
             switch order
                 case 1 % linear
@@ -180,6 +255,17 @@ classdef ElementMatrices
         end
 
         function dN_dxi = ShapeFunctionDerivatives(order, xi)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     ShapeFunctionDerivatives()
+        %
+        % Arguments:    order and local coordinate
+        % Returns:      shape function derivative values
+        %
+        % Description:  Computes shape function derivative values at 
+        %               given local coordinate
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
             switch order
                 case 1 % linear

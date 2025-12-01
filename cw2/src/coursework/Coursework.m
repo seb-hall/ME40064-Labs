@@ -3,7 +3,7 @@
 % ME40064 Coursework 2
 %
 % File         :  Coursework.m
-% Author       :  samh25
+% Author       :  11973
 % Created      :  2025-11-27 (YYYY-MM-DD)
 % License      :  MIT
 % Description  :  Static methods for each part of the coursework.
@@ -460,17 +460,16 @@ classdef Coursework
         function Part3InitialResults()
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %
-        % Function:     Part2GaussianQuadrature()
+        % Function:     Part3InitialResults()
         %
         % Arguments:    None
         % Returns:      None
         %
-        % Description:  Runs a study comparing L2 error with and without
-        %               Gaussian Quadrature.
+        % Description:  Runs a basic case for Part 3 of the coursework
         % 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
-        % Generate mesh
+            % Generate mesh
             xmin = 0;
             xmax = 0.01;
             element_count = 50;
@@ -514,17 +513,16 @@ classdef Coursework
             Plotter.PlotHeatMap(numeric_solution, "Drug Concentration Heatmap", 'cw2/report/resources/part3/InitialNumericHeatmap', c_max);
         end
             
-    
         function Part3MinimumEffectiveDose()
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %
-        % Function:     Part2GaussianQuadrature()
+        % Function:     Part3MinimumEffectiveDose()
         %
         % Arguments:    None
         % Returns:      None
         %
-        % Description:  Runs a study comparing L2 error with and without
-        %               Gaussian Quadrature.
+        % Description:  Runs a study to find the minimum effective dose for
+        %               Part 3 of the coursework
         % 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
@@ -580,6 +578,18 @@ classdef Coursework
         end
             
         function Part3DoseSensitivityAnalysis()
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     Part3DoseSensitivityAnalysis()
+        %
+        % Arguments:    None
+        % Returns:      None
+        %
+        % Description:  Runs a study to plot the sensitivity of dose to
+        %               diffusion, beta, and gamma coefficients for
+        %               Part 3 of the coursework
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
             % common mesh parameters
             xmin = 0;

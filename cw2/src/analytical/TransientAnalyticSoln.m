@@ -7,6 +7,7 @@
 % Created      :  2025-11-11 (YYYY-MM-DD)
 % License      :  -
 % Description  :  Analytical solution to transient diffusion equation
+%                 provided in the coursework materials.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

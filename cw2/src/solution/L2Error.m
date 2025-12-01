@@ -3,11 +3,11 @@
 % ME40064 Coursework 2
 %
 % File         :  L2Error.m
-% Author       :  samh25
+% Author       :  11973
 % Created      :  2025-11-26 (YYYY-MM-DD)
 % License      :  MIT
-% Description  :  A class defining a solution to the transient
-%                 diffusion equation
+% Description  :  A class defining an L2 error calculator between
+%                 a numerical and reference solution
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -26,8 +26,19 @@ classdef L2Error < handle
 
     methods
 
-        %% Solution constructor
+        
         function obj = L2Error(ref_solution, num_solution)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     L2Error()
+        %
+        % Arguments:    rfeference and numerical solutions
+        % Returns:      L2Error handle
+        %
+        % Description:  Initialises an L2Error object and computes the 
+        %               L2 error between the two solutions
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
             % assign properties
             obj.ref_solution = ref_solution;

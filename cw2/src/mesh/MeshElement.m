@@ -3,7 +3,7 @@
 % ME40064 Coursework 2
 %
 % File         :  MeshElement.m
-% Author       :  samh25
+% Author       :  11973
 % Created      :  2025-11-26 (YYYY-MM-DD)
 % License      :  MIT
 % Description  :  A class defining a one-dimensional mesh element
@@ -24,8 +24,17 @@ classdef MeshElement
 
     methods
 
-        %% MeshElement constructor
         function obj = MeshElement(ids, coords, order, D, lambda)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     MeshElement()
+        %
+        % Arguments:    parameters to initialise
+        % Returns:      MeshElement handle
+        %
+        % Description:  Initialises a one-dimensional mesh element object
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
             % assign properties
             obj.node_ids = ids;

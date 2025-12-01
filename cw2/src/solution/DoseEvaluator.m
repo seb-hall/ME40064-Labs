@@ -2,12 +2,12 @@
 %
 % ME40064 Coursework 2
 %
-% File         :  Evaluation.m
-% Author       :  samh25
+% File         :  DoseEvaluator.m
+% Author       :  11973
 % Created      :  2025-11-26 (YYYY-MM-DD)
 % License      :  MIT
-% Description  :  A static class defining a dose evaluator of 
-%                 a solution
+% Description  :  A static class defining a evaluation methods
+%                 for dose effectiveness
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -16,6 +16,16 @@ classdef DoseEvaluator
     methods (Static)
 
         function K = EvaluateSolution(solution, target_x, c_threshold, dt)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     EvaluateSolution()
+        %
+        % Arguments:    solution, target x location, concentration
+        % Returns:      kappa value
+        %
+        % Description:  Evaluates the solution at a target location
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
             % first, find the closest node to the target
             node_index = 0;
@@ -53,6 +63,17 @@ classdef DoseEvaluator
         end
 
         function [c_dose_min, dose_vals, kappa_vals] = FindMinimumDose(mesh, tmax, dt, theta, integration_method, target_x, c_threshold, K_target)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     FindMinimumDose()
+        %
+        % Arguments:    mesh, max time, time step, theta value,
+        % Returns:      minimum effective dose, results from search
+        %
+        % Description:  Performs a binary search to find the minimum
+        %               effective dose to achieve a target kappa value
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
             % Binary search for minimum effective dose - high and low starting bounds
             c_dose_low = 0;

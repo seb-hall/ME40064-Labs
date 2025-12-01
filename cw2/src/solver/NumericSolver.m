@@ -3,7 +3,7 @@
 % ME40064 Coursework 2
 %
 % File         :  NumericSolver.m
-% Author       :  samh25
+% Author       :  11973
 % Created      :  2025-11-24 (YYYY-MM-DD)
 % License      :  MIT
 % Description  :  Class definition for generic solver for the 
@@ -16,16 +16,30 @@ classdef NumericSolver
 
     methods (Static)
 
-       function solution = SolveNumeric(mesh, tmax, dt, theta, left_boundary, right_boundary, source_fn, integration_method)
+        function solution = SolveNumeric(mesh, tmax, dt, theta, left_boundary, right_boundary, source_fn, integration_method)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     SolveNumeric()
+        %
+        % Arguments:    parameters for solver
+        % Returns:      solution object
+        %
+        % Description:  Runs a numeric solver for the transient
+        %               diffusion-reaction equation using the
+        %               finite element method and theta-method for
+        %               time integration.
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
             % time vector
             time_vector = 0:dt:tmax;
             solution = Solution(mesh, time_vector);
 
-            % === SET INITIAL CONDITION EXPLICITLY ===
+            % initial condition: c(x,0) = 0
             c0 = zeros(mesh.node_count, 1);
             solution.SetValues(c0, 1);  % column 1 = t=0
 
+            % create global matrices
             [K, M] = NumericSolver.CreateGlobalMatrices(mesh, theta, integration_method);
 
             % loop over time steps
@@ -39,6 +53,16 @@ classdef NumericSolver
         end
 
         function c = SolveStep(mesh, solution, step, dt, theta, K, M, left_boundary, right_boundary, source_fn, integration_method)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     SolveStep()
+        %
+        % Arguments:    parameters for solver
+        % Returns:      solution at next time step
+        %
+        % Description:  Solves for the solution at the next time step
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
             c_current = solution.values(:, step);
 
@@ -61,8 +85,17 @@ classdef NumericSolver
 
         end
 
-        %% Create global stiffness and mass matrices
         function [K, M] = CreateGlobalMatrices(mesh, theta, integration_method)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     CreateGlobalMatrices()
+        %
+        % Arguments:    parameters for solver
+        % Returns:      global stiffness and mass matrices
+        %
+        % Description:  Creates the global stiffness and mass matrices
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
             num_elements = mesh.element_count;
             num_nodes = mesh.node_count;
@@ -98,8 +131,17 @@ classdef NumericSolver
 
         end
 
-        %% Create source vector for given time
         function F = CreateSourceVector(mesh, t, source_fn, integration_method)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     CreateSourceVector()
+        %
+        % Arguments:    parameters for solver
+        % Returns:      global source vector
+        %
+        % Description:  Creates the global source vector
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
             F = zeros(mesh.node_count, 1);
 
@@ -127,6 +169,16 @@ classdef NumericSolver
         end
 
         function [lhs, rhs] = ApplyBoundaryConditions(lhs, rhs, t, left_boundary, right_boundary)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     ApplyBoundaryConditions()
+        %
+        % Arguments:    parameters for solver
+        % Returns:      modified system matrix and rhs vector
+        %
+        % Description:  Applies boundary conditions to the system
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
              % Store diagonal values before modification
             diag_left = lhs(1,1);
@@ -144,8 +196,6 @@ classdef NumericSolver
                     rhs(1) = rhs(1) + left_boundary.ValueFunction(t); % apply flux
             
             end
-
-            
 
             % apply right boundary condition
             switch right_boundary.Type

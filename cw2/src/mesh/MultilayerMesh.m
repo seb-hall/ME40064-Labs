@@ -2,29 +2,39 @@
 %
 % ME40064 Coursework 2
 %
-% File         :  Mesh.m
-% Author       :  samh25
+% File         :  MultilayerMesh.m
+% Author       :  11973
 % Created      :  2025-11-26 (YYYY-MM-DD)
 % License      :  MIT
-% Description  :  A class defining a one-dimensional mesh for
+% Description  :  A class defining a multilayer one-dimensional mesh for
 %                 finite element analysis.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 classdef MultilayerMesh < Mesh
-    % inherit from handle to allow pass-by-reference
+    % inherit from Mesh
 
     properties
-        layers    MeshLayer % array of layer properties
+        layers              MeshLayer % array of layer properties
         total_density       double
     end
 
     methods
 
-        %% Mesh constructor
         function obj = MultilayerMesh(xmin, xmax, element_count, order, D, lambda, layers)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     MultilayerMesh()
+        %
+        % Arguments:    initialisation parameters including layers
+        % Returns:      MultilayerMesh handle
+        %
+        % Description:  Initialises a multilayer one-dimensional mesh object
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
+            % call superclass constructor
             obj = obj@Mesh(xmin, xmax, element_count, order, D, lambda);
             obj.layers = layers;
 
@@ -57,6 +67,17 @@ classdef MultilayerMesh < Mesh
         end
 
         function obj = Generate(obj)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     Generate()
+        %
+        % Arguments:    MultilayerMesh handle
+        % Returns:      MultilayerMesh handle
+        %
+        % Description:  Generates the mesh for the given object, 
+        %               overriding the base Mesh.Generate() method.
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
             disp('Generating multilayer mesh...');
 

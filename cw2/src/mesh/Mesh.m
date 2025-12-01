@@ -3,14 +3,13 @@
 % ME40064 Coursework 2
 %
 % File         :  Mesh.m
-% Author       :  samh25
+% Author       :  11973
 % Created      :  2025-11-26 (YYYY-MM-DD)
 % License      :  MIT
 % Description  :  A class defining a one-dimensional mesh for
 %                 finite element analysis.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 classdef Mesh < handle
     % inherit from handle to allow pass-by-reference
@@ -36,8 +35,18 @@ classdef Mesh < handle
 
     methods
 
-        %% Mesh constructor
         function obj = Mesh(xmin, xmax, element_count, order, D, lambda)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     Mesh()
+        %
+        % Arguments:    parameters to initialise
+        % Returns:      Mesh handle
+        %
+        % Description:  Initialises a one-dimensional mesh object
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
             obj.xmin = xmin;
             obj.xmax = xmax;
@@ -57,6 +66,16 @@ classdef Mesh < handle
         end
 
         function obj = Generate(obj)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     Generate()
+        %
+        % Arguments:    Mesh handle
+        % Returns:      Mesh handle
+        %
+        % Description:  Generates the mesh for the given object
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
             disp('Generating normal mesh...');
 

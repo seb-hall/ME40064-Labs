@@ -3,7 +3,7 @@
 % ME40064 Coursework 2
 %
 % File         :  Solution.m
-% Author       :  samh25
+% Author       :  11973
 % Created      :  2025-11-26 (YYYY-MM-DD)
 % License      :  MIT
 % Description  :  A class defining a solution to the transient
@@ -24,8 +24,18 @@ classdef Solution < handle
 
     methods
 
-        %% Solution constructor
         function obj = Solution(mesh, time_vector)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     Solution()
+        %
+        % Arguments:    parameters to initialise
+        % Returns:      Solution handle
+        %
+        % Description:  Initialises a Solution object
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
             
             % assign properties
             obj.mesh = mesh;
@@ -34,8 +44,20 @@ classdef Solution < handle
             
         end
 
-        %% Set solution values at given time step
-        function SetValues(obj, values, step)
+
+        function obj = SetValues(obj, values, step)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     SetValues()
+        %
+        % Arguments:    object, values to set, time step index
+        % Returns:      Solution handle
+        %
+        % Description:  Helper function to set solution values at a
+        %               given time step
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
             % set solution values at given time step
             obj.values(:, step) = values(:);
         end

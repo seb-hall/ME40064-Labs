@@ -3,7 +3,7 @@
 % ME40064 Coursework 2
 %
 % File         :  NumericSolverTest.m
-% Author       :  samh25
+% Author       :  11973
 % Created      :  2025-11-27 (YYYY-MM-DD)
 % License      :  MIT
 % Description  :  Test suite for NumericSolver class
