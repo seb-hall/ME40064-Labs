@@ -96,11 +96,6 @@ classdef NumericSolver
 
             end
 
-            if theta == 0  % Forward Euler only
-                M_lumped = sparse(1:num_nodes, 1:num_nodes, sum(M, 2), num_nodes, num_nodes);
-                M = M_lumped;
-            end
-
         end
 
         %% Create source vector for given time

@@ -272,52 +272,20 @@ For linear finite elements, the stability condition for the Forward Euler method
 
 Therefore, for a mesh with 50 elements over the domain $0 <= x <= 1$ and $D = 1$, the value of $d t$ must be no more than 0.0002s for stability, which aligns with the results shown in @part2-time-integration-stability-analysis.
 
-== Quadratic Basis Functions
-
-
-#figure(
-    image("resources/part2/BasisComparison.png", width: 110%),
-    caption: [Comparison of RMS errors at $t = 1s$ for Varying Time Steps],  
-)  <part2-basis-function-comparison>
-
-
-#figure(
-    image("resources/part2/IntegrationComparison.png", width: 110%),
-    caption: [Comparison of RMS errors at $t = 1s$ for Varying Time Steps],  
-)  <part2-integration-comparison>
-
-
-== Quadratic Basis Functions
-
 == Gaussian Quadrature
 
+So far, the solver has only been used with a simple 2-point trapezoidal integration method for evaluating element matrices.
+While this method is easy to implement, it treats all elements as linear, requiring meshes with high numbers of elements to achieve good accuracy for non-linear problems.
 
-- The *Mesh* and *MeshElement* classes were modified to support higher-order elements.
+*Gaussian Quadrature* is an alternative integration method that can provide a more accurate result with the same number of integration points as trapezoidal integration, resulting in a more efficient solution @gaussian-quadrature.
 
-== Comparing Solver Methods
-
-- Forward Euler - conditionally stable, requires 0.0002s dt for stability
-   - needs to be dt <= (dx^2) / (2D)
-
-- other two methods - unconditionally stable
-
-
-
-\
-
-Next, the FEM solver was extended to account for the following advanced features:
-- Different solver methods (Explicit Euler, Implicit Euler, Crank-Nicolson)
-- Gaussian quadrature for numerical integration
-- Quadratic basis functions
-- Using L2 norm to evaluate solution accuracy
-
-\
-
-
-NEED TO REFINE MESH!
+== Quadratic Basis Functions
 
 
 = Part 3: Modelling & Simulation Results
+
+== Mesh Refining
+NEED TO REFINE MESH!
 
 = Conclusion
 
@@ -339,7 +307,7 @@ This coursework was completed in Visual Studio Code (with the #link("https://mar
 
 #set page(columns: 1)
 
-= Appendix
+= Appendix - MATLAB Source Code
 
 #let sections = (
   ("Main", (

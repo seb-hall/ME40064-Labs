@@ -244,23 +244,6 @@ classdef Coursework
                 "cw2/report/resources/part1/TimeStepConvergence", "Time Step (s)", "RMS Error at t = 1s");
         end
 
-        function Part2Error()
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %
-        % Function:     Part2TimeIntegrationComparison()
-        %
-        % Arguments:    None
-        % Returns:      None
-        %
-        % Description:  Runs a study comparing different time integration
-        %               methods for Part 2 of the coursework.
-        % 
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            
-            
-            
-        end
-
         function Part2TimeIntegrationComparison()
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %
@@ -383,9 +366,9 @@ classdef Coursework
 
                         l2_error = L2Error(analytical_solution, numeric_solution);
                         
-                        %l2_errors_dt = [l2_errors_dt, l2_error];
+                        l2_errors_dt = [l2_errors_dt, l2_error];
                     catch
-                        %l2_errors_dt = [l2_errors_dt, NaN];
+                        l2_errors_dt = [l2_errors_dt, NaN];
                         fprintf("%s EXPLODED \n", method_names{i});
                     end
                 end
@@ -395,8 +378,103 @@ classdef Coursework
 
         end
 
+        function Part2GaussianQuadrature()
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     Part2GaussianQuadrature()
+        %
+        % Arguments:    None
+        % Returns:      None
+        %
+        % Description:  Runs a study comparing L2 error with and without
+        %               Gaussian Quadrature.
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            
+            
+            % time parameters
+            tmax = 0.002;
+            dt = 0.0001;
 
+            % mesh parameters
+            xmin = 0.0;
+            xmax = 1.0;
+            element_count = 10;
+            order = 1;
 
+            % diffusion and reaction coefficients
+            D = 1.0; 
+            lambda = 0.0;
+
+            % concentrations
+            c_max = 1.0;
+            c_min = 0.0;
+
+            % generate mesh
+            mesh = Mesh(xmin, xmax, element_count, order, D, lambda);
+            mesh.Generate();
+
+            % solve analytically
+            analytical_solution = AnalyticalSolver.SolveAnalytical(mesh, tmax, dt);
+
+            % solver parameters
+
+            theta = 0.5; % Crank-Nicholson
+
+            lhs_boundary = BoundaryCondition();
+            lhs_boundary.Type = BoundaryType.Dirichlet;
+            lhs_boundary.Value = c_min;
+
+            rhs_boundary = BoundaryCondition();
+            rhs_boundary.Type = BoundaryType.Dirichlet;
+            rhs_boundary.Value = c_max;
+
+            l2_errors = [];
+
+            % trapezoidal method
+            trapezoidal_method = IntegrationMethod();
+            trapezoidal_method.type = IntegrationType.Trapezoidal;
+            trapezoidal_method.gauss_points = 0; % not used for trapezoidal
+
+            trapezoidal_solution = NumericSolver.SolveNumeric(...
+                mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, trapezoidal_method);
+
+            % gaussian quadrature method
+            gaussian_method = IntegrationMethod();
+            gaussian_method.type = IntegrationType.Gaussian;
+            gaussian_method.gauss_points = 3; % 2-point Gaussian quadrature
+
+            gaussian_solution = NumericSolver.SolveNumeric(...
+                mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, gaussian_method);
+
+            % compute L2 error
+            l2_error_trapezoidal = L2Error(analytical_solution, trapezoidal_solution);
+            l2_error_gaussian = L2Error(analytical_solution, gaussian_solution);
+            l2_errors = [l2_error_trapezoidal, l2_error_gaussian];
+
+            method_names = {"Trapezoidal Integration", "Gaussian Quadrature"};
+
+            Plotter.PlotL2Errors(l2_errors, "L2 Error over Time", ...
+                "cw2/report/resources/part2/L2ErrorGaussianTrapezoidal", ...
+                method_names);
+        end
+
+        function Part2QuadraticBasisFunctions()
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     Part2TimeIntegrationComparison()
+        %
+        % Arguments:    None
+        % Returns:      None
+        %
+        % Description:  Runs a study comparing different time integration
+        %               methods for Part 2 of the coursework.
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            
+            
+            
+        end
 
     end
 

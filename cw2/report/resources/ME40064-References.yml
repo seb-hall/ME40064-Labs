@@ -35,3 +35,11 @@ euler-stability:
     author: C. Connaughton
     date: 2009
     url: https://warwick.ac.uk/fac/cross_fac/complexity/study/msc_and_phd/co906/co906online/lecturenotes_2009/chap3.pdf 
+
+
+gaussian-quadrature:
+    type: Article
+    title: Gaussian Quadrature as a Numerical Integration Method for Estimating Area Under the Curve
+    date: 2001
+    author: T. Amisaki
+    url: https://www.jstage.jst.go.jp/article/bpb/24/1/24_1_70/_pdf/-char/ja
