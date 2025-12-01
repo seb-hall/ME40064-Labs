@@ -290,6 +290,14 @@ The L2 error of a quadratic mesh with both trapezoidal and Gaussian integration 
 
 This shows a clear improvement in accuracy when using Gaussian Quadrature over trapezoidal integration with quadratic basis functions, approaching the analytical solution in a shorter time.
 
+The reason for this improved performance is that Gaussian Quadrature evaluates the integrand at optimally chosen points, capturing a more accurate representation of the function being integrated (@part2-gaussian-trapezoidal-diagram).
+
+#figure(
+    image("resources/part2/Comparison_Gaussquad_trapezoidal.svg.png", width: 100%),
+    caption: [Visualisation of Gaussian Quadrature vs Trapezoidal Integration],  
+)  <part2-gaussian-trapezoidal-diagram>
+
+
 == Summary of Features
 
 The addition of L2 error evaluation was an effective way to quantitatively assess the accuracy of the FEM solver, with varying configurations. It was found that the Crank-Nicolson method remained a suitable choice for time integration, balancing accuracy and stability, while the addition of Gaussian Quadrature and higher-order basis functions showed a significant improvement to solution accuracy.
@@ -306,7 +314,9 @@ The transient FEM solver developed in Parts 1 and 2 was then applied to a practi
     caption: [1D Multilayer Finite Element Mesh of Skin Tissue Layers  @part3-description],  
 )  <part3-skin-description>
 
-The concentration of the drug is modelled by the following transient diffusion-reaction equation
+\
+
+The concentration of the drug is modelled by the transient diffusion-reaction equation
 
 #math.equation(
   block: true,

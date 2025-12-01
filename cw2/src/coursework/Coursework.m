@@ -511,12 +511,75 @@ classdef Coursework
             numeric_solution = NumericSolver.SolveNumeric(...
                 mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
 
+            Plotter.PlotHeatMap(numeric_solution, "Drug Concentration Heatmap", 'cw2/report/resources/part3/InitialNumericHeatmap', c_max);
+        end
+            
+    
+        function Part3MinimumEffectiveDose()
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %
+        % Function:     Part2GaussianQuadrature()
+        %
+        % Arguments:    None
+        % Returns:      None
+        %
+        % Description:  Runs a study comparing L2 error with and without
+        %               Gaussian Quadrature.
+        % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            
+        % Generate mesh
+            xmin = 0;
+            xmax = 0.01;
+            element_count = 50;
+            order = 2;
+
+            theta = 0.5; % Crank-Nicholson
+            D = 1;
+            lambda = 0;
+
+            epidermis_layer = MeshLayer(0.0, 4e-6, 0.0, 0.02, 2.0);
+            dermis_layer = MeshLayer(0.00166667, 5e-6, 0.01, 0.02, 1.0);
+            sub_cutaneous_layer = MeshLayer(0.005, 2e-6, 0.01, 0.02, 1.0);
+
+            layers = [epidermis_layer, dermis_layer, sub_cutaneous_layer];
+
+            mesh = MultilayerMesh(xmin, xmax, element_count, order, D, lambda, layers);
+            mesh.Generate();
+
+            tmax = 30.0;
+            dt = 0.01; % works well with element_count = 50
+
+            % concentrations
+            c_max = 30.0;
+            c_min = 0.0;
+
+            lhs_boundary = BoundaryCondition();
+            lhs_boundary.Type = BoundaryType.Dirichlet;
+            lhs_boundary.Value = c_max;
+
+            rhs_boundary = BoundaryCondition();
+            rhs_boundary.Type = BoundaryType.Dirichlet;
+            rhs_boundary.Value = c_min;
+
+            integration_method = IntegrationMethod();
+            integration_method.type = IntegrationType.Gaussian;
+            integration_method.gauss_points = order + 1;
+
+            % Find minimum dose
+            c_dose_min = DoseEvaluator.FindMinimumDose(...
+                mesh, tmax, dt, theta, integration_method, ...
+                0.005, 40.0, 1000.0);
+
+            numeric_solution = NumericSolver.SolveNumeric(...
+                mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
+
 
             kappa = DoseEvaluator.EvaluateSolution(numeric_solution, 0.005, 4.0, dt);
                 
             fprintf('Kappa: %.2f\n', kappa);
 
-            Plotter.PlotHeatMap(numeric_solution, "Drug Concentration Heatmap", 'cw2/report/resources/part3/InitialNumericHeatmap', c_max);
+            %Plotter.PlotHeatMap(numeric_solution, "Drug Concentration Heatmap", 'cw2/report/resources/part3/InitialNumericHeatmap', c_max);
         end
             
 
