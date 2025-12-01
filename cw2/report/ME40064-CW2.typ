@@ -83,19 +83,16 @@ In addition to this, the size and shape of elements can be adjusted to improve a
     caption: [Finite Element Modelling of a Wrench under a Test Load Scenario @comsol], 
 )  <fem-example>
 
-This coursework focuses on the implementation and verification of a FEM solver for the transient diffusion-reaction equation, given by @numerical-advection-diffusion-reaction:
+This coursework focuses on the implementation and verification of a FEM solver for the transient diffusion-reaction equation, given by
 
 #math.equation(
   block: true,
   numbering: "(1)",
-  $ (delta c) / (delta t) = D (delta ^2 c)/(delta x^2) + lambda c + f $
+  $ (delta c) / (delta t) = D (delta ^2 c)/(delta x^2) + lambda c + f, $
 ) <transient-diffusion-reaction>
 
-Where:
-- $c$ is the concentration level
-- $D$ is the diffusion coefficient
-- $lambda$ is the reaction rate
-- $f$ is a source term
+where $c$ is the concentration level, $D$ is the diffusion coefficient, $lambda$ is the reaction rate
+and $f$ is a source term @numerical-advection-diffusion-reaction.
 
 The transient diffusion-reaction equation models processes where substances diffuse through a medium while undergoing reactions or being influenced by boundary interactions. 
 Examples of situations modelled by this equation include the transfer of heat through a material or (as explored in Part 3 of this report) the diffusion of a drug through biological tissue.
@@ -300,8 +297,42 @@ The addition of L2 error evaluation was an effective way to quantitatively asses
 
 = Part 3: Modelling & Simulation Results
 
-== Mesh Refining
+== Overview
+
+The transient FEM solver developed in Parts 1 and 2 was then applied to a practical problem: modelling the diffusion of a drug through a multilayer skin structure, as shown in the diagram below:
+
+#figure(
+    image("resources/part3/description-skin.png", width: 110%),
+    caption: [1D Multilayer Finite Element Mesh of Skin Tissue Layers  @part3-description],  
+)  <part3-skin-description>
+
+The concentration of the drug is modelled by the following transient diffusion-reaction equation
+
+#math.equation(
+  block: true,
+  numbering: "(1)",
+  $ (delta c) / (delta t) = D (delta ^2 c)/(delta x^2) - beta c - gamma c,$
+) <part3-diffusion-reaction-equation>
+
+where $c$ is the drug concentration, $D$ is the diffusion coefficient, $beta$ is the extra-vascular diffusivity, and $gamma$ is the drug degradation rate. For the purposes of modelling, $beta$ and $gamma$ are combined into a single reaction rate term i.e $lambda = beta + gamma$, as they both act as sink terms that reduce the drug concentration.
+
+== Solver Modification
+
 NEED TO REFINE MESH!
+
+== Initial Results
+
+#figure(
+    image("resources/part3/InitialNumericHeatmap.png", width: 110%),
+    caption: [FEM Solution of Drug Diffusion through Multilayer Skin Structure over $0 <= x <= 0.01$ and \ $0 <= t <= 30s$],  
+)  <part3-initial-numeric-heatmap>
+
+
+== Dose Evaluation
+
+== Dose Sensitivity Analysis
+
+== Further Work
 
 = Conclusion
 

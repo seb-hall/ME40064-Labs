@@ -43,3 +43,9 @@ gaussian-quadrature:
     date: 2001
     author: T. Amisaki
     url: https://www.jstage.jst.go.jp/article/bpb/24/1/24_1_70/_pdf/-char/ja
+
+part3-description:
+    type: Article
+    title: Assignment Transient MATLAB-Based FEM Modelling
+    date: 2025
+    author: A. Cookson

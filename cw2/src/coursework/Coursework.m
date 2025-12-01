@@ -429,8 +429,6 @@ classdef Coursework
             rhs_boundary.Type = BoundaryType.Dirichlet;
             rhs_boundary.Value = c_max;
 
-            l2_errors = [];
-
             % trapezoidal method
             trapezoidal_method = IntegrationMethod();
             trapezoidal_method.type = IntegrationType.Trapezoidal;
@@ -459,22 +457,68 @@ classdef Coursework
                 method_names);
         end
 
-        function Part2QuadraticBasisFunctions()
+        function Part3InitialResults()
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %
-        % Function:     Part2TimeIntegrationComparison()
+        % Function:     Part2GaussianQuadrature()
         %
         % Arguments:    None
         % Returns:      None
         %
-        % Description:  Runs a study comparing different time integration
-        %               methods for Part 2 of the coursework.
+        % Description:  Runs a study comparing L2 error with and without
+        %               Gaussian Quadrature.
         % 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
-            
-            
+        % Generate mesh
+            xmin = 0;
+            xmax = 0.01;
+            element_count = 50;
+            order = 2;
+
+            theta = 0.5; % Crank-Nicholson
+            D = 1;
+            lambda = 0;
+
+            epidermis_layer = LayerProperties(0.0, 4e-6, 0.0, 0.02);
+            dermis_layer = LayerProperties(0.00166667, 5e-6, 0.01, 0.02);
+            sub_cutaneous_layer = LayerProperties(0.005, 2e-6, 0.01, 0.02);
+
+            layer_properties = [epidermis_layer, dermis_layer, sub_cutaneous_layer];
+
+            mesh = MultilayerMesh(xmin, xmax, element_count, order, D, lambda, layer_properties);
+            mesh.Generate();
+
+            tmax = 30.0;
+            dt = 0.01; % works well with element_count = 50
+
+            % concentrations
+            c_max = 30.0;
+            c_min = 0.0;
+
+            lhs_boundary = BoundaryCondition();
+            lhs_boundary.Type = BoundaryType.Dirichlet;
+            lhs_boundary.Value = c_max;
+
+            rhs_boundary = BoundaryCondition();
+            rhs_boundary.Type = BoundaryType.Dirichlet;
+            rhs_boundary.Value = c_min;
+
+            integration_method = IntegrationMethod();
+            integration_method.type = IntegrationType.Gaussian;
+            integration_method.gauss_points = order + 1;
+
+            numeric_solution = NumericSolver.SolveNumeric(...
+                mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
+
+
+            kappa = DoseEvaluator.EvaluateSolution(numeric_solution, 0.005, 4.0, dt);
+                
+            fprintf('Kappa: %.2f\n', kappa);
+
+            Plotter.PlotHeatMap(numeric_solution, "Drug Concentration Heatmap", 'cw2/report/resources/part3/InitialNumericHeatmap', c_max);
         end
+            
 
     end
 
