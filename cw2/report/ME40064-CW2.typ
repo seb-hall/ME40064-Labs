@@ -223,8 +223,8 @@ To address this, a dedicated L2 error evaluation class was added to the solver, 
 == Integration Methods
 
 Using the L2 norm error evalutation class, the performance of three different time integration methods was compared: 
-Forward (Explicit) Euler, Backward (Implicit) Euler, and Crank-Nicolson. 
-This test was run using a mesh with 10 elements and a time step size of 0.0001s. 
+Forward (Explicit) Euler, Backward (Implicit) Euler, and Crank-Nicolson.
+The comparison  test was run using a mesh with 10 elements and a time step size of 0.0001s. 
 
 #figure(
     image("resources/part2/L2ErrorTimeIntegration.png", width: 100%),
@@ -234,7 +234,7 @@ This test was run using a mesh with 10 elements and a time step size of 0.0001s.
 This shows that the Forward Euler method had a higher initial accuracy, approaching the solution more quickly than the other two methods, but that it started to decrease in accuracy again afterwards.
 This was likely caused by instability in the method, as it is only conditionally stable.
 
-To illustrate this further, a stability analysis was performed for all three methods, using a larger mesh of 50 elements:
+To illustrate this further, a stability analysis was performed for all three methods, using a larger mesh of 50 elements. The stability results are shown in @part2-time-integration-stability-analysis:
 
 #figure(
     caption: "Integration Method Stability Comparison",
@@ -290,17 +290,22 @@ The L2 error of a quadratic mesh with both trapezoidal and Gaussian integration 
 
 This shows a clear improvement in accuracy when using Gaussian Quadrature over trapezoidal integration with quadratic basis functions, approaching the analytical solution in a shorter time.
 
-The reason for this improved performance is that Gaussian Quadrature evaluates the integrand at optimally chosen points, capturing a more accurate representation of the function being integrated (@part2-gaussian-trapezoidal-diagram).
+The reason for this improved performance is that Gaussian Quadrature evaluates the integrand at specially chosen points, capturing a more accurate representation of the function being integrated. @part2-gaussian-trapezoidal-diagram shows a visual comparison of a trapezoidal integration, alongside a Gaussian Quadrature with 2 intermediary points.
 
 #figure(
-    image("resources/part2/Comparison_Gaussquad_trapezoidal.svg.png", width: 90%),
+    image("resources/part2/Comparison_Gaussquad_trapezoidal.svg.png", width: 100%),
     caption: [Visualisation of Gaussian Quadrature vs Trapezoidal Integration @gaussian-diagram],  
 )  <part2-gaussian-trapezoidal-diagram>
 
+In the code implementation, the mesh was implemented with an arbitrary order parameter, dynamically calculating the number of nodes based off the baseline element count and order. In comparison, the code for Gaussian Quadrature was implemented with pre-defined functions for 1, 2 and 3 integration points, and shape functions for linear and quadratic elements.
 
 == Summary of Features
 
 The addition of L2 error evaluation was an effective way to quantitatively assess the accuracy of the FEM solver, with varying configurations. It was found that the Crank-Nicolson method remained a suitable choice for time integration, balancing accuracy and stability, while the addition of Gaussian Quadrature and higher-order basis functions showed a significant improvement to solution accuracy.
+
+Together these features enhance the capability and robustness of the FEM solver, allowing it to tackle a wider range of problems with improved accuracy and efficiency.
+
+The robust, object-oriented software architecture introduced in Part 1 was also extended, with new classes and tests for the additional functionality.
 
 
 = Part 3: Modelling & Simulation Results
@@ -382,13 +387,14 @@ The simulation was then run using an initial mesh size of 50 elements and a time
 
 The results were plotted as a heatmap (@part3-initial-numeric-heatmap), showing the diffusion of the drug through the multilayer skin structure over time. Additionally marked on this plot are the approximate boundaries between each layer.
 
-A stable profile is visible after around 10 seconds, with the epidermis layer almost immediately saturated to a high level, and the dermis soon after with a slightly lower concentration. The sub-cutaneous layer shows a much more gradual concentration gradient, mainly due to the Dirichlet boundary at $x = 0.01$ of $c(0.01, t) = 0$ forcing a perfect sink along the far edge of the mesh.
-
 #figure(
     image("resources/part3/InitialNumericHeatmapMarkedup.png", width: 110%),
     caption: [FEM Solution of Drug Diffusion through \ Multilayer Skin Structure over $0 <= x <= 0.01$ and \ $0 <= t <= 30s$],  
 )  <part3-initial-numeric-heatmap>
 
+\
+
+A stable profile is visible after around 10 seconds, with the epidermis layer almost immediately saturated to a high level, and the dermis soon after with a slightly lower concentration. The sub-cutaneous layer shows a much more gradual concentration gradient, mainly due to the Dirichlet boundary at $x = 0.01$ of $c(0.01, t) = 0$ forcing a perfect sink along the far edge of the mesh.
 
 == Dose Evaluation
 
@@ -413,13 +419,12 @@ This process was achieved with a *binary search* algorithm, which iteratevely na
 The minimum effective dose, $c_op("DOSE")$, was defined as the value at which the concentration at $x = 0.005$ exceeds a threshold of $K > 1000$. A search was run with an initial search range of $0 <= c <= 100$, using a tolerance of 0.1 for convergence. The results of this search are shown below in @part3-dose-binary-search:
 
 #figure(
-    image("resources/part3/MinDoseBinarySearch.png", width: 110%), 
+    image("resources/part3/MinDoseBinarySearch.png", width: 100%), 
     caption: [Binary Search for Minimum Effective Dose],  
 )  <part3-dose-binary-search>
 
 This shows that the relationship between dose and kappa is linear, and that the minimum effective dose was found to be approximately *59.18*.
 
-\
 
 == Dose Sensitivity Analysis
 
@@ -427,33 +432,32 @@ A sensitivity analysis was then performed on the model, investigating the impact
 
 === Diffusion Coefficient
 
-The diffusion coefficient $D$ was investigated by scaling the original values for each layer by factors of 0.5, 0.75, 1.0, 1.5 and 2.0. The results of this analysis are shown below in @part3-diffusion-sensitivity and @part3-diffusion-kappa, illustrating the effect of varying $D$ on concentration over time, and of the resultant dose effectiveness.
+The diffusion coefficient $D$ was investigated by scaling the original values for each layer by factors of 0.5, 0.75, 1.0, 1.5 and 2.0. The results of this analysis are shown below in @part3-diffusion-sensitivity and @part3-diffusion-kappa, illustrating the effect of varying $D$ on concentration over time, and of the resultant dose effectiveness. These plots show a clear trend of increasing diffusion coefficient leading to higher concentrations at the target point, and therefore higher dose effectiveness K. 
+
+This is expected, as a higher diffusion coefficient allows the drug to spread more rapidly through the tissue layers, reaching the target point in a shorter time, with less degradation.
 
 #figure(
-    image("resources/part3/DiffusionSensitivityAnalysis.png", width: 110%), 
+    image("resources/part3/DiffusionSensitivityAnalysis.png", width: 100%), 
     caption: [Concentration at $x=D$ for Varying Values of $D$],  
 )  <part3-diffusion-sensitivity>
 
 #figure(
-    image("resources/part3/DiffusionKappa.png", width: 110%), 
+    image("resources/part3/DiffusionKappa.png", width: 100%), 
     caption: [Dose Effectiveness for Varying Values of $D$],  
 )  <part3-diffusion-kappa>
 
-These plots show a clear trend of increasing diffusion coefficient leading to higher concentrations at the target point, and therefore higher dose effectiveness K. This is expected, as a higher diffusion coefficient allows the drug to spread more rapidly through the tissue layers, reaching the target point in a shorter time, with less degradation.
-
-\
 
 === Extra-Vascular Diffusivity
 
 The next parameter to be investigated was extra-vascular diffusivity ($beta$), varied in the same way as the diffusion coefficient. The results of this analysis are shown below in @part3-beta-sensitivity and @part3-beta-kappa.
 
 #figure(
-    image("resources/part3/BetaSensitivityAnalysis.png", width: 110%), 
+    image("resources/part3/BetaSensitivityAnalysis.png", width: 100%), 
     caption: [Concentration at $x=D$ for Varying Values of $beta$],  
 )  <part3-beta-sensitivity>
 
 #figure(
-    image("resources/part3/BetaKappa.png", width: 110%), 
+    image("resources/part3/BetaKappa.png", width: 100%), 
     caption: [Dose Effectiveness for Varying Values of $beta$],  
 )  <part3-beta-kappa>
 
@@ -473,12 +477,35 @@ Finally, the drug degredation rate ($gamma$) was investigated, again varied in t
     caption: [Dose Effectiveness for Varying Values of $gamma$],  
 )  <part3-gamma-kappa>
 
-As with $beta$, these plots show an inverse, linear relationship between $gamma$ and dose effectiveness. A higher degradation rate results in the drug breaking down more quickly, reducing the concentration at the target point and lowering K. From a mathematical perspective, this is also expected as both $beta$ and $gamma$ act as sink terms in the diffusion-reaction equation, reducing the overall concentration. However, as the original values of $gamma$ were larger than those of $beta$, the impact of varying $gamma$ was more pronounced.
+As with $beta$, these plots show an inverse, linear relationship between $gamma$ and dose effectiveness. A higher degradation rate results in the drug breaking down more quickly, reducing the concentration at the target point and lowering K. 
 
+From a mathematical perspective, this is also expected as both $beta$ and $gamma$ act as sink terms in the diffusion-reaction equation, reducing the overall concentration. However, as the original values of $gamma$ were larger than those of $beta$, the impact of varying $gamma$ was more pronounced.
+
+\
 
 == Further Work
 
+While the FEM solver developed in this coursework has proved effective for modelling the 1D drug diffusion problem, there are several areas where further work could improve it's performance.
+
+One example is the implementation of continuous diffusion-reaction parameters across the mesh, instead of the discrete steps that are currently used. This would more accuractly represent the gradual changes in tissue properties that occur in real biological systems.
+
+Alongside this, the boundary conditions of a perfect source at one side and a perfect sink at the other are idealised scenarios. More realistic boundary conditions, such as Neumann or Robin conditions that vary over time, could be implemented to better simulate real-world situations.
+
+Increasing the mesh or time fidelity would also be likely improve accuracy, although both result in higher computational cost. More advanced meshing techniques could be explored, taking the multi-density approach further by implementing adaptive techniques that refine the mesh further in areas of high gradient.
+
+Finally, the solver could be extended to 2D or 3D problems, allowing for more complex geometries and diffusion scenarios to be modelled. This would require significant changes to the mesh generation and element assembly processes, but would greatly expand the range of applications for the solver.
+
 = Conclusion
+
+The FEM solver developed in this coursework was successfully implemented and validated against an analytical solution for the transient diffusion-reaction equation in Part 1. 
+It was then improved in Part 2 with the addition of more advanced features such as L2 error evaluation, higher-order basis functions, and Gaussian Quadrature integration.
+
+In Part 3, the solver was then applied to a practical problem, modelling the diffusion of a drug through a multilayer skin structure.
+The initial results and subsequent analysis demonstrated a physically plausible diffusion profile, with a binary search method effectively identifying the minimum effective drug dose level.
+
+Changes to key parameters in a sensitivity analysis produced results that aligned with both mathematical and physical interpretations of the sample problem, further validating the solver's performance.
+
+Finally, several areas for further work were discussed and identified, providing a roadmap for future improvements to the solver.
 
 // MARK: REFERENCES
 = References
