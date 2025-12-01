@@ -16,16 +16,43 @@ classdef MultilayerMesh < Mesh
     % inherit from handle to allow pass-by-reference
 
     properties
-        layer_properties LayerProperties % array of layer properties
+        layers    MeshLayer % array of layer properties
+        total_density       double
     end
 
     methods
 
         %% Mesh constructor
-        function obj = MultilayerMesh(xmin, xmax, element_count, order, D, lambda, layer_properties)
+        function obj = MultilayerMesh(xmin, xmax, element_count, order, D, lambda, layers)
             
             obj = obj@Mesh(xmin, xmax, element_count, order, D, lambda);
-            obj.layer_properties = layer_properties;
+            obj.layers = layers;
+
+
+            % recalculate nodes and element counts based on layer densities
+            obj.total_density = 0.0;
+
+            for l = 1:length(layers)
+                obj.total_density = obj.total_density + layers(l).density_ratio;
+            end
+
+            obj.element_count = 0;
+
+            for l = 1:length(layers)
+
+                layer_density = layers(l).density_ratio;
+                layer_element_count = round((layer_density / obj.total_density) * element_count);
+
+                layers(l).element_count = layer_element_count;
+                layers(l).layer_offset = obj.element_count + 1; % starting index for this layer
+
+                obj.element_count = obj.element_count + layer_element_count;
+            end
+
+            obj.node_count = (obj.element_count * order) + 1;
+            obj.node_coords = zeros(1, obj.node_count);
+
+            obj.elements = MeshElement.empty(obj.element_count, 0);
             
         end
 
@@ -33,8 +60,42 @@ classdef MultilayerMesh < Mesh
 
             disp('Generating multilayer mesh...');
 
-            % generate uniform node coordinates
-            obj.node_coords = linspace(obj.xmin, obj.xmax, obj.node_count);
+            % generate per-layer uniform node coordinates
+
+            for l = 1:length(obj.layers)
+                
+                % calculate layer xmin and xmax
+
+                layer_xmin = obj.layers(l).x;
+
+                if l < length(obj.layers)
+                    layer_xmax = obj.layers(l + 1).x;
+                else
+                    layer_xmax = obj.xmax;
+                end 
+
+                layer_nodes = obj.layers(l).element_count * obj.order + 1;
+
+                layer_coords = linspace(layer_xmin, layer_xmax, layer_nodes);
+
+
+                if l == 1
+                    node_range = 1:layer_nodes;
+                else
+                    node_range = 2:layer_nodes;
+                end
+
+                num_nodes = length(node_range);
+                
+                if l == 1
+                    start_index = (obj.layers(l).layer_offset-1)*obj.order + 1;
+                else
+                    start_index = (obj.layers(l).layer_offset-1)*obj.order;
+                end
+
+                obj.node_coords(start_index : start_index + num_nodes - 1) = layer_coords(node_range);
+                
+            end
 
             % generate elements
             for e = 1:obj.element_count
@@ -51,14 +112,14 @@ classdef MultilayerMesh < Mesh
                 % determine which layer this element is in
                 layer_index = 1;
 
-                for l = 1:length(obj.layer_properties)
-                    if midpoint >= obj.layer_properties(l).x
+                for l = 1:length(obj.layers)
+                    if midpoint >= obj.layers(l).x
                         layer_index = l;
                     end
                 end
 
-                D = obj.layer_properties(layer_index).D;
-                lambda = -(obj.layer_properties(layer_index).beta + obj.layer_properties(layer_index).gamma);
+                D = obj.layers(layer_index).D;
+                lambda = -(obj.layers(layer_index).beta + obj.layers(layer_index).gamma);
 
                 % create MeshElement object
                 obj.elements(e) = MeshElement(node_ids, coords, obj.order, D, lambda);

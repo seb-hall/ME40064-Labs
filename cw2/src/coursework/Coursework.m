@@ -480,13 +480,13 @@ classdef Coursework
             D = 1;
             lambda = 0;
 
-            epidermis_layer = LayerProperties(0.0, 4e-6, 0.0, 0.02);
-            dermis_layer = LayerProperties(0.00166667, 5e-6, 0.01, 0.02);
-            sub_cutaneous_layer = LayerProperties(0.005, 2e-6, 0.01, 0.02);
+            epidermis_layer = MeshLayer(0.0, 4e-6, 0.0, 0.02, 1.0);
+            dermis_layer = MeshLayer(0.00166667, 5e-6, 0.01, 0.02, 1.0);
+            sub_cutaneous_layer = MeshLayer(0.005, 2e-6, 0.01, 0.02, 1.0);
 
-            layer_properties = [epidermis_layer, dermis_layer, sub_cutaneous_layer];
+            layers = [epidermis_layer, dermis_layer, sub_cutaneous_layer];
 
-            mesh = MultilayerMesh(xmin, xmax, element_count, order, D, lambda, layer_properties);
+            mesh = MultilayerMesh(xmin, xmax, element_count, order, D, lambda, layers);
             mesh.Generate();
 
             tmax = 30.0;
