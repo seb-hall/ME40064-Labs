@@ -101,7 +101,7 @@ The transient diffusion-reaction equation models processes where substances diff
 Examples of situations modelled by this equation include the transfer of heat through a material or (as explored in Part 3 of this report) the diffusion of a drug through biological tissue.
 
 This coursework describes the development and validation of a FEM solver for the transient diffusion-reaction equation. 
-To keep the scope manageable, the solver was implemented in 1D, using MATLAB as the scripting language @matlab
+To keep the scope manageable, the solver was implemented in 1D, using MATLAB as the scripting language @matlab.
 
 = Part 1: Software Verification
 
@@ -220,7 +220,7 @@ This involved selecting specific values for $D$, $lambda$, and $f$ such that the
 
 In Part 1 of the coursework, the RMS error term was used to evaluate the accuracy of the FEM solver. 
 While RMS is a useful metric, it can be sensitive to outliers and therefore may not always provide a complete picture of the solution accuracy.
-L2 norm doesn't suffer as much from this, and is more widely used in literature as a result @numerical-advection-diffusion-reaction
+L2 norm doesn't suffer as much from this, and is more widely used in literature as a result @numerical-advection-diffusion-reaction.
 To address this, a dedicated L2 error evaluation class was added to the solver, allowing for more robust error analysis.
 
 == Integration Methods
@@ -228,12 +228,12 @@ To address this, a dedicated L2 error evaluation class was added to the solver, 
 Using the L2 norm error evalutation class, the performance of three different time integration methods was compared: 
 Forward (Explicit) Euler, Backward (Implicit) Euler, and Crank-Nicolson.
 
-
-
 #figure(
     image("resources/part2/L2ErrorTimeIntegration.png", width: 110%),
     caption: [Comparison of RMS errors at $t = 1s$ for Varying Time Steps],  
 )  <part2-time-integration-comparison>
+
+After this, a study was run to compare the speed and stability of each method.
 
 
 #figure(
