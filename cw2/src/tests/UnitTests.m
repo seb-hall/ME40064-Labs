@@ -16,6 +16,16 @@ function tests = UnitTests
 end
 
 function TestSolveNumericReactionOnly(testCase)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Function:     TestSolveNumericReactionOnly()
+%
+% Arguments:    test case
+% Returns:      none
+%
+% Description:  Tests NumericSolver for pure reaction case
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     % mesh parameters
     xmin = 0.0;
@@ -63,9 +73,18 @@ function TestSolveNumericReactionOnly(testCase)
 end
 
 function TestSteadyStateConvergence(testCase)
-    % For pure diffusion with constant BCs, should reach steady state
-    % Analytical: c(x) = x (linear profile from 0 to 1)
-    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Function:     TestSteadyStateConvergence()
+%
+% Arguments:    test case
+% Returns:      none
+%
+% Description:  Tests that NumericSolver converges to steady
+%               state for pure diffusion with Dirichlet BCs
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
     xmin = 0; xmax = 1;
     mesh = Mesh(xmin, xmax, 20, 1, 1.0, 0.0);
     mesh.Generate();
@@ -95,23 +114,115 @@ function TestSteadyStateConvergence(testCase)
     verifyLessThan(testCase, error, 1e-3);
 end
 
-function TestMassConservation(testCase)
-    % With D=1, lambda=0, no source, Neumann BCs: total mass conserved
+function TestGaussianQuadratureAccuracy(testCase)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Function:     TestGaussianQuadratureAccuracy()
+%
+% Arguments:    test case
+% Returns:      none
+%
+% Description:  Tests that Gaussian quadrature gives better
+%               accuracy than trapezoidal for the same problem
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    xmin = 0; xmax = 1;
+    element_count = 5;
+    order = 2; % quadratic elements
     
-    mesh = Mesh(0, 1, 10, 1, 1.0, 0.0);
+    mesh = Mesh(xmin, xmax, element_count, order, 1.0, 0.0);
     mesh.Generate();
     
-    % Set initial non-zero distribution
-    c0 = sin(pi * mesh.node_coords);
+    tmax = 0.1; dt = 0.01; theta = 0.5;
     
     lhs_bc = BoundaryCondition();
-    lhs_bc.Type = BoundaryType.Neumann;
-    lhs_bc.ValueFunction = @(t) 0.0;
+    lhs_bc.Type = BoundaryType.Dirichlet;
+    lhs_bc.Value = 0.0;
     
     rhs_bc = BoundaryCondition();
-    rhs_bc.Type = BoundaryType.Neumann;
-    rhs_bc.ValueFunction = @(t) 0.0;
+    rhs_bc.Type = BoundaryType.Dirichlet;
+    rhs_bc.Value = 1.0;
     
-    % [Run solver with initial condition c0]
-    % Check integral(c dx) is constant over time
+    % Solve with trapezoidal
+    trap_method = IntegrationMethod();
+    trap_method.type = IntegrationType.Trapezoidal;
+    
+    trap_solution = NumericSolver.SolveNumeric(mesh, tmax, dt, theta, ...
+        lhs_bc, rhs_bc, @(x,t) 0, trap_method);
+    
+    % Solve with Gaussian
+    gauss_method = IntegrationMethod();
+    gauss_method.type = IntegrationType.Gaussian;
+    gauss_method.gauss_points = 3;
+    
+    gauss_solution = NumericSolver.SolveNumeric(mesh, tmax, dt, theta, ...
+        lhs_bc, rhs_bc, @(x,t) 0, gauss_method);
+    
+    % Get analytical solution
+    analytical_solution = AnalyticalSolver.SolveAnalytical(mesh, tmax, dt);
+    
+    % Compute errors
+    trap_error = L2Error(analytical_solution, trap_solution);
+    gauss_error = L2Error(analytical_solution, gauss_solution);
+    
+    % Gaussian should be more accurate (lower final error)
+    verifyLessThan(testCase, gauss_error.l2_error(end), ...
+        trap_error.l2_error(end));
+end
+
+function TestQuadraticVsLinearElements(testCase)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Function:     TestQuadraticVsLinearElements()
+%
+% Arguments:    test case
+% Returns:      none
+%
+% Description:  Tests that quadratic elements give better
+%               accuracy than linear elements for the same
+%               problem
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    xmin = 0; xmax = 1;
+    element_count = 5;
+    
+    tmax = 0.1; dt = 0.01; theta = 0.5;
+    
+    lhs_bc = BoundaryCondition();
+    lhs_bc.Type = BoundaryType.Dirichlet;
+    lhs_bc.Value = 0.0;
+    
+    rhs_bc = BoundaryCondition();
+    rhs_bc.Type = BoundaryType.Dirichlet;
+    rhs_bc.Value = 1.0;
+    
+    integration_method = IntegrationMethod();
+    integration_method.type = IntegrationType.Gaussian;
+    integration_method.gauss_points = 3;
+    
+    % Linear elements
+    mesh_linear = Mesh(xmin, xmax, element_count, 1, 1.0, 0.0);
+    mesh_linear.Generate();
+    
+    solution_linear = NumericSolver.SolveNumeric(mesh_linear, tmax, dt, ...
+        theta, lhs_bc, rhs_bc, @(x,t) 0, integration_method);
+    
+    analytical_linear = AnalyticalSolver.SolveAnalytical(mesh_linear, tmax, dt);
+    error_linear = L2Error(analytical_linear, solution_linear);
+    
+    % Quadratic elements
+    mesh_quadratic = Mesh(xmin, xmax, element_count, 2, 1.0, 0.0);
+    mesh_quadratic.Generate();
+    
+    solution_quadratic = NumericSolver.SolveNumeric(mesh_quadratic, tmax, dt, ...
+        theta, lhs_bc, rhs_bc, @(x,t) 0, integration_method);
+    
+    analytical_quadratic = AnalyticalSolver.SolveAnalytical(mesh_quadratic, tmax, dt);
+    error_quadratic = L2Error(analytical_quadratic, solution_quadratic);
+    
+    % Quadratic should have lower error
+    verifyLessThan(testCase, error_quadratic.l2_error(end), ...
+        error_linear.l2_error(end));
 end

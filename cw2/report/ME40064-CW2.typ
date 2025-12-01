@@ -571,7 +571,7 @@ Finally, several areas for further work were discussed and identified, providing
 
 
   ("Tests", (
-    "../src/tests/NumericSolverTest.m", 
+    "../src/tests/UnitTests.m", 
     ""
   )),
 
