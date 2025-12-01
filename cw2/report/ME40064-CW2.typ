@@ -489,11 +489,13 @@ While the FEM solver developed in this coursework has proved effective for model
 
 One example is the implementation of continuous diffusion-reaction parameters across the mesh, instead of the discrete steps that are currently used. This would more accuractly represent the gradual changes in tissue properties that occur in real biological systems.
 
-Alongside this, the boundary conditions of a perfect source at one side and a perfect sink at the other are idealised scenarios. More realistic boundary conditions, such as Neumann or Robin conditions that vary over time, could be implemented to better simulate real-world situations.
+Alongside this, the boundary conditions of a perfect source at one side and a perfect sink at the other are idealised scenarios. More realistic boundary conditions, such as Neumann or Robin conditions that vary over time, could be implemented to better simulate real-world situations @neumann.
+
+The values chosen for the model parameters were based on the values provided in the coursework brief. However, these were stated as approximate or in some places unrealistic. More researched and physically accurate values would therefore improve the validity of the simulation results.
 
 Increasing the mesh or time fidelity would also be likely improve accuracy, although both result in higher computational cost. More advanced meshing techniques could be explored, taking the multi-density approach further by implementing adaptive techniques that refine the mesh further in areas of high gradient.
 
-Finally, the solver could be extended to 2D or 3D problems, allowing for more complex geometries and diffusion scenarios to be modelled. This would require significant changes to the mesh generation and element assembly processes, but would greatly expand the range of applications for the solver.
+Finally, the solver could be extended to 2D or 3D problems @d1-d2, allowing for more complex geometries and diffusion scenarios to be modelled. This would require significant changes to the mesh generation and element assembly processes, but would greatly expand the range of applications for the solver.
 
 = Conclusion
 
@@ -505,7 +507,7 @@ The initial results and subsequent analysis demonstrated a physically plausible 
 
 Changes to key parameters in a sensitivity analysis produced results that aligned with both mathematical and physical interpretations of the sample problem, further validating the solver's performance.
 
-Finally, several areas for further work were discussed and identified, providing a roadmap for future improvements to the solver.
+Finally, several areas for further work were discussed and identified, providing a roadmap for future improvements to the solver. These further demonstrate the flexibility and suitability of the FEM approach for solving complex diffusion-reaction problems.
 
 // MARK: REFERENCES
 = References

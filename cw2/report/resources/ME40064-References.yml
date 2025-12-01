@@ -55,3 +55,16 @@ gaussian-diagram:
     title: Comparison between 2-point Gaussian and trapezoidal quadrature
     author: Paolostar
     url: https://en.wikipedia.org/wiki/Gaussian_quadrature#/media/File:Comparison_Gaussquad_trapezoidal.svg
+
+neumann:
+    type: Article
+    title: Neumann and Robin boundary conditions for heat conduction modeling using smoothed particle hydrodynamics
+    date: 2016
+    author: M. A. Esmili Sikarudi et al
+    url: https://www.sciencedirect.com/science/article/pii/S0010465515002738
+
+d1-d2:
+    type: Article
+    title: Comparison between 1D and 2D models to analyze the dam break wave using the FEM method and the shallow water equations
+    author: I. Lencina
+    date: 2007
