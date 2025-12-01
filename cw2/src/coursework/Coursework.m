@@ -528,7 +528,7 @@ classdef Coursework
         % 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
-        % Generate mesh
+            % Generate mesh
             xmin = 0;
             xmax = 0.01;
             element_count = 50;
@@ -579,6 +579,95 @@ classdef Coursework
             fprintf("Minimum Effective Dose: %.2f\n", c_dose_min);
         end
             
+        function Part3DoseSensitivityAnalysis()
+
+            % common mesh parameters
+            xmin = 0;
+            xmax = 0.01;
+            element_count = 50;
+            order = 2;
+
+            tmax = 30.0;
+            dt = 0.01; % works well with element_count = 50
+
+            % concentrations
+            c_max = 59.18;
+            c_min = 0.0;
+
+            theta = 0.5; % Crank-Nicholson
+            D = 1;
+            lambda = 0;
+
+
+            lhs_boundary = BoundaryCondition();
+            lhs_boundary.Type = BoundaryType.Dirichlet;
+            lhs_boundary.Value = c_max;
+
+            rhs_boundary = BoundaryCondition();
+            rhs_boundary.Type = BoundaryType.Dirichlet;
+            rhs_boundary.Value = c_min;
+
+            integration_method = IntegrationMethod();
+            integration_method.type = IntegrationType.Gaussian;
+            integration_method.gauss_points = order + 1;
+
+            % diffusion coefficients analysis
+            relative_diffusions = [1.0];
+
+            target_x = 0.005; % use x = D as an example
+
+            x_values = [];
+            y_values = zeros(length(relative_diffusions), tmax/dt + 1);
+
+            for d = 1:length(relative_diffusions)
+
+                D_rel = relative_diffusions(d);
+
+                epidermis_layer = MeshLayer(0.0, 4e-6 * D_rel, 0.0, 0.02, 2.0);
+                dermis_layer = MeshLayer(0.00166667, 5e-6 * D_rel, 0.01, 0.02, 1.0);
+                sub_cutaneous_layer = MeshLayer(0.005, 2e-6 * D_rel, 0.01, 0.02, 1.0);
+
+                layers = [epidermis_layer, dermis_layer, sub_cutaneous_layer];
+
+                mesh = MultilayerMesh(xmin, xmax, element_count, order, D, lambda, layers);
+                mesh.Generate();
+
+                numeric_solution = NumericSolver.SolveNumeric(...
+                    mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
+
+                 % first, find the closest node to the target
+                node_index = 0;
+
+                for i = 1:numeric_solution.mesh.node_count
+                    x = numeric_solution.mesh.node_coords(i);
+                    if x >= target_x
+                        node_index = i;
+                        break;
+                    end
+                end
+
+                if d == 1
+                    x_values = numeric_solution.time;
+                end
+
+                y_values(d, :) = numeric_solution.values(node_index, :);
+            end
+
+            legend_strings = [];
+
+            for d = 1:length(relative_diffusions)
+                legend_strings = [legend_strings, sprintf("D rel = %.2f", relative_diffusions(d))];
+            end
+
+            fprintf("Plotting Dose Sensitivity Analysis...\n");
+
+            Plotter.PlotSensitivityAnalysis(x_values, y_values, ...
+                "Dose Sensitivity Analysis", ...
+                "cw2/report/resources/part3/DoseSensitivityAnalysis", ...
+                "Time (s)", "Concentration at x = 0.005", legend_strings);
+
+
+        end
 
     end
 

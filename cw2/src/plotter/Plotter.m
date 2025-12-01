@@ -215,5 +215,30 @@ classdef Plotter
             openfig(name + ".fig");
         end
 
+        function PlotSensitivityAnalysis(x_values, y_values, title_str, name, x_label, y_label, legend_strings)
+            set(0, "DefaultAxesFontSize", 12);
+            set(0, "DefaultTextFontSize", 12);
+
+            figure;
+
+            for i = 1:length(y_values)
+                plot_handle = plot(x_values, y_values(i));
+                set(plot_handle, "LineWidth", 1.5);
+                hold on;
+            end
+
+            xlabel(x_label);
+            ylabel(y_label);
+            title(title_str);
+            legend(legend_strings, 'Location', 'best');
+            grid on;
+
+            set(gcf, 'Position', [0, 0, 500, 350]);
+
+            saveas(gcf, name, "png");
+            saveas(gcf, name, "fig");
+            openfig(name + ".fig");
+        end
+
     end
 end

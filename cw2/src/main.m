@@ -13,7 +13,7 @@
 function main()
     fprintf("ME40064 Coursework 2 Starting...\n");
 
-    Coursework.Part3MinimumEffectiveDose();
+    Coursework.Part3DoseSensitivityAnalysis();
 
     fprintf("...ME40064 Coursework 2 Complete\n");
 end
