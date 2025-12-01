@@ -318,13 +318,65 @@ where $c$ is the drug concentration, $D$ is the diffusion coefficient, $beta$ is
 
 == Solver Modification
 
-NEED TO REFINE MESH!
+The main difference between the skin application and previous problems is the use of a multilayer mesh. A new *MultilayerMesh* class was created, inheriting from the original *Mesh* class, and overriding a method to generate a mesh made up of discrete layers (*MeshLayer* class), each with different properties. 
 
-== Initial Results
+In addition to variable diffusion and reaction rates, a 'density ratio' property was added to each layer, allowing for a non-uniform distribution of elements across the mesh. Thinner layers can therefore be assigned a higher density ratio, resulting in a local mesh with higher resolution, and improved solution accuracy.
+
+This was implemented in three passes. First, the total density of all layers was calculated. Then, the number of elements in each layer was found by multiplying the total element count by the ratio of the layer density to total density. As an example, if there were two layers with density ratios of 1 and 3 respectively, and a total of 40 elements, the layers would be assigned 10 and 30 elements respectively. After this, the node co-ordinates were generated for each layer in sequence, with a uniform distribution according to the number of elements assigned to that layer, and it's range of $x$ values.
+
+== Simulation Results
+
+The modified solver was then configured to use solve the coursework-specified problem, with the following conditions:
 
 #figure(
-    image("resources/part3/InitialNumericHeatmap.png", width: 110%),
-    caption: [FEM Solution of Drug Diffusion through Multilayer Skin Structure over $0 <= x <= 0.01$ and \ $0 <= t <= 30s$],  
+    caption: "Drug Concentration Problem Conditions",
+    block(width: 100%, inset: (top: 0%, bottom: 0%),
+        align(center,
+            table(
+                columns: (auto, auto),
+                inset: 5pt,
+                align: horizon + left,
+                [Problem Space], [$0 <= x <= 0.01$],
+                [Left Boundary Condition], [Dirichlet: $c(0, t) = 30$],
+                [Right Boundary Condition], [Dirichlet: $c(0.01, t) = 0$],
+                [Initial Condition], [$c(x, 0) = 0$],
+            )
+        )
+    )
+) <part3-conditions>
+
+This used a multilayer mesh with three layers representing the epidermis, dermis and sub-cutaneous tissue, with the following parameters:
+
+#figure(
+    caption: "Mesh Layer Parameters",
+    block(width: 100%, inset: (top: 0%, bottom: 0%),
+        align(center, 
+            table(
+                columns: (auto, auto, auto, auto),
+                inset: 5pt,
+                align: horizon + left,
+                table.header(
+                    [*Parameter*], [*Epidermis*], [*Dermis*], [*Sub-Cutaneous*]
+                ),
+                [$x$ Range], [$0 <= x < 0.00166667$], [$0.00166667 \ <= x < 0.005$], [$0.005 \ <= x <= 0.01$],
+                [D], [4e-6], [5e-6], [2e-6],
+                [$beta$], [0.0], [0.01], [0.01],
+                [$gamma$], [0.02], [0.02], [0.02],
+                [Density \ Ratio], [2.0], [1.0], [1.0],
+            )
+        )
+    )
+) <part3-mesh-parameters>
+
+The simulation was then run using an initial mesh size of 50 elements and a time step of 0.01s, over the specified time period of $0 < t <= 30s$.
+
+The results were plotted as a heatmap (@part3-initial-numeric-heatmap), showing the diffusion of the drug through the multilayer skin structure over time. Additionally marked on this plot are the approximate boundaries between each layer.
+
+A stable profile is visible after around 10 seconds, with the epidermis layer almost immediately saturated to a high level, and the dermis soon after with a slightly lower concentration. The sub-cutaneous layer shows a much more gradual concentration gradient, mainly due to the Dirichlet boundary at $x = 0.01$ of $c(0.01, t) = 0$ forcing a perfect sink along the far edge of the mesh.
+
+#figure(
+    image("resources/part3/InitialNumericHeatmapMarkedup.png", width: 110%),
+    caption: [FEM Solution of Drug Diffusion through \ Multilayer Skin Structure over $0 <= x <= 0.01$ and \ $0 <= t <= 30s$],  
 )  <part3-initial-numeric-heatmap>
 
 

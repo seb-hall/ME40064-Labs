@@ -480,9 +480,9 @@ classdef Coursework
             D = 1;
             lambda = 0;
 
-            epidermis_layer = MeshLayer(0.0, 4e-6, 0.0, 0.02, 1.0);
+            epidermis_layer = MeshLayer(0.0, 4e-6, 0.0, 0.02, 2.0);
             dermis_layer = MeshLayer(0.00166667, 5e-6, 0.01, 0.02, 1.0);
-            sub_cutaneous_layer = MeshLayer(0.005, 2e-6, 0.01, 0.02, 2.0);
+            sub_cutaneous_layer = MeshLayer(0.005, 2e-6, 0.01, 0.02, 1.0);
 
             layers = [epidermis_layer, dermis_layer, sub_cutaneous_layer];
 
