@@ -34,7 +34,7 @@ classdef DoseEvaluator
             effective_t_index = 0;
 
             for i = 1:length(c)
-                if c(i) > c_threshold
+                if c(i) >= c_threshold
                     effective_t_index = i;
                     break
                 end
@@ -45,16 +45,15 @@ classdef DoseEvaluator
                 return;
             end 
 
-            fprintf("effective t index %d %fs\n", effective_t_index, solution.time(effective_t_index));
+            t_effective = solution.time(effective_t_index);
 
-            if effective_t_index == 0
-                K = 0; % never exceeds threshold
-                return;
-            end
+            fprintf("effective t index %d %fs\n", effective_t_index, t_effective);
 
             % integrate concentration over time until effective_t_index
             time_range = effective_t_index:length(solution.time);
-            K = trapz(c(time_range)) * dt;
+            K = trapz(solution.time(time_range), c(time_range));
+            fprintf("Kappa = %.2f (integrated from t=%.2f to t=%.2f)\n", ...
+                K, t_effective, solution.time(end));
         end
 
         function c_dose_min = FindMinimumDose(mesh, tmax, dt, theta, integration_method, target_x, c_threshold, K_target)
