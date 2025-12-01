@@ -26,7 +26,7 @@ classdef NumericSolver
             c0 = zeros(mesh.node_count, 1);
             solution.SetValues(c0, 1);  % column 1 = t=0
 
-            [K, M] = NumericSolver.CreateGlobalMatrices(mesh, integration_method);
+            [K, M] = NumericSolver.CreateGlobalMatrices(mesh, theta, integration_method);
 
             % loop over time steps
             for step = 1:length(time_vector) - 1
@@ -62,7 +62,7 @@ classdef NumericSolver
         end
 
         %% Create global stiffness and mass matrices
-        function [K, M] = CreateGlobalMatrices(mesh, integration_method)
+        function [K, M] = CreateGlobalMatrices(mesh, theta, integration_method)
 
             num_elements = mesh.element_count;
             num_nodes = mesh.node_count;
@@ -96,10 +96,10 @@ classdef NumericSolver
 
             end
 
-            fprintf('Condition number of M: %.2e\n', condest(M));
-            fprintf('Condition number of K: %.2e\n', condest(K));
-            fprintf('Max eigenvalue of M\\K: %.2e\n', max(eigs(M\K, 1)));
-            fprintf('Stability limit (theory): dt < %.6f\n', 0.02^2/(2*1.0));
+            if theta == 0  % Forward Euler only
+                M_lumped = sparse(1:num_nodes, 1:num_nodes, sum(M, 2), num_nodes, num_nodes);
+                M = M_lumped;
+            end
 
         end
 
@@ -133,25 +133,31 @@ classdef NumericSolver
 
         function [lhs, rhs] = ApplyBoundaryConditions(lhs, rhs, t, left_boundary, right_boundary)
 
-            % apply left boundary condition
+             % Store diagonal values before modification
+            diag_left = lhs(1,1);
+            diag_right = lhs(end,end);
 
+            % apply left boundary condition
             switch left_boundary.Type
 
                 case BoundaryType.Dirichlet
                     lhs(1, :) = 0;                  % clear row
-                    lhs(1, 1) = 1;                  % set diagonal to 1
-                    rhs(1) = left_boundary.Value;   % set value
+                    lhs(1, 1) = diag_left;          % keep diagonal
+                    rhs(1) = left_boundary.Value * diag_left;   % scale by diagonal
 
                 case BoundaryType.Neumann
                     rhs(1) = rhs(1) + left_boundary.ValueFunction(t); % apply flux
             
             end
 
+            
+
+            % apply right boundary condition
             switch right_boundary.Type
                  case BoundaryType.Dirichlet
                     lhs(end, :) = 0;                % clear row
-                    lhs(end, end) = 1;              % set diagonal to 1
-                    rhs(end) = right_boundary.Value; % set value
+                    lhs(end, end) = diag_right;     % set diagonal to 1
+                    rhs(end) = right_boundary.Value * diag_right; % set value
 
                 case BoundaryType.Neumann
                     rhs(end) = rhs(end) + right_boundary.ValueFunction(t); % apply flux

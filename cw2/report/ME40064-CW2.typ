@@ -226,14 +226,53 @@ To address this, a dedicated L2 error evaluation class was added to the solver, 
 == Integration Methods
 
 Using the L2 norm error evalutation class, the performance of three different time integration methods was compared: 
-Forward (Explicit) Euler, Backward (Implicit) Euler, and Crank-Nicolson.
+Forward (Explicit) Euler, Backward (Implicit) Euler, and Crank-Nicolson. 
+This test was run using a mesh with 10 elements and a time step size of 0.0001s. 
 
 #figure(
-    image("resources/part2/L2ErrorTimeIntegration.png", width: 110%),
-    caption: [Comparison of RMS errors at $t = 1s$ for Varying Time Steps],  
+    image("resources/part2/L2ErrorTimeIntegration.png", width: 100%),
+    caption: [Comparison of L2 Errors for Different Time Integration Methods],  
 )  <part2-time-integration-comparison>
 
-After this, a study was run to compare the speed and stability of each method.
+This shows that the Forward Euler method had a higher initial accuracy, approaching the solution more quickly than the other two methods, but that it started to decrease in accuracy again afterwards.
+This was likely caused by instability in the method, as it is only conditionally stable.
+
+To illustrate this further, a stability analysis was performed for all three methods, using a larger mesh of 50 elements:
+
+#figure(
+    caption: "Integration Method Stability Comparison",
+    block(width: 100%, inset: (top: 0%, bottom: 0%),
+        align(center, //Align starts here
+            table(
+                columns: (auto, auto, auto, auto),
+                inset: 5pt,
+                align: horizon + left,
+                table.header(
+                    [*dt*], [*Forward Euler*], [*Backward Euler*], [*Crank-Nicolson*]
+                ),
+                [0.0001], [Stable], [Stable], [Stable],
+                [0.001], [Unstable], [Stable], [Stable],
+                [0.01], [Unstable], [Stable], [Stable],
+                [0.1], [Unstable], [Stable], [Stable],
+                [0.25], [Unstable], [Stable], [Stable]
+            )
+        )
+    )
+) <part2-time-integration-stability-analysis>
+
+This shows that the Forward Euler method was only stable for very small time steps, while the other two methods demonstrated *unconditional stability*, remaining stable across all tested time steps.
+
+For linear finite elements, the stability condition for the Forward Euler method is given by the following equation @euler-stability:
+
+#math.equation(
+  block: true,
+  numbering: "(1)",
+  $ d t <= (d x^2) / (2D) $
+) <euler-stability-equation>
+
+Therefore, for a mesh with 50 elements over the domain $0 <= x <= 1$ and $D = 1$, the value of $d t$ must be no more than 0.0002s for stability, which aligns with the results shown in @part2-time-integration-stability-analysis.
+
+== Quadratic Basis Functions
 
 
 #figure(
@@ -251,8 +290,6 @@ After this, a study was run to compare the speed and stability of each method.
 == Quadratic Basis Functions
 
 == Gaussian Quadrature
-
-
 
 
 - The *Mesh* and *MeshElement* classes were modified to support higher-order elements.

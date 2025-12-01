@@ -76,22 +76,22 @@ classdef Coursework
             
             % plot solutions as a heatmaps
             Plotter.PlotHeatMap(numeric_solution, "FEM Solution Heatmap", ...
-                'cw2/report/resources/part1/NumericHeatmap', c_max);
+                "cw2/report/resources/part1/NumericHeatmap", c_max);
             Plotter.PlotHeatMap(analytical_solution, "Analytical Solution Heatmap", ...
-                'cw2/report/resources/part1/AnalyticalHeatmap', c_max);
+                "cw2/report/resources/part1/AnalyticalHeatmap", c_max);
 
             % plot solution samples at specified times
             sample_times = [0.05, 0.1, 0.3, 1.0];
             Plotter.PlotTimeSamples(numeric_solution, dt, sample_times, "FEM Solution Samples", ...
-                'cw2/report/resources/part1/NumericSamples');
+                "cw2/report/resources/part1/NumericSamples");
             Plotter.PlotTimeSamples(analytical_solution, dt, sample_times, "Analytical Solution Samples", ...
-                'cw2/report/resources/part1/AnalyticalSamples');
+                "cw2/report/resources/part1/AnalyticalSamples");
 
             % plot both solutions at a specific position over time
             sample_x = 0.8;
-            legend_strings = {'Numeric Solution', 'Analytical Solution'};
+            legend_strings = {"Numeric Solution", "Analytical Solution"};
             Plotter.PlotSampleOverTime(numeric_solution, analytical_solution, ...
-                sample_x, "Both Solutions at x = 0.8", 'cw2/report/resources/part1/BothX08', legend_strings);
+                sample_x, "Both Solutions at x = 0.8", "cw2/report/resources/part1/BothX08", legend_strings);
 
         end
 
@@ -187,7 +187,7 @@ classdef Coursework
                 rms_errr_table_elem_count(k,:) = [elem_count, dt, (xmax-xmin)/elem_count, rms_error];
                 k = k + 1;
 
-                fprintf('Elements: %d, dt: %.4f, dx: %.4f, RMS Error: %.6f\n', ...
+                fprintf("Elements: %d, dt: %.4f, dx: %.4f, RMS Error: %.6f\n", ...
                     elem_count, dt, (xmax-xmin)/elem_count, rms_error);
             end
 
@@ -222,7 +222,7 @@ classdef Coursework
                 rms_errr_table_time_step(k,:) = [elem_count, dt, (xmax-xmin)/elem_count, rms_error];
                 k = k + 1;
 
-                fprintf('Elements: %d, dt: %.4f, dx: %.4f, RMS Error: %.6f\n', ...
+                fprintf("Elements: %d, dt: %.4f, dx: %.4f, RMS Error: %.6f\n", ...
                     elem_count, dt, (xmax-xmin)/elem_count, rms_error);
 
             end
@@ -233,7 +233,7 @@ classdef Coursework
 
             Plotter.PlotConvergenceError(dx, err_spatial, ...
                 "RMS Error vs Element Size (dt = 0.0005)", ...
-                'cw2/report/resources/part1/ElementSizeConvergence', 'Element Size (x)', 'RMS Error at t = 1s');
+                "cw2/report/resources/part1/ElementSizeConvergence", "Element Size (x)", "RMS Error at t = 1s");
 
             % plot time steps
             dt_vals = rms_errr_table_time_step(:, 2);  % time steps
@@ -241,7 +241,7 @@ classdef Coursework
 
             Plotter.PlotConvergenceError(dt_vals, err_temporal, ...
                 "RMS Error vs Time Step (dx = 0.01)", ...
-                'cw2/report/resources/part1/TimeStepConvergence', 'Time Step (s)', 'RMS Error at t = 1s');
+                "cw2/report/resources/part1/TimeStepConvergence", "Time Step (s)", "RMS Error at t = 1s");
         end
 
         function Part2Error()
@@ -316,7 +316,7 @@ classdef Coursework
             l2_errors = [];
 
             thetas = [0.0, 1.0, 0.5]; % Explicit Euler, Implicit Euler, Crank-Nicholson
-            method_names = {'Forward Euler', 'Crank-Nicolson', 'Backward Euler'};
+            method_names = {"Forward Euler", "Crank-Nicolson", "Backward Euler"};
 
             for i = 1:length(thetas)
                 theta = thetas(i);
@@ -331,9 +331,8 @@ classdef Coursework
             end
 
             Plotter.PlotL2Errors(l2_errors, "L2 Error over Time", ...
-                'cw2/report/resources/part2/L2ErrorTimeIntegration', ...
+                "cw2/report/resources/part2/L2ErrorTimeIntegration", ...
                 method_names);
-
 
             % perform stability analysis 
 
@@ -356,6 +355,9 @@ classdef Coursework
                     dt = dt_list(j);
 
                     try
+
+                        fprintf("Testing %s with dt = %.4f...\n", method_names{i}, dt);
+
                         numeric_solution = NumericSolver.SolveNumeric(...
                             mesh, tmax, dt, theta, lhs_boundary, rhs_boundary, @(~, ~) 0.0, integration_method);
 
@@ -363,15 +365,16 @@ classdef Coursework
                         for t_idx = 1:length(numeric_solution.time)
                             vals = numeric_solution.values(:, t_idx);
                             if any(isnan(vals))
-                                fprintf('%s: NaN at step %d (t=%.4f)\n', method_names{i}, t_idx, numeric_solution.time(t_idx));
+                                fprintf("%s: NaN at step %d (t=%.4f)\n", method_names{i}, t_idx, numeric_solution.time(t_idx));
                                 break;
                             end
                             if any(isinf(vals))
-                                fprintf('%s: Inf at step %d (t=%.4f)\n', method_names{i}, t_idx, numeric_solution.time(t_idx));
+                                fprintf("%s: Inf at step %d (t=%.4f)\n", method_names{i}, t_idx, numeric_solution.time(t_idx));
                                 break;
                             end
+                            
                             if max(abs(vals)) > 1e10
-                                fprintf('%s: Explosion at step %d (t=%.4f), max=%.2e\n', method_names{i}, t_idx, numeric_solution.time(t_idx), max(abs(vals)));
+                                fprintf("%s: Explosion at step %d (t=%.4f), max=%.2e\n", method_names{i}, t_idx, numeric_solution.time(t_idx), max(abs(vals)));
                                 break;
                             end
                         end
@@ -381,10 +384,9 @@ classdef Coursework
                         l2_error = L2Error(analytical_solution, numeric_solution);
                         
                         %l2_errors_dt = [l2_errors_dt, l2_error];
-                        fprintf('%s OK %f \n', method_names{i}, l2_error.l2_error(end));
                     catch
                         %l2_errors_dt = [l2_errors_dt, NaN];
-                        fprintf('%s EXPLODED \n', method_names{i});
+                        fprintf("%s EXPLODED \n", method_names{i});
                     end
                 end
 
