@@ -3,7 +3,7 @@
 % ME40064 Coursework 2
 %
 % File         :  MeshLayer.m
-% Author       :  samh25
+% Author       :  11973
 % Created      :  2025-11-29 (YYYY-MM-DD)
 % License      :  MIT
 % Description  :  A class defining a layer in a multi-layer mesh

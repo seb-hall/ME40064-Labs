@@ -290,7 +290,7 @@ The L2 error of a quadratic mesh with both trapezoidal and Gaussian integration 
 
 This shows a clear improvement in accuracy when using Gaussian Quadrature over trapezoidal integration with quadratic basis functions, approaching the analytical solution in a shorter time.
 
-The reason for this improved performance is that Gaussian Quadrature evaluates the integrand at specially chosen points, capturing a more accurate representation of the function being integrated. @part2-gaussian-trapezoidal-diagram shows a visual comparison of a trapezoidal integration, alongside a Gaussian Quadrature with 2 intermediary points.
+The reason for this improved performance is that Gaussian Quadrature evaluates the integrand at specially chosen points (Gaussian points), capturing a more accurate representation of the function being integrated. @part2-gaussian-trapezoidal-diagram shows a visual comparison of a trapezoidal integration, alongside a Gaussian Quadrature with 2 Gaussian points.
 
 #figure(
     image("resources/part2/Comparison_Gaussquad_trapezoidal.svg.png", width: 100%),

@@ -41,7 +41,7 @@
         ]
 
         text(13pt)[
-            Seb Hall #link("mailto:samh25@bath.ac.uk"), 4th November 2025\
+            Seb Hall #link("mailto:11973@bath.ac.uk"), 4th November 2025\
             Department of Mechanical Engineering, University of Bath \
         ]
     }
