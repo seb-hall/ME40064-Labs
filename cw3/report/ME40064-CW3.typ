@@ -482,6 +482,211 @@ These results show that the car responds appropriately to road disturbances.
 
 = Part 2: Investigation of Car \ Performance
 
+#block(width: 100%,
+inset: (left: 0%, right: 0%),
+[
+    #grid(
+    columns: (0.5fr, 0.5fr),
+    gutter: 10pt,
+    align: horizon,
+    [
+        #figure(
+            block([
+                #image("resources/perf/sine/1ms-sddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(s)_B$ at 1m/s, Nominal Parameters],
+
+        ) 
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/perf/sine/5ms-sddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(s)_B$ at 5m/s, Nominal Parameters],
+
+        )
+    ],
+    [
+        #figure(
+            block([
+                #image("resources/perf/sine/1ms-thetaddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(theta)_B$ at 1m/s, Nominal Parameters],
+
+        ) 
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/perf/sine/5ms-thetaddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(theta)_B$ at 5m/s, Nominal Parameters],
+
+        ) 
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/perf/sine/1ms-sw.png", width: 100%)
+            ]),
+            caption: [$s_(w, text("front"))$ at 1m/s, Nominal Parameters],
+
+        ) 
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/perf/sine/5ms-sw.png", width: 100%)
+            ]),
+            caption: [$s_(w, text("front"))$ at 5m/s, Nominal Parameters],
+
+        ) 
+    ] 
+    )
+])
+
+#block(width: 100%,
+inset: (left: 0%, right: 0%),
+[
+    #grid(
+    columns: (0.5fr, 0.5fr),
+    gutter: 10pt,
+    align: horizon,
+    [
+        #figure(
+            block([
+                #image("resources/perf/sine-2ks/1ms-sddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(s)_B$ at 1m/s, $2k_s$],
+
+        ) 
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/perf/sine-2ks/5ms-sddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(s)_B$ at 5m/s, $2k_s$],
+
+        )
+    ],
+    [
+        #figure(
+            block([
+                #image("resources/perf/sine-2ks/1ms-thetaddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(theta)_B$ at 1m/s, $2k_s$],
+
+        ) 
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/perf/sine-2ks/5ms-thetaddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(theta)_B$ at 5m/s, $2k_s$],
+
+        ) 
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/perf/sine-2ks/1ms-sw.png", width: 100%)
+            ]),
+            caption: [$s_(w, text("front"))$ at 1m/s, $2k_s$],
+
+        ) 
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/perf/sine-2ks/5ms-sw.png", width: 100%)
+            ]),
+            caption: [$s_(w, text("front"))$ at 5m/s, $2k_s$],
+
+        ) 
+    ] 
+    )
+])
+
+
+#block(width: 100%,
+inset: (left: 0%, right: 0%),
+[
+    #grid(
+    columns: (0.5fr, 0.5fr),
+    gutter: 10pt,
+    align: horizon,
+    [
+        #figure(
+            block([
+                #image("resources/perf/sine-2cs/1ms-sddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(s)_B$ at 1m/s, $2c_s$],
+
+        ) 
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/perf/sine-2cs/5ms-sddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(s)_B$ at 5m/s, $2c_s$],
+
+        )
+    ],
+    [
+        #figure(
+            block([
+                #image("resources/perf/sine-2cs/1ms-thetaddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(theta)_B$ at 1m/s, $2c_s$],
+
+        ) 
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/perf/sine-2cs/5ms-thetaddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(theta)_B$ at 5m/s, $2c_s$],
+
+        ) 
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/perf/sine-2cs/1ms-sw.png", width: 100%)
+            ]),
+            caption: [$s_(w, text("front"))$ at 1m/s, $2c_s$],
+
+        ) 
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/perf/sine-2cs/5ms-sw.png", width: 100%)
+            ]),
+            caption: [$s_(w, text("front"))$ at 5m/s, $2c_s$],
+
+        ) 
+    ] 
+    )
+])
+
 = Further Work
 
 = Conclusion
