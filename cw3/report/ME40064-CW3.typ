@@ -314,7 +314,171 @@ inset: (left: 0%, right: 0%),
 
 == Creation of Full Half Car Model Block
 
+Having validated the half car body block, a full half car model was assembled by coupling it with front and rear suspension and tyre blocks, as shown in @halfcar-subsystem.
 
+#figure(
+    image("resources/half-car-subsystem.png", width: 110%),
+    caption: [Simulink Half Car Model],  
+)  <halfcar-subsystem>
+
+The parameters of the suspension, tyre and body models were all set according to the coursework specification @assignment-2-description.
+
+Simulink Goto/From blocks and bus signals were used to manage signal routing and maintain model clarity.
+
+== Verification of the Full Half Car Model
+
+As with the half car body block, a suite of tests was performed to verify the full half car model.
+
+First, the settle response of the car and the effect of mass on settle displacement were investigated.
+
+#block(width: 100%,
+inset: (left: 0%, right: 0%),
+[
+    #grid(
+    columns: (0.5fr, 0.5fr),
+    gutter: 10pt,
+    align: horizon,
+    [
+        #figure(
+            block([
+                #image("resources/half-car-tests/cw-settle.png", width: 100%)
+            ]),
+            caption: [Settle Response with Coursework Mass],
+
+        ) <fig-cw-settle>
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/half-car-tests/half-mass-settle.png", width: 100%)
+            ]),
+            caption: [Settle Response with Half Mass],
+
+        ) <fig-half-mass-settle>
+    ] 
+    )
+])
+
+@fig-cw-settle and @fig-half-mass-settle show that the resultant vertical displacement of the car after settling is correctly affected by the mass of the car body.
+
+Next, the effect of suspension damping on the settle response was investigated.
+
+#block(width: 100%,
+inset: (left: 0%, right: 0%),
+[
+    #grid(
+    columns: (0.5fr, 0.5fr),
+    gutter: 10pt,
+    align: horizon,
+    [
+        #figure(
+            block([
+                #image("resources/half-car-tests/settle-less-damping.png", width: 100%)
+            ]),
+            caption: [Settle Response with Decreased Damping],
+
+        ) <fig-settle-less-damping>
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/half-car-tests/settle-more-damping.png", width: 100%)
+            ]),
+            caption: [Settle Response with Increased Damping],
+
+        ) <fig-settle-more-damping>
+    ] 
+    )
+])
+
+@fig-settle-less-damping and @fig-settle-more-damping show that the damping coefficient of the suspension affects the rate of settling, as expected.
+
+After this, the effect of the CG position on the pitch angle during settling was investigated.
+
+#block(width: 100%,
+inset: (left: 0%, right: 0%),
+[
+    #grid(
+    columns: (0.5fr, 0.5fr),
+    gutter: 10pt,
+    align: horizon,
+    [
+        #figure(
+            block([
+                #image("resources/half-car-tests/cw-settle-pitch.png", width: 100%)
+            ]),
+            caption: [Settle Pitch with Coursework CG Position],
+
+        ) <fig-cw-settle-pitch>
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/half-car-tests/equal-settle-pitch.png", width: 100%)
+            ]),
+            caption: [Settle Pitch with CG at Midpoint],
+
+        ) <fig-unity-settle-pitch>
+    ] 
+    )
+])
+
+@fig-cw-settle-pitch and @fig-unity-settle-pitch show that under the coursework parameters, the car settles with a small pitch angle due to the CG being forward of centre, with identical front and rear suspension characteristics. When the CG is moved to the midpoint between the front and rear axles, the car settles with zero pitch angle, as expected.
+
+Next, the response of the car to road steps was investigated, first with a step hitting both front and rear axles simultaneously, and then with a staggered step hitting the front axle before the rear.
+
+#block(width: 100%,
+inset: (left: 0%, right: 0%),
+[
+    #grid(
+    columns: (0.5fr, 0.5fr),
+    gutter: 10pt,
+    align: horizon,
+    [
+        #figure(
+            block([
+                #image("resources/half-car-tests/same-bump-s.png", width: 100%)
+            ]),
+            caption: [Displacement Response to Step],
+
+        ) <fig-same-bump-s>
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/half-car-tests/same-bump-theta.png", width: 100%)
+            ]),
+            caption: [Pitch Response to Step],
+
+        ) <fig-same-bump-theta>
+    ],
+    [
+        #figure(
+            block([
+                #image("resources/half-car-tests/staggered-bump-s.png", width: 100%)
+            ]),
+            caption: [Displacement Response to Staggered Step],
+
+        ) <fig-staggered-bump-s>
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/half-car-tests/staggered-bump-theta.png", width: 100%)
+            ]),
+            caption: [Pitch Response to Staggered Step],
+
+        ) <fig-staggered-bump-theta>
+    ] 
+    )
+])
+
+These results show that the car responds appropriately to road disturbances.
 
 = Part 2: Investigation of Car \ Performance
 
