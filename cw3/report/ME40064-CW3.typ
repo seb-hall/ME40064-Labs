@@ -312,6 +312,33 @@ inset: (left: 0%, right: 0%),
 
 @fig-low-inertia and @fig-high-inertia show that a lower moment of inertia results in a higher pitch angle response to the same applied forces, as expected from @halfcar-eqn-2.
 
+\
+
+#figure(
+    caption: "Half Car Body Block Test Results",
+    block(width: 100%, inset: (top: 0%, bottom: 0%),
+        align(center, //Align starts here
+            table(
+                columns: (auto, auto),
+                inset: 5pt,
+                align: horizon + left,
+                table.header(
+                    [*Test*], [*Result*]
+                ),
+                [Body doesn't move with upward force of mg], [PASS],
+                [Body moves down with upward force $<$ mg], [PASS],
+                [Lower mass results in greater displacement], [PASS],
+                [Balanced forces with CG at midpoint results in zero pitch], [PASS],
+                [CG forward results in nose-down pitch], [PASS],
+                [Higher front force results in nose-up pitch], [PASS],
+                [Higher rear force results in nose-down pitch], [PASS],
+                [Higher moment of inertia results in smaller pitch angle], [PASS],
+                
+            )
+        )
+    )
+)
+
 == Creation of Full Half Car Model Block
 
 Having validated the half car body block, a full half car model was assembled by coupling it with front and rear suspension and tyre blocks, as shown in @halfcar-subsystem.
@@ -480,7 +507,39 @@ inset: (left: 0%, right: 0%),
 
 These results show that the car responds appropriately to road disturbances.
 
+#figure(
+    caption: "Half Car Model Test Results",
+    block(width: 100%, inset: (top: 0%, bottom: 0%),
+        align(center, //Align starts here
+            table(
+                columns: (auto, auto),
+                inset: 5pt,
+                align: horizon + left,
+                table.header(
+                    [*Test*], [*Result*]
+                ),
+                [Settle displacement affected by mass], [PASS],
+                [Lower damping results in slower settling], [PASS],
+                [Higher damping results in faster settling], [PASS],
+                [CG forward results in nose-down pitch during settling], [PASS],
+                [CG at midpoint results in zero pitch during settling], [PASS],
+                [Step input results in appropriate vertical and pitch response], [PASS],
+                [Staggered step input results in appropriate vertical and pitch response], [PASS],
+                
+            )
+        )
+    )
+)
+
+
 = Part 2: Investigation of Car \ Performance
+
+A sinusoidal road profile was created to investigate the performance of the half car model under different conditions.
+The road profile had an amplitude of 0.01m and a wavelength of 1m, and was tested with a range of speeds. 
+
+A baseline dataset was captured, for the core performance metrics of body vertical acceleration ($dot.double(s)_B$), body pitch angular acceleration ($dot.double(theta)$), and front wheel vertical displacement relative to the road ($s_(w, text("front"))$), at speeds of 1m/s and 5m/s.
+
+== Baseline Performance
 
 #block(width: 100%,
 inset: (left: 0%, right: 0%),
@@ -496,7 +555,7 @@ inset: (left: 0%, right: 0%),
             ]),
             caption: [$dot.double(s)_B$ at 1m/s, Nominal Parameters],
 
-        ) 
+        ) <fig-1ms-sddot>
     ],
     [
 
@@ -506,7 +565,7 @@ inset: (left: 0%, right: 0%),
             ]),
             caption: [$dot.double(s)_B$ at 5m/s, Nominal Parameters],
 
-        )
+        ) <fig-5ms-sddot>
     ],
     [
         #figure(
@@ -515,7 +574,7 @@ inset: (left: 0%, right: 0%),
             ]),
             caption: [$dot.double(theta)_B$ at 1m/s, Nominal Parameters],
 
-        ) 
+        ) <fig-1ms-thetaddot>
     ],
     [
 
@@ -525,7 +584,7 @@ inset: (left: 0%, right: 0%),
             ]),
             caption: [$dot.double(theta)_B$ at 5m/s, Nominal Parameters],
 
-        ) 
+        ) <fig-5ms-thetaddot>
     ],
     [
 
@@ -535,7 +594,7 @@ inset: (left: 0%, right: 0%),
             ]),
             caption: [$s_(w, text("front"))$ at 1m/s, Nominal Parameters],
 
-        ) 
+        ) <fig-1ms-sw>
     ],
     [
 
@@ -545,10 +604,16 @@ inset: (left: 0%, right: 0%),
             ]),
             caption: [$s_(w, text("front"))$ at 5m/s, Nominal Parameters],
 
-        ) 
+        ) <fig-5ms-sw>
     ] 
     )
 ])
+
+== Performance with Increased \ Suspension Stiffness
+
+After establishing the baseline performance, the suspension stiffness was doubled to investigate its effect on the performance metrics.
+
+As specified by the coursework description @assignment-2-description, the spring contants of both front and rear suspensions used a lookup table, so all values in the table were multiplied by 2 to achieve the increased stiffness.
 
 #block(width: 100%,
 inset: (left: 0%, right: 0%),
@@ -564,7 +629,7 @@ inset: (left: 0%, right: 0%),
             ]),
             caption: [$dot.double(s)_B$ at 1m/s, $2k_s$],
 
-        ) 
+        ) <fig-2ks-1ms-sddot>
     ],
     [
 
@@ -574,7 +639,7 @@ inset: (left: 0%, right: 0%),
             ]),
             caption: [$dot.double(s)_B$ at 5m/s, $2k_s$],
 
-        )
+        ) <fig-2ks-5ms-sddot>
     ],
     [
         #figure(
@@ -583,7 +648,7 @@ inset: (left: 0%, right: 0%),
             ]),
             caption: [$dot.double(theta)_B$ at 1m/s, $2k_s$],
 
-        ) 
+        ) <fig-2ks-1ms-thetaddot>
     ],
     [
 
@@ -593,7 +658,7 @@ inset: (left: 0%, right: 0%),
             ]),
             caption: [$dot.double(theta)_B$ at 5m/s, $2k_s$],
 
-        ) 
+        ) <fig-2ks-5ms-thetaddot>
     ],
     [
 
@@ -603,7 +668,7 @@ inset: (left: 0%, right: 0%),
             ]),
             caption: [$s_(w, text("front"))$ at 1m/s, $2k_s$],
 
-        ) 
+        ) <fig-2ks-1ms-sw>
     ],
     [
 
@@ -613,11 +678,23 @@ inset: (left: 0%, right: 0%),
             ]),
             caption: [$s_(w, text("front"))$ at 5m/s, $2k_s$],
 
-        ) 
+        ) <fig-2ks-5ms-sw>
     ] 
     )
 ])
 
+The stiffer suspension resulted in a smoother ride at lower speeds, with reduced body accelerations (as shown in @fig-1ms-sddot vs @fig-2ks-1ms-sddot, and @fig-1ms-thetaddot vs @fig-2ks-1ms-thetaddot), alongside lower wheel displacement relative to the road (@fig-1ms-sw vs @fig-2ks-1ms-sw).
+
+At higher speeds, however, the stiffer suspension led to increased body accelerations (@fig-5ms-sddot vs @fig-2ks-5ms-sddot, and @fig-5ms-thetaddot vs @fig-2ks-5ms-thetaddot), indicating a harsher ride. The wheel displacement relative to the road also increased (@fig-5ms-sw vs @fig-2ks-5ms-sw), suggesting reduced handling characteristics.
+
+The improved performance at lower speeds can be attributed to the stiffer suspension's ability to better resist body movement in response to changes in road profile, while the degraded performance at higher speeds likely results from a shift in the suspension's natural frequency, leading to an increased amplitude compared to the baseline.
+
+== Performance with Increased \ Suspension Damping
+
+Next, the suspension damping was doubled to investigate its effect on the performance metrics.
+Also specified by the coursework description @assignment-2-description, the damping coefficients were different depending on if the suspension was in compression or extension.
+
+Both the compression and extension damping coefficients of the front and rear suspensions were therefore multiplied by 2 to achieve the increased damping for analysis.
 
 #block(width: 100%,
 inset: (left: 0%, right: 0%),
@@ -633,7 +710,7 @@ inset: (left: 0%, right: 0%),
             ]),
             caption: [$dot.double(s)_B$ at 1m/s, $2c_s$],
 
-        ) 
+        ) <fig-2cs-1ms-sddot>
     ],
     [
 
@@ -643,7 +720,7 @@ inset: (left: 0%, right: 0%),
             ]),
             caption: [$dot.double(s)_B$ at 5m/s, $2c_s$],
 
-        )
+        ) <fig-2cs-5ms-sddot>
     ],
     [
         #figure(
@@ -652,7 +729,7 @@ inset: (left: 0%, right: 0%),
             ]),
             caption: [$dot.double(theta)_B$ at 1m/s, $2c_s$],
 
-        ) 
+        ) <fig-2cs-1ms-thetaddot>
     ],
     [
 
@@ -662,7 +739,7 @@ inset: (left: 0%, right: 0%),
             ]),
             caption: [$dot.double(theta)_B$ at 5m/s, $2c_s$],
 
-        ) 
+        ) <fig-2cs-5ms-thetaddot>
     ],
     [
 
@@ -672,7 +749,7 @@ inset: (left: 0%, right: 0%),
             ]),
             caption: [$s_(w, text("front"))$ at 1m/s, $2c_s$],
 
-        ) 
+        ) <fig-2cs-1ms-sw>
     ],
     [
 
@@ -682,14 +759,23 @@ inset: (left: 0%, right: 0%),
             ]),
             caption: [$s_(w, text("front"))$ at 5m/s, $2c_s$],
 
-        ) 
+        ) <fig-2cs-5ms-sw>
     ] 
     )
 ])
 
+As with the increased stiffness case, the increased damping resulted in a smoother ride at lower speeds, with reduced body accelerations (as shown in @fig-1ms-sddot vs @fig-2cs-1ms-sddot, and @fig-1ms-thetaddot vs @fig-2cs-1ms-thetaddot), alongside lower wheel displacement relative to the road (@fig-1ms-sw vs @fig-2cs-1ms-sw).
+
+Also like the increased stiffness case, at higher speeds the increased damping led to increased body accelerations (@fig-5ms-sddot vs @fig-2cs-5ms-sddot, and @fig-5ms-thetaddot vs @fig-2cs-5ms-thetaddot), indicating a harsher ride. The wheel displacement relative to the road also increased (@fig-5ms-sw vs @fig-2cs-5ms-sw), and my more than in the increased stiffness case, suggesting further reduced handling characteristics.
+
+At lower speeds, the improved performance is likely due to the increased energy dissipation provided by the higher damping, reducing oscillations in response to road profile changes. At high speeds, however, the dampers may be over-damping the system, making it act more like a rigid body and transmitting more road disturbances to the sprung mass.
+
 = Further Work
 
 = Conclusion
+
+Talk about adaptive dampers?
+
 
 // MARK: REFERENCES
 = References
