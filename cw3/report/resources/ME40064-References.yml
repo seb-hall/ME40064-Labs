@@ -1,0 +1,17 @@
+assignment-2-description:
+    type: Article
+    title: "Assignment 2: Simulink Modelling of Dynamic Systems"
+    date: 2025
+    author: A. Cookson
+
+half-car:
+    type: Article
+    title: A Half-car Model for Dynamic Analysis of Vehicles with Random Parameters
+    date: 2007
+    author: W. Gau, N. Zhang, H. Du
+    url: https://search.informit.org/doi/epdf/10.3316/informit.221968307621967
+
+simulink:
+    type: Web
+    title: Simulink
+    url: https://mathworks.com/products/simulink.html
