@@ -15,3 +15,22 @@ simulink:
     type: Web
     title: Simulink
     url: https://mathworks.com/products/simulink.html
+
+watt-profile: 
+    type: Article
+    title: Effects of Speed Bumps and Humps on Motorcycle Speed Profiles
+    date: 2014
+    author: W Satiennam et al.
+    url: https://www.scientific.net/AMR.931-932.536
+
+simulink-solver:
+    type: Web
+    title: Choose a Solver
+    url: https://www.mathworks.com/help/simulink/ug/choose-a-solver.html
+
+active-suspensions:
+    type: Article
+    title: A comparison study of passive, active, and semi-active suspension systems
+    author: U. Demircioglu, M. Cakir
+    date: 2024
+    url: https://doi.org/10.1504/IJVNV.2024.142742

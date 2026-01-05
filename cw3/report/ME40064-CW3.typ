@@ -111,12 +111,18 @@ It is particularly well-suited for modelling dynamic systems, providing a wide r
 
 == Creation of a Half Car Body Block
 
-A Simulink block was created to solve the half car equations of motion. This had inputs of the front and rear suspension forces, and outputs of the body vertical displacement and pitch angle, as well as front and rear axle vertical displacements and velocities (@half-car-body).
+A Simulink block was created to solve the half car equations of motion. This had inputs of the front and rear suspension forces, and outputs of the body vertical displacement and pitch angle, as well as front and rear axle vertical displacements and velocities (@half-car-body, @half-car-body-subsystem).
 
 #figure(
-    image("resources/half-car-body-block.png", width: 90%),
+    image("resources/half-car-body-block.png", width: 80%),
     caption: [Simulink Half Car Body Block],   
 )  <half-car-body>
+
+#figure(
+    image("resources/halfcar-body-subsystem.png", width: 110%),
+    caption: [Simulink Half Car Body Block Subsystem],   
+)  <half-car-body-subsystem>
+
 
 The front and rear vertical displacements and velocities were calculated according to the following equations:
 
@@ -312,7 +318,6 @@ inset: (left: 0%, right: 0%),
 
 @fig-low-inertia and @fig-high-inertia show that a lower moment of inertia results in a higher pitch angle response to the same applied forces, as expected from @halfcar-eqn-2.
 
-\
 
 #figure(
     caption: "Half Car Body Block Test Results",
@@ -344,7 +349,7 @@ inset: (left: 0%, right: 0%),
 Having validated the half car body block, a full half car model was assembled by coupling it with front and rear suspension and tyre blocks, as shown in @halfcar-subsystem.
 
 #figure(
-    image("resources/half-car-subsystem.png", width: 110%),
+    image("resources/half-car-subsystem.png", width: 100%),
     caption: [Simulink Half Car Model],  
 )  <halfcar-subsystem>
 
@@ -531,15 +536,20 @@ These results show that the car responds appropriately to road disturbances.
     )
 )
 
+== Simulation Convergence
+
+All simulations were run using Simulink's variable step solver @simulink-solver, with an automatic solver implementation and parameters. These are automatically adjusted to maintain accuracy while optimising computation time. The consistency and physical plausibility of the results across all tests indicate that the simulations converged successfully.
 
 = Part 2: Investigation of Car \ Performance
+
+== Sinusoidal Road Profile
 
 A sinusoidal road profile was created to investigate the performance of the half car model under different conditions.
 The road profile had an amplitude of 0.01m and a wavelength of 1m, and was tested with a range of speeds. 
 
 A baseline dataset was captured, for the core performance metrics of body vertical acceleration ($dot.double(s)_B$), body pitch angular acceleration ($dot.double(theta)$), and front wheel vertical displacement relative to the road ($s_(w, text("front"))$), at speeds of 1m/s and 5m/s.
 
-== Baseline Performance
+=== Baseline Performance
 
 #block(width: 100%,
 inset: (left: 0%, right: 0%),
@@ -609,7 +619,7 @@ inset: (left: 0%, right: 0%),
     )
 ])
 
-== Performance with Increased \ Suspension Stiffness
+=== Performance with Increased \ Suspension Stiffness
 
 After establishing the baseline performance, the suspension stiffness was doubled to investigate its effect on the performance metrics.
 
@@ -689,7 +699,7 @@ At higher speeds, however, the stiffer suspension led to increased body accelera
 
 The improved performance at lower speeds can be attributed to the stiffer suspension's ability to better resist body movement in response to changes in road profile, while the degraded performance at higher speeds likely results from a shift in the suspension's natural frequency, leading to an increased amplitude compared to the baseline.
 
-== Performance with Increased \ Suspension Damping
+=== Performance with Increased \ Suspension Damping
 
 Next, the suspension damping was doubled to investigate its effect on the performance metrics.
 Also specified by the coursework description @assignment-2-description, the damping coefficients were different depending on if the suspension was in compression or extension.
@@ -766,16 +776,254 @@ inset: (left: 0%, right: 0%),
 
 As with the increased stiffness case, the increased damping resulted in a smoother ride at lower speeds, with reduced body accelerations (as shown in @fig-1ms-sddot vs @fig-2cs-1ms-sddot, and @fig-1ms-thetaddot vs @fig-2cs-1ms-thetaddot), alongside lower wheel displacement relative to the road (@fig-1ms-sw vs @fig-2cs-1ms-sw).
 
-Also like the increased stiffness case, at higher speeds the increased damping led to increased body accelerations (@fig-5ms-sddot vs @fig-2cs-5ms-sddot, and @fig-5ms-thetaddot vs @fig-2cs-5ms-thetaddot), indicating a harsher ride. The wheel displacement relative to the road also increased (@fig-5ms-sw vs @fig-2cs-5ms-sw), and my more than in the increased stiffness case, suggesting further reduced handling characteristics.
+Also like the increased stiffness case, at higher speeds the increased damping led to increased body accelerations (@fig-5ms-sddot vs @fig-2cs-5ms-sddot, and @fig-5ms-thetaddot vs @fig-2cs-5ms-thetaddot), indicating a harsher ride. The wheel displacement relative to the road also increased (@fig-5ms-sw vs @fig-2cs-5ms-sw), and by more than in the increased stiffness case, suggesting further reduced handling characteristics.
 
 At lower speeds, the improved performance is likely due to the increased energy dissipation provided by the higher damping, reducing oscillations in response to road profile changes. At high speeds, however, the dampers may be over-damping the system, making it act more like a rigid body and transmitting more road disturbances to the sprung mass.
 
-= Further Work
+\
+
+== Speedbump Response
+
+=== Nominal Speedbump Response
+
+A speedbump profile was created in Simulink, based on the Watt profile @watt-profile, but with configurable width and height parameters. The initial case had a width of 0.5m and a height of 0.05m. 
+
+The response of the core performance metrics of the half car model was then captured at speeds of 5m/s and \ 10m/s.
+
+#block(width: 100%,
+inset: (left: 0%, right: 0%),
+[
+    #grid(
+    columns: (0.5fr, 0.5fr),
+    gutter: 10pt,
+    align: horizon,
+    [
+        #figure(
+            block([
+                #image("resources/speedbump/005-05/5ms-sddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(s)_B$ at 5m/s, Nominal Speedbump],
+
+        ) <fig-005-05-5ms-sddot>
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/speedbump/005-05/10ms-sddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(s)_B$ at 10m/s, Nominal Speedbump],
+
+        ) <fig-005-05-10ms-sddot>
+    ],
+    [
+        #figure(
+            block([
+                #image("resources/speedbump/005-05/5ms-thetaddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(theta)_B$ at 5m/s, Nominal Speedbump],
+
+        ) <fig-005-05-5ms-thetaddot>
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/speedbump/005-05/10ms-thetaddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(theta)_B$ at 10m/s, Nominal Speedbump],
+
+        ) <fig-005-05-10ms-thetaddot>
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/speedbump/005-05/5ms-sw.png", width: 100%)
+            ]),
+            caption: [$s_w$ at 5m/s, Nominal Speedbump],
+
+        ) <fig-005-05-5ms-sw>
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/speedbump/005-05/10ms-sw.png", width: 100%)
+            ]),
+            caption: [$s_w$ at 10m/s, Nominal Speedbump],
+
+        ) <fig-005-05-10ms-sw>
+    ] 
+    )
+])
+
+
+
+=== Wider Speedbump Response
+
+After capturing the baseline results, the width of the speedbump was increased to 1.0m while keeping the height at 0.05m, and the response was captured again at speeds of 5 and 10m/s.
+
+#block(width: 100%,
+inset: (left: 0%, right: 0%),
+[
+    #grid(
+    columns: (0.5fr, 0.5fr),
+    gutter: 10pt,
+    align: horizon,
+    [
+        #figure(
+            block([
+                #image("resources/speedbump/005-10/5ms-sddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(s)_B$ at 5m/s, Wider Speedbump],
+
+        ) <fig-005-10-5ms-sddot>
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/speedbump/005-10/10ms-sddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(s)_B$ at 10m/s, Wider Speedbump],
+
+        ) <fig-005-10-10ms-sddot>
+    ],
+    [
+        #figure(
+            block([
+                #image("resources/speedbump/005-10/5ms-thetaddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(theta)_B$ at 5m/s, Wider Speedbump],
+
+        ) <fig-005-10-5ms-thetaddot>
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/speedbump/005-10/10ms-thetaddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(theta)_B$ at 10m/s, Wider Speedbump],
+
+        ) <fig-005-10-10ms-thetaddot>
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/speedbump/005-10/5ms-sw.png", width: 100%)
+            ]),
+            caption: [$s_w$ at 5m/s, Wider Speedbump],
+
+        ) <fig-005-10-5ms-sw>
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/speedbump/005-10/10ms-sw.png", width: 100%)
+            ]),
+            caption: [$s_w$ at 10m/s, Wider Speedbump],
+
+        ) <fig-005-10-10ms-sw>
+    ] 
+    )
+])
+
+Comparing these results to the nominal speedbump case, the wider speedbump resulted in a reduced effect on the body accelerations and wheel displacement at both speeds, indicating a less disruptive ride. This is likely due to the more gradual change in road profile provided by the wider bump.
+
+
+=== Taller Speedbump Response
+
+Finally, the height of the speedbump was increased to 0.1m while keeping the original width at 0.5m, and the response of the core performance metrics was captured again at speeds of 5m/s and 10m/s.
+
+
+#block(width: 100%,
+inset: (left: 0%, right: 0%),
+[
+    #grid(
+    columns: (0.5fr, 0.5fr),
+    gutter: 10pt,
+    align: horizon,
+    [
+        #figure(
+            block([
+                #image("resources/speedbump/010-05/5ms-sddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(s)_B$ at 5m/s, Taller Speedbump],
+
+        ) <fig-010-05-5ms-sddot>
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/speedbump/010-05/10ms-sddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(s)_B$ at 10m/s, Taller Speedbump],
+
+        ) <fig-010-05-10ms-sddot>
+    ],
+    [
+        #figure(
+            block([
+                #image("resources/speedbump/010-05/5ms-thetaddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(theta)_B$ at 5m/s, Taller Speedbump],
+
+        ) <fig-010-05-5ms-thetaddot>
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/speedbump/010-05/10ms-thetaddot.png", width: 100%)
+            ]),
+            caption: [$dot.double(theta)_B$ at 10m/s, Taller Speedbump],
+
+        ) <fig-010-05-10ms-thetaddot>
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/speedbump/010-05/5ms-sw.png", width: 100%)
+            ]),
+            caption: [$s_w$ at 5m/s, Taller Speedbump],
+
+        ) <fig-010-05-5ms-sw>
+    ],
+    [
+
+        #figure(
+            block([
+                #image("resources/speedbump/010-05/10ms-sw.png", width: 100%)
+            ]),
+            caption: [$s_w$ at 10m/s, Taller Speedbump],
+
+        ) <fig-010-05-10ms-sw>
+    ] 
+    )
+])
+
+The taller speedbump resulted in significantly increased body accelerations and wheel displacement at both speeds compared to the nominal case, indicating a much more disruptive ride. This is due to the larger vertical change in road profile, which the suspension must work harder to absorb.
 
 = Conclusion
 
 Talk about adaptive dampers?
 
+This coursework investigation succesfully developed and validated a half car model in Simulink, demonstrating an accurate representation of vertical and pitch dynamics in a purely longitudal context.
+
+Effective unit testing was performed to validate components of the model, alonside system-level testing to ensure the full model behaved as expected under various conditions.
+
+The sinusoidal road profile analysis highlighted the trade-offs involved in suspension tuning, with increased stiffness and damping improving ride quality at lower speeds but degrading it at higher speeds.
+
+Analysing the response of the model to different speedbump profiles showed a clear relationship between bump geometry and ride comfort, with wider bumps being less disruptive and taller bumps causing significant increases in body accelerations and wheel displacement. There was also a clear trend of increasing severity of response with increasing speed, exactly as a speedbump should behave.
+
+These findings illustrate the limitations of a traditional passive suspension system in handling a wide range of road conditions and speeds. 
+It is therefore understandable that modern vehicles are increasingly adopting adaptive suspension systems, which can dynamically adjust damping and stiffness characteristics in real-time based on road conditions and driving dynamics. Such systems have the potential to significantly enhance ride comfort and handling characteristics across a broader range of scenarios compared to traditional solutions @active-suspensions.
 
 // MARK: REFERENCES
 = References
@@ -786,8 +1034,3 @@ Talk about adaptive dampers?
     style: "ieee"
 )
 
-#pagebreak()
-
-#set page(columns: 1)
-
-= Appendix - Simulink Source Code
